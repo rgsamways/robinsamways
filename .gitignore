@@ -216,3 +216,41 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# --- Node / Next.js ---
+
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Next.js
+.next/
+out/
+
+# Vercel
+.vercel
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Env files
+.env*
+!.env.example
+
+# Misc
+.DS_Store
+*.pem
+
+# Claude Code local settings (machine-specific permission allowlists, not project config)
+.claude/settings.local.json
+
+# Source asset only — resume content is hardcoded in the React homepage, not read at runtime
+/resume.pdf
