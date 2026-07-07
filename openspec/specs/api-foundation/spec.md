@@ -25,9 +25,9 @@ The `/api` app SHALL be structured so it can be deployed to Railway with minimal
 - **THEN** Railway installs dependencies, starts the app using the declared start command, and the `/health` endpoint responds successfully
 
 ### Requirement: No business endpoints beyond health check
-The API SHALL NOT include any Salesforce, CRM, or other business-domain endpoints in this change — those are explicitly deferred to a later change.
+The API SHALL NOT include any Salesforce, CRM, or other business-domain endpoints — those remain deferred to a later change. The `POST /contact` endpoint defined by the `contact-form` capability is explicitly permitted as the API's first non-infrastructure endpoint.
 
-#### Scenario: API surface is limited to infrastructure concerns
+#### Scenario: API surface is limited to infrastructure concerns and the contact endpoint
 - **WHEN** the API's route table is inspected
-- **THEN** only the health check endpoint (and any framework-default routes such as docs) are present
+- **THEN** only the health check endpoint, the `POST /contact` endpoint, and any framework-default routes (such as docs) are present
 

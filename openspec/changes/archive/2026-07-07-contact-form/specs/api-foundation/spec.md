@@ -1,6 +1,6 @@
 ## MODIFIED Requirements
 
-### Requirement: No business endpoints beyond health check and contact form
+### Requirement: No business endpoints beyond health check
 The API SHALL NOT include any Salesforce, CRM, or other business-domain endpoints — those remain deferred to a later change. The `POST /contact` endpoint defined by the `contact-form` capability is explicitly permitted as the API's first non-infrastructure endpoint.
 
 #### Scenario: API surface is limited to infrastructure concerns and the contact endpoint

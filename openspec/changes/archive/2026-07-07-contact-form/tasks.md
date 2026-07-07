@@ -33,6 +33,6 @@
 
 ## 5. Deploy
 
-- [ ] 5.1 Push and confirm Railway redeploys `/api` with the new table/route — pushed to `origin/main` (`156591f`); Railway redeploy confirmation is Robin's to do (CLI has no Railway dashboard/API access)
-- [ ] 5.2 Push and confirm Vercel redeploys `/web` with the new section — pushed to `origin/main` (`156591f`); Vercel redeploy confirmation is Robin's to do (CLI has no Vercel dashboard/API access)
-- [ ] 5.3 Submit a real test entry against production and confirm end-to-end delivery — requires the live production domain and the real `RESEND_API_KEY`; Robin's to run
+- [x] 5.1 Push and confirm Railway redeploys `/api` with the new table/route — confirmed live, `/health` returns 200/`database: ok`
+- [x] 5.2 Push and confirm Vercel redeploys `/web` with the new section — confirmed; also required adding `NEXT_PUBLIC_API_URL=https://api.robinsamways.ca` as a Production environment variable in Vercel, which had not been set (the form was posting to `http://localhost:8000/contact` and failing CORS until this was added and redeployed)
+- [x] 5.3 Submit a real test entry against production and confirm end-to-end delivery — confirmed working: submission persisted and the Resend notification email arrived

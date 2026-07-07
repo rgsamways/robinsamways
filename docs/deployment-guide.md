@@ -38,7 +38,7 @@ Nothing else in this guide can proceed until this zone shows **Active** in Cloud
 1. Vercel → **Add New → Project** → import the repo from GitHub.
 2. Set **Root Directory** to `web`.
 3. Framework preset should auto-detect as **Next.js** — leave build/output settings on their defaults (this was a specific goal of the `web-foundation` spec: zero-config deploy).
-4. No environment variables are required yet — the homepage content is hardcoded, not fetched from the API. (Note for later: if `/web` ever calls `/api` directly, e.g. for a live Salesforce-backed feature, that's when a `NEXT_PUBLIC_API_URL` variable gets added here.)
+4. **Set `NEXT_PUBLIC_API_URL` = `https://api.robinsamways.ca` as a Production environment variable** (Project → Settings → Environment Variables — note this is a different page from "Environments"). This became required once `/web` started calling `/api` directly (first landed with the `contact-form` change) — without it, the app falls back to `http://localhost:8000`, which fails with a CORS error in production. **Environment variable changes don't apply to existing deployments — trigger a new deploy after adding it.**
 5. Deploy. Confirm the generated `*.vercel.app` preview URL loads the homepage correctly before touching DNS.
 6. Project → **Settings → Domains** → add `robinsamways.ca` and `www.robinsamways.ca`.
 7. Vercel displays the exact DNS records it needs (typically an `A` record for the apex and a `CNAME` for `www`). **Use whatever Vercel shows on screen at setup time** — the values below are illustrative and can change:
