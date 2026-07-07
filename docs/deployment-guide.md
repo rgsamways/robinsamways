@@ -83,21 +83,23 @@ Moving the domain's nameservers to Cloudflare replaces whatever GoDaddy was doin
 
 ### 6a. Inbound — Cloudflare Email Routing (free)
 
-1. Cloudflare → `robinsamways.ca` → **Email → Email Routing → Enable**. Cloudflare adds the necessary MX and SPF/TXT records to the zone automatically.
-2. Add a routing rule: `robin@robinsamways.ca` (or whatever address is wanted) → **forward to** `rgsamways@gmail.com`.
-3. Cloudflare sends a verification email to the Gmail address — confirm it.
-4. Test by sending a real email to the new address and confirming it lands in Gmail.
+1. **Delete any leftover mail records from the old registrar first.** If GoDaddy was previously handling mail for the domain (even just default parking records), it will have left `MX` records pointing at `smtp.secureserver.net` / `mailstore1.secureserver.net`. These conflict with Cloudflare Email Routing and must be deleted from Cloudflare's DNS Records page before enabling routing — search the records list by type `MX` to find them.
+2. Cloudflare → `robinsamways.ca` → **Email → Email Routing → Enable**. Cloudflare adds the necessary MX and SPF/TXT records to the zone automatically.
+3. Add a routing rule: `robin@robinsamways.ca` (or whatever address is wanted) → **forward to** `rgsamways@gmail.com`.
+4. Cloudflare sends a verification email to the Gmail address — confirm it.
+5. **Gotcha (as of mid-2026): Cloudflare's new Email Routing UI can leave routing "Disabled" even after rules/destinations are configured.** The Overview page may show a routing rule, a destination address, and a domain all configured, yet "Routing status: Disabled" — the new UI's own banner admits it's incomplete ("You're now using the new Email Routing UI... being retired"), and its Settings → DNS records sub-page shows records marked "Locked" that aren't actually live. If this happens: click **"Use the old UI"** (link at the top of the page) → find the **"Get started with Email Routing"** wizard → click **"Add records and enable"**. That's the action that actually writes the MX/TXT records and flips status to Enabled — the new UI's setup does not reliably do this on its own.
+6. Test by sending a real email to the new address and confirming it lands in Gmail. **Use an account other than the one it forwards to.** Sending the test from the same Gmail account the address forwards to (a self-addressed loop through a third-party relay) can be silently dropped by Gmail with no bounce and no spam-folder trace, even when Cloudflare's Activity Log shows the message as successfully "Forwarded" with SPF/DKIM/ARC all passing — Gmail's own downstream filtering is the opaque part, not Cloudflare's relay. Test from a different mailbox to get a real signal.
 
 ### 6b. Outbound — Resend (transactional email API)
 
-For anything the site or API needs to *send* programmatically later — a contact form, a notification — not needed by anything currently built, but worth setting up now so the domain is pre-verified when that feature arrives.
+For anything the site or API needs to *send* programmatically — the homepage contact form's notification email is the first real user of this (see the `contact-form` OpenSpec change).
 
 1. Sign up at Resend, create an API key.
 2. Add a **sending domain**. Recommend a subdomain like `mail.robinsamways.ca` rather than the bare domain, so transactional-mail reputation stays separate from personal inbound mail on the apex.
 3. Resend provides DNS records to add: an SPF `TXT` record, a handful of DKIM `CNAME` records, and optionally a DMARC `TXT` record. Add all of them in Cloudflare.
 4. Wait for Resend to mark the domain **Verified** (Cloudflare's fast propagation usually makes this quick).
 5. Store the API key as a Railway environment variable on the **api** service (`RESEND_API_KEY`) — never commit it to the repo. Add a placeholder line to `api/.env.example` only.
-6. No send-email code exists in `/api` yet — this step just gets the account and domain pre-verified so a future feature can start sending immediately without a DNS detour.
+6. Store the same key on `/web` only if a build-time need arises — as of the contact-form change, only `/api` sends email, so `/web` never needs this key.
 
 ## Part 7 — End-to-end verification checklist
 
@@ -106,7 +108,7 @@ For anything the site or API needs to *send* programmatically later — a contac
 - [ ] `https://robinsamways.com` 301-redirects to `https://robinsamways.ca`
 - [ ] `https://api.robinsamways.ca/health` returns 200 with `database: ok` against **production** Postgres
 - [ ] Menu navigation works in production (Portfolio / Farpost / Dev Log placeholder routes)
-- [ ] A test email to `robin@robinsamways.ca` arrives in Gmail
+- [ ] A test email to `robin@robinsamways.ca`, sent from an account other than `rgsamways@gmail.com`, arrives in Gmail (see the self-send caveat in Part 6a)
 - [ ] Resend shows the sending domain as **Verified**
 
 ## Part 8 — Troubleshooting
@@ -115,3 +117,4 @@ For anything the site or API needs to *send* programmatically later — a contac
 - **Vercel/Railway domain stuck on "pending verification":** re-check the exact record type/value the platform is currently asking for (they can differ from what's documented here) and confirm Cloudflare isn't proxying (orange cloud) if the platform expects direct DNS-only resolution.
 - **API fails to boot on Railway with a dialect/driver error:** almost certainly the `DATABASE_URL` scheme mismatch from Part 4 — confirm it starts with `postgresql+asyncpg://`, not `postgresql://`.
 - **Reverting:** nameservers can be pointed back to GoDaddy's defaults at any time from GoDaddy's DNS settings. Vercel/Railway deployments can be deleted without affecting the domain until DNS is repointed away from them.
+- **Test email to the routed address never arrives, no bounce, no spam folder trace, and Cloudflare's Activity Log shows it as "Forwarded" with SPF/DKIM/ARC passing:** this is very likely the self-send loop described in Part 6a, not a Cloudflare problem — Gmail can silently drop mail that appears to loop back to the same account via a third-party relay. Re-test from a different mailbox before assuming anything is broken.
