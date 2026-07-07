@@ -6,9 +6,28 @@ Each entry includes the literal handoff text given to CLI, not just a summary, s
 
 ## Open
 
-(none)
+- [ ] 2026-07-07 — `/ops/deploy` still drifted from `docs/deployment-guide.md` in three places, on top of the Part 6a/8 sync just completed. Two were flagged by CLI as out-of-scope-but-noticed; one (Part 3) hadn't been surfaced yet because the guide edit happened after the original sync handoff was written.
+
+  **Handoff given to CLI (2026-07-07):**
+  > Three more content-only syncs needed between `docs/deployment-guide.md` (source of truth) and `web/src/app/ops/deploy/page.tsx`, same pattern as the Part 6a/8 sync you just finished:
+  > 1. **Part 3 (Vercel setup)** — the guide's step 4 now says `NEXT_PUBLIC_API_URL=https://api.robinsamways.ca` is a required Production environment variable (with the localhost-fallback/CORS-failure explanation and the "env var changes don't apply to existing deployments" note), replacing the old "no environment variables are required yet... for later" wording. The page still has the stale version.
+  > 2. **Part 6b intro (Resend/outbound)** — guide now says the contact form is Resend's first real runtime caller, replacing "not needed by anything currently built."
+  > 3. **Part 7 (verification checklist)** — the email-test checklist item now specifies testing from an account other than `rgsamways@gmail.com`, per the self-send-loop caveat.
+  >
+  > Update the "Last updated" date on the page if it changes. Same verification bar as last time: `npm run build` clean, check for the JSX whitespace-glue bug proactively, no console warnings.
 
 ## Resolved
+
+- [x] 2026-07-07 — New OpenSpec change `home-navigation-links` proposed and validated. Adds a "Home" menu entry (first position) and makes the "$ Robin Samways" header text a link to `/` — currently there's no way back to the homepage from a placeholder page other than the browser back button. Full detail in `openspec/changes/home-navigation-links/`.
+
+  **Handoff given to CLI (2026-07-07):**
+  > Implement the validated OpenSpec change at `openspec/changes/home-navigation-links/` — read `proposal.md` for context (small change, no design.md needed), then work through `tasks.md`. Two things: add "Home" as the first item in the menu (above Portfolio/Farpost/Dev Log), and make the "$ Robin Samways" header text a link to `/`, available on the homepage and all three placeholder pages. Watch for the fixed-width toggle button from the earlier layout-shift fix — don't reintroduce that issue while touching the header. Check off tasks in `tasks.md` as you go and report back when done.
+
+  **Resolution:** added "Home" as the first entry in `MenuToggle.tsx`'s links array (above Portfolio/Farpost/Dev Log), and wrapped the "$ Robin Samways" text in `Header.tsx` in a `next/link` to `/`, keeping the existing `$` accent span untouched. Verified via headless browser across all four routes (`/`, `/portfolio`, `/farpost`, `/dev-log`): menu order is Home/Portfolio/Farpost/Dev Log; both the header title link and the Home menu link navigate to `/` correctly; and — specifically checking for a regression of the earlier layout-shift fix — toggled the menu button 6 times on every route, confirming the button stays a constant 32×32px and the header title's x-position never moves (184px throughout). `npm run build` clean, zero console warnings/errors across all checks.
+
+- [x] 2026-07-07 — Production contact form failed with a browser console CORS error: `Access to fetch at 'http://localhost:8000/contact' from origin 'https://robinsamways.ca' has been blocked by CORS policy`. Root cause: `ContactForm.tsx` reads `NEXT_PUBLIC_API_URL`, falling back to `localhost:8000` when unset — Vercel never had that variable configured for Production, so the deployed build silently pointed at a dev-only address. This was actually anticipated in the `/ops/deploy` runbook page's Vercel setup steps ("no environment variables are required yet... that's when `NEXT_PUBLIC_API_URL` gets added"), just not yet acted on.
+
+  **No CLI handoff needed** — this was a Vercel dashboard config fix, not a code change. Robin added `NEXT_PUBLIC_API_URL=https://api.robinsamways.ca` as a Production environment variable (Project → Settings → Environment Variables) and triggered a redeploy. Verified: console error gone, submission persisted, Resend notification email arrived. Also updated `docs/deployment-guide.md` Part 3 to mark this variable as now-required rather than "for later."
 
 - [x] 2026-07-07 — New OpenSpec change `contact-form` proposed and validated (not a bug — logged here per the handoff-logging convention since it's a "paste this to CLI" moment). Adds a homepage Contact section, a `POST /contact` API endpoint, a `ContactSubmission` Postgres table, and a Resend email notification. Full detail in `openspec/changes/contact-form/`.
 

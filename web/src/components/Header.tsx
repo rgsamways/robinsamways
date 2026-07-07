@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import Farpost from "./Farpost";
 import MenuToggle from "./MenuToggle";
 
@@ -10,7 +11,9 @@ export default function Header() {
           <MenuToggle />
           <div>
             <h1 className="text-2xl font-bold">
-              <span className="text-accent">$</span> Robin Samways
+              <Link href="/">
+                <span className="text-accent">$</span> Robin Samways
+              </Link>
             </h1>
             <p className="mt-1 text-sm text-muted">
               Senior Application Developer · Founder, <Farpost />
