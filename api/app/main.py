@@ -7,6 +7,7 @@ from sqlalchemy import text
 from app import models  # noqa: F401  (registers SQLModel metadata)
 from app.contact import router as contact_router
 from app.db import engine, init_db
+from app.salesforce import router as salesforce_router
 
 
 @asynccontextmanager
@@ -24,11 +25,12 @@ app.add_middleware(
         "https://www.robinsamways.ca",
         "http://localhost:3000",
     ],
-    allow_methods=["POST"],
+    allow_methods=["GET", "POST"],
     allow_headers=["Content-Type"],
 )
 
 app.include_router(contact_router)
+app.include_router(salesforce_router)
 
 
 @app.get("/health")
