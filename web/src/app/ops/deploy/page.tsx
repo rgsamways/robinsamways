@@ -335,6 +335,20 @@ export default function DeployRunbookPage() {
         <Steps
           items={[
             <>
+              <strong>
+                Delete any leftover mail records from the old registrar
+                first.
+              </strong>{" "}
+              If GoDaddy was previously handling mail for the domain (even
+              just default parking records), it will have left{" "}
+              <code>MX</code> records pointing at{" "}
+              <code>smtp.secureserver.net</code> /{" "}
+              <code>mailstore1.secureserver.net</code>. These conflict with
+              Cloudflare Email Routing and must be deleted from
+              Cloudflare&rsquo;s DNS Records page before enabling routing —
+              search the records list by type <code>MX</code> to find them.
+            </>,
+            <>
               Cloudflare → <code>robinsamways.ca</code> →{" "}
               <strong>Email → Email Routing → Enable</strong>. Cloudflare
               adds the necessary MX and SPF/TXT records to the zone
@@ -349,9 +363,44 @@ export default function DeployRunbookPage() {
               Cloudflare sends a verification email to the Gmail address —
               confirm it.
             </>,
+          ]}
+        />
+        <Callout>
+          <strong>Gotcha (as of mid-2026):</strong>{" "}
+          Cloudflare&rsquo;s new Email Routing UI can leave routing
+          &quot;Disabled&quot; even after rules/destinations are configured.
+          The Overview page may show a routing rule, a destination address,
+          and a domain all configured, yet &quot;Routing status:
+          Disabled&quot; — the new UI&rsquo;s own banner admits it&rsquo;s
+          incomplete (&quot;You&rsquo;re now using the new Email Routing
+          UI... being retired&quot;), and its Settings → DNS records
+          sub-page shows records marked &quot;Locked&quot; that aren&rsquo;t
+          actually live. If this happens: click{" "}
+          <strong>&quot;Use the old UI&quot;</strong>{" "}
+          (link at the top of the page) → find the{" "}
+          <strong>&quot;Get started with Email Routing&quot;</strong>{" "}
+          wizard → click{" "}
+          <strong>&quot;Add records and enable&quot;</strong>. That&rsquo;s
+          the action that actually writes the MX/TXT records and flips
+          status to Enabled — the new UI&rsquo;s setup does not reliably do
+          this on its own.
+        </Callout>
+        <Steps
+          items={[
             <>
               Test by sending a real email to the new address and confirming
-              it lands in Gmail.
+              it lands in Gmail.{" "}
+              <strong>
+                Use an account other than the one it forwards to.
+              </strong>{" "}
+              Sending the test from the same Gmail account the address
+              forwards to (a self-addressed loop through a third-party
+              relay) can be silently dropped by Gmail with no bounce and no
+              spam-folder trace, even when Cloudflare&rsquo;s Activity Log
+              shows the message as successfully &quot;Forwarded&quot; with
+              SPF/DKIM/ARC all passing — Gmail&rsquo;s own downstream
+              filtering is the opaque part, not Cloudflare&rsquo;s relay.
+              Test from a different mailbox to get a real signal.
             </>,
           ]}
         />
@@ -506,6 +555,22 @@ export default function DeployRunbookPage() {
                 any time from GoDaddy&rsquo;s DNS settings. Vercel/Railway
                 deployments can be deleted without affecting the domain until
                 DNS is repointed away from them.
+              </span>
+            </li>
+            <li className="flex gap-2">
+              <span aria-hidden>›</span>
+              <span>
+                <strong>
+                  Test email to the routed address never arrives, no bounce,
+                  no spam folder trace, and Cloudflare&rsquo;s Activity Log
+                  shows it as &quot;Forwarded&quot; with SPF/DKIM/ARC
+                  passing:
+                </strong>{" "}
+                this is very likely the self-send loop described in Part 6a,
+                not a Cloudflare problem — Gmail can silently drop mail that
+                appears to loop back to the same account via a third-party
+                relay. Re-test from a different mailbox before assuming
+                anything is broken.
               </span>
             </li>
           </ul>

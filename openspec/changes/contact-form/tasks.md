@@ -33,6 +33,6 @@
 
 ## 5. Deploy
 
-- [ ] 5.1 Push and confirm Railway redeploys `/api` with the new table/route
-- [ ] 5.2 Push and confirm Vercel redeploys `/web` with the new section
-- [ ] 5.3 Submit a real test entry against production and confirm end-to-end delivery
+- [ ] 5.1 Push and confirm Railway redeploys `/api` with the new table/route — pushed to `origin/main` (`156591f`); Railway redeploy confirmation is Robin's to do (CLI has no Railway dashboard/API access)
+- [ ] 5.2 Push and confirm Vercel redeploys `/web` with the new section — pushed to `origin/main` (`156591f`); Vercel redeploy confirmation is Robin's to do (CLI has no Vercel dashboard/API access)
+- [ ] 5.3 Submit a real test entry against production and confirm end-to-end delivery — requires the live production domain and the real `RESEND_API_KEY`; Robin's to run
