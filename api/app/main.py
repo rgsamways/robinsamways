@@ -1,9 +1,11 @@
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 
 from app import models  # noqa: F401  (registers SQLModel metadata)
+from app.contact import router as contact_router
 from app.db import engine, init_db
 
 
@@ -14,6 +16,19 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="Robin Samways API", lifespan=lifespan)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "https://robinsamways.ca",
+        "https://www.robinsamways.ca",
+        "http://localhost:3000",
+    ],
+    allow_methods=["POST"],
+    allow_headers=["Content-Type"],
+)
+
+app.include_router(contact_router)
 
 
 @app.get("/health")

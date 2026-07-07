@@ -10,6 +10,8 @@ Exhaustive, running list of every technology, library, and tool used to build an
 - SQLModel
 - asyncpg
 - uvicorn
+- httpx — direct REST calls to Resend's transactional-send API (`POST /contact`'s notification email; no Resend SDK)
+- Resend (transactional-send API) — live runtime dependency as of the `contact-form` change; called from `api/app/contact.py` on every valid contact submission. Previously only configured at the account/DNS level for the deployment guide's outbound mail; this is its first use from application code.
 - Postgres (Railway managed addon — planned, not yet deployed)
 
 **Frontend (`/web`)**

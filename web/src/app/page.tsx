@@ -1,5 +1,6 @@
 import Farpost from "@/components/Farpost";
 import SectionHeader from "@/components/SectionHeader";
+import ContactForm from "@/components/resume/ContactForm";
 import Experience from "@/components/resume/Experience";
 import Skills from "@/components/resume/Skills";
 
@@ -66,6 +67,11 @@ export default function Home() {
           Python for Health Data · Back-End Frameworks &amp; Architecture ·
           Security, DB Design &amp; Concurrency · Cloud Services
         </p>
+      </section>
+
+      <section>
+        <SectionHeader title="CONTACT" />
+        <ContactForm />
       </section>
 
       <footer className="mt-12 flex flex-wrap justify-between gap-2 border-t border-foreground/20 pt-4 text-xs text-muted">
