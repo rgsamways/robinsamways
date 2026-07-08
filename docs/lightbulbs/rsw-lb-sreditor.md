@@ -15,7 +15,7 @@ Independent and small-team developers doing genuinely SR&ED-eligible work — re
 
 1. An explainer of how Sreditor was actually built and used on this project: the `docs/sreditor/` convention, the `CLAUDE.md`-codified habit of logging uncertainty as it's resolved, and the distinction between routine work and genuinely SR&ED-eligible work.
 2. A form-based, guided workflow that walks a developer through the key things SR&ED auditors actually look for (technological uncertainty, systematic investigation, knowledge gained), producing a filled-out entry in the same shape as this project's own log.
-3. Guidance for applying the practice inside a developer's own environment using Claude Code — how to set up the same `CLAUDE.md` convention and `docs/` folder pattern on their own project, so the habit becomes automatic instead of something they have to remember to do manually.
+3. **A real, installable package — not just a written guide** (refined 2026-07-08): model Sreditor's distribution directly on OpenSpec's own pattern. OpenSpec is itself a package a developer installs and runs (`openspec new change`, `openspec validate`, etc.) to scaffold a convention into their repo; Sreditor would work the same way — an init command that scaffolds the `docs/sreditor/` folder, the `TEMPLATE.md`, the `README.md` criteria explainer, and the `CLAUDE.md`-level instruction to log contemporaneously, directly into whatever project it's run in. This turns "here's how I did it, go set it up yourself" into "run this, and the habit is already wired in" — a much lower-friction adoption path than a guide someone has to follow manually, and a proven distribution shape to copy since OpenSpec is already validated, working infrastructure in *this* project.
 
 ## Why it matters beyond convenience
 
@@ -30,3 +30,4 @@ Independent and small-team developers doing genuinely SR&ED-eligible work — re
 - Does this live under Portfolio as a case study, or does it eventually justify hosting something at `sreditor.ca`/`sreditor.com` directly — the domains already owned?
 - How much of Farpost's actual lightbulbs practice (this very file's origin) can be shown as a real, concrete example inside the case study itself, rather than just described abstractly?
 - Scope of "auditor criteria" content: does this need real research into CRA's actual SR&ED evaluation criteria to be credible, or is it enough to reflect the practice as Robin understands it from his own experience?
+- Packaging mechanics for the init-able tool (added 2026-07-08): what does OpenSpec's own packaging actually look like under the hood (npm package? a CLI binary? something else) — worth inspecting directly, since the plan is to copy its distribution shape rather than reinvent one.

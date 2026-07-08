@@ -21,11 +21,11 @@ The site header SHALL include a menu button (e.g. hamburger icon) that, when act
 - **THEN** the browser navigates to the homepage and the menu closes
 
 ### Requirement: Placeholder routes exist for each menu item
-The site SHALL have three routes — Portfolio, Farpost, and Dev Log (at path `/dev-log`) — each rendering a minimal placeholder page (e.g. a heading and short "coming soon" style message) rather than a 404 or external redirect.
+The site SHALL have two placeholder routes — Farpost and Dev Log (at path `/dev-log`) — each rendering a minimal placeholder page (e.g. a heading and short "coming soon" style message) rather than a 404 or external redirect. The Portfolio route SHALL instead render the real case-study content and live demo widget defined by the `salesforce-loan-demo` capability, not a placeholder.
 
-#### Scenario: Portfolio route renders a placeholder page
+#### Scenario: Portfolio route renders the Salesforce case study
 - **WHEN** a visitor navigates to the Portfolio route
-- **THEN** a page renders with a heading identifying it as Portfolio and placeholder content, using the site's monospace/terminal styling
+- **THEN** a page renders with the Salesforce integration case-study content and live demo widget defined by the `salesforce-loan-demo` capability, using the site's monospace/terminal styling
 
 #### Scenario: Farpost route renders a placeholder page
 - **WHEN** a visitor navigates to the Farpost route

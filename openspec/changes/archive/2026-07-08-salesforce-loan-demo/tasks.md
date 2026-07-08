@@ -1,16 +1,16 @@
 ## 1. Salesforce: object model (manual, Robin — not a CLI/code task)
 
-- [ ] 1.1 Create custom object `Loan_Application__c` (label "Loan Application")
-- [ ] 1.2 Add lookup field to standard Contact object, labeled "Applicant"
-- [ ] 1.3 Add lookup field to standard Account object
-- [ ] 1.4 Add `Amount_Requested__c` currency field
-- [ ] 1.5 Add `Status__c` picklist field with values: Draft, Submitted, Under Review, Approved, Denied (default Draft)
-- [ ] 1.6 Add `Submitted_Date__c` date field
-- [ ] 1.7 Add `Decision_Date__c` date field
-- [ ] 1.8 Build a Record-Triggered Flow on `Loan_Application__c`: when `Status__c` changes to Approved or Denied, set `Decision_Date__c` to TODAY()
-- [ ] 1.9 Grant the Client Credentials Flow "Run As" user (`rgsamways.4eb74f70474f@agentforce.com`) read/create/edit object permissions and field-level security on `Loan_Application__c` and its fields
-- [ ] 1.10 Create 2-3 seed `Loan_Application__c` records (each linked to a Contact and Account) with varied Status values so the demo has real data on first load
-- [ ] 1.11 Smoke-test: confirm a manual token request + SOQL query against `Loan_Application__c` returns the seed data before handing off to the API work below
+- [x] 1.1 Create custom object `Loan_Application__c` (label "Loan Application")
+- [x] 1.2 Add lookup field to standard Contact object, labeled "Applicant"
+- [x] 1.3 Add lookup field to standard Account object
+- [x] 1.4 Add `Amount_Requested__c` currency field
+- [x] 1.5 Add `Status__c` picklist field with values: Draft, Submitted, Under Review, Approved, Denied (default Draft)
+- [x] 1.6 Add `Submitted_Date__c` date field
+- [x] 1.7 Add `Decision_Date__c` date field
+- [x] 1.8 Build a Record-Triggered Flow on `Loan_Application__c`: when `Status__c` changes to Approved or Denied, set `Decision_Date__c` to TODAY() — verified both branches live (Approved and Denied seed records both got auto-stamped; an "Under Review" record correctly did not)
+- [x] 1.9 Grant the Client Credentials Flow "Run As" user (`rgsamways.4eb74f70474f@agentforce.com`) read/create/edit object permissions and field-level security on `Loan_Application__c` and its fields — System Administrator profile already had full object/field access by default; confirmed rather than changed
+- [x] 1.10 Create 2-3 seed `Loan_Application__c` records (each linked to a Contact and Account) with varied Status values so the demo has real data on first load — 3 created (Approved, Under Review, Denied)
+- [x] 1.11 Smoke-test: confirm a manual token request + SOQL query against `Loan_Application__c` returns the seed data before handing off to the API work below — confirmed live via PowerShell, `totalSize: 3`
 
 ## 2. API: Salesforce OAuth2 client
 
