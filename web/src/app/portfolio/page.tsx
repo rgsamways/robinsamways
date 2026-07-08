@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import Farpost from "@/components/Farpost";
 import InfoTooltip from "@/components/InfoTooltip";
 import SectionHeader from "@/components/SectionHeader";
-import LoanDemoWidget from "@/components/portfolio/LoanDemoWidget";
-import RelationshipView from "@/components/portfolio/RelationshipView";
+import PortfolioDemos from "@/components/portfolio/PortfolioDemos";
 
 const PROFESSIONAL_REPUTATION_GRAPH_EXPLANATION =
   "Farpost's professional-reputation graph: not a score or star rating — a computed timeline. Every action a professional takes (inspections, claims, relationships with buildings) is an event; reputation is assembled fresh from those events on each request, surfacing activity history and breadth of engagement rather than a single number. Professionals whose roles haven't yet earned trust are excluded entirely — no score, no timeline, nothing to game. It's the same underlying entities-connected-by-records shape as a Salesforce Account/Contact view, just applied to a professional network instead of a household.";
@@ -88,36 +87,7 @@ export default function PortfolioPage() {
         </p>
       </section>
 
-      <section>
-        <SectionHeader title="LIVE_DEMO" />
-        <LoanDemoWidget />
-      </section>
-
-      <section>
-        <SectionHeader title="RELATIONSHIP_VIEW" />
-        <p className="text-sm leading-relaxed">
-          Three more read-only additions, chosen to speak directly to{" "}
-          this role&rsquo;s actual priorities rather than to be generically
-          impressive. Select an Account below to see its Loan Applications
-          grouped together — a small, concrete instance of
-          relationship-centric data modeling, not just an implied lookup.
-          Each application also offers an AI-generated{" "}
-          &ldquo;recommended next action,&rdquo; produced by calling the
-          Anthropic API directly — not Salesforce Agentforce, which
-          isn&rsquo;t licensed on this Developer Edition org, so this is an
-          honest analog rather than a claim of using a product Robin
-          doesn&rsquo;t have access to. And each application&rsquo;s status
-          history is sourced from Salesforce&rsquo;s own Field History
-          Tracking — real audit-trail entries, not a fabricated summary
-          from two date fields. Same principle as{" "}
-          <Farpost />
-          &rsquo;s professional-reputation graph above: computed from
-          actual events, not a stored score.
-        </p>
-        <div className="mt-4">
-          <RelationshipView />
-        </div>
-      </section>
+      <PortfolioDemos />
     </main>
   );
 }

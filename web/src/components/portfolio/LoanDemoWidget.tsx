@@ -1,16 +1,13 @@
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
-
-type LoanApplication = {
-  id: string;
-  applicant_name: string | null;
-  account_name: string | null;
-  amount_requested: number | null;
-  status: string | null;
-  submitted_date: string | null;
-  decision_date: string | null;
-};
+import {
+  compareLoanApplications,
+  SETTABLE_STATUSES,
+  STATUS_FILTER_OPTIONS,
+  type LoanApplication,
+  type SortDirection,
+} from "./loanApplication";
 
 type ListStatus = "loading" | "loaded" | "error";
 type CreateStatus = "idle" | "submitting" | "success" | "error";
@@ -28,15 +25,8 @@ type SortField =
   | "status"
   | "submitted_date"
   | "decision_date";
-type SortDirection = "asc" | "desc";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
-
-// Archived is a real Status value (the original seed records), but it's
-// deliberately reachable only by editing Salesforce directly — never offered
-// as a settable option in the create form or the per-row update control.
-const SETTABLE_STATUSES = ["Draft", "Submitted", "Under Review", "Approved", "Denied"];
-const STATUS_FILTER_OPTIONS = ["All", ...SETTABLE_STATUSES, "Archived"];
 
 const COLUMNS: { field: SortField; label: string }[] = [
   { field: "applicant_name", label: "Applicant" },
@@ -47,7 +37,7 @@ const COLUMNS: { field: SortField; label: string }[] = [
   { field: "decision_date", label: "Decision" },
 ];
 
-export default function LoanDemoWidget() {
+export default function LoanDemoWidget({ onMutate }: { onMutate?: () => void }) {
   const [applications, setApplications] = useState<LoanApplication[]>([]);
   const [listStatus, setListStatus] = useState<ListStatus>("loading");
   const [statusFilter, setStatusFilter] = useState("All");
@@ -102,19 +92,9 @@ export default function LoanDemoWidget() {
   const filteredApplications =
     statusFilter === "All" ? applications : applications.filter((app) => app.status === statusFilter);
 
-  const sortedApplications = [...filteredApplications].sort((a, b) => {
-    if (!sortField) return 0;
-    const aVal = a[sortField];
-    const bVal = b[sortField];
-    if (aVal == null && bVal == null) return 0;
-    if (aVal == null) return 1;
-    if (bVal == null) return -1;
-    const cmp =
-      typeof aVal === "number" && typeof bVal === "number"
-        ? aVal - bVal
-        : String(aVal).localeCompare(String(bVal));
-    return sortDirection === "asc" ? cmp : -cmp;
-  });
+  const sortedApplications = [...filteredApplications].sort((a, b) =>
+    sortField ? compareLoanApplications(a, b, sortField, sortDirection) : 0
+  );
 
   const validate = () => {
     const next: Errors = {};
@@ -153,6 +133,7 @@ export default function LoanDemoWidget() {
       setAmountRequested("");
       setStatus("Draft");
       await loadApplications();
+      onMutate?.();
     } catch {
       setCreateStatus("error");
     }
@@ -169,6 +150,7 @@ export default function LoanDemoWidget() {
       if (!response.ok) throw new Error("request failed");
       await loadApplications();
       setRowActions((prev) => ({ ...prev, [id]: {} }));
+      onMutate?.();
     } catch {
       setRowActions((prev) => ({ ...prev, [id]: { statusError: true } }));
     }
@@ -187,6 +169,7 @@ export default function LoanDemoWidget() {
         delete next[id];
         return next;
       });
+      onMutate?.();
     } catch {
       setRowActions((prev) => ({ ...prev, [id]: { deleteError: true } }));
     }

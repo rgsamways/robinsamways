@@ -1,16 +1,12 @@
 "use client";
 
 import { Fragment, useEffect, useState } from "react";
-
-type LoanApplication = {
-  id: string;
-  applicant_name: string | null;
-  account_name: string | null;
-  amount_requested: number | null;
-  status: string | null;
-  submitted_date: string | null;
-  decision_date: string | null;
-};
+import {
+  compareLoanApplications,
+  STATUS_FILTER_OPTIONS,
+  type LoanApplication,
+  type SortDirection,
+} from "./loanApplication";
 
 type AccountGroup = {
   account_id: string | null;
@@ -32,13 +28,25 @@ type PanelState = {
 };
 type RecommendationState = PanelState & { text?: string };
 type HistoryState = PanelState & { entries?: HistoryEntry[] };
+type SortField = "applicant_name" | "amount_requested" | "status" | "submitted_date" | "decision_date";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
-export default function RelationshipView() {
+const COLUMNS: { field: SortField; label: string }[] = [
+  { field: "applicant_name", label: "Applicant" },
+  { field: "amount_requested", label: "Amount" },
+  { field: "status", label: "Status" },
+  { field: "submitted_date", label: "Submitted" },
+  { field: "decision_date", label: "Decision" },
+];
+
+export default function RelationshipView({ refreshKey }: { refreshKey?: number }) {
   const [groups, setGroups] = useState<AccountGroup[]>([]);
   const [loadStatus, setLoadStatus] = useState<LoadStatus>("loading");
   const [selectedAccountId, setSelectedAccountId] = useState<string>("");
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [sortField, setSortField] = useState<SortField | null>(null);
+  const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
   const [recommendations, setRecommendations] = useState<Record<string, RecommendationState>>({});
   const [histories, setHistories] = useState<Record<string, HistoryState>>({});
 
@@ -56,15 +64,38 @@ export default function RelationshipView() {
       }
     };
     load();
-  }, []);
+  }, [refreshKey]);
 
   useEffect(() => {
-    if (!selectedAccountId && groups.length > 0) {
+    if (groups.length === 0) {
+      if (selectedAccountId) setSelectedAccountId("");
+      return;
+    }
+    const stillExists = groups.some((group) => (group.account_id ?? "") === selectedAccountId);
+    if (!selectedAccountId || !stillExists) {
       setSelectedAccountId(groups[0].account_id ?? "");
     }
   }, [groups, selectedAccountId]);
 
   const selectedGroup = groups.find((group) => group.account_id === selectedAccountId) ?? null;
+
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      setSortDirection((direction) => (direction === "asc" ? "desc" : "asc"));
+    } else {
+      setSortField(field);
+      setSortDirection("asc");
+    }
+  };
+
+  const groupApplications = selectedGroup?.applications ?? [];
+  const filteredApplications =
+    statusFilter === "All"
+      ? groupApplications
+      : groupApplications.filter((app) => app.status === statusFilter);
+  const sortedApplications = [...filteredApplications].sort((a, b) =>
+    sortField ? compareLoanApplications(a, b, sortField, sortDirection) : 0
+  );
 
   const toggleRecommendation = async (id: string) => {
     const current = recommendations[id];
@@ -125,22 +156,41 @@ export default function RelationshipView() {
 
   return (
     <div className="space-y-4 text-sm">
-      <div className="flex flex-wrap items-center gap-2 text-xs">
-        <label htmlFor="account-select" className="font-semibold text-accent">
-          account
-        </label>
-        <select
-          id="account-select"
-          value={selectedAccountId}
-          onChange={(event) => setSelectedAccountId(event.target.value)}
-          className="border border-foreground/20 bg-transparent px-2 py-1 focus:border-accent focus:outline-none"
-        >
-          {groups.map((group) => (
-            <option key={group.account_id ?? "unknown"} value={group.account_id ?? ""}>
-              {group.account_name ?? "Unknown Account"}
-            </option>
-          ))}
-        </select>
+      <div className="flex flex-wrap items-center gap-4 text-xs">
+        <div className="flex flex-wrap items-center gap-2">
+          <label htmlFor="account-select" className="font-semibold text-accent">
+            account
+          </label>
+          <select
+            id="account-select"
+            value={selectedAccountId}
+            onChange={(event) => setSelectedAccountId(event.target.value)}
+            className="border border-foreground/20 bg-transparent px-2 py-1 focus:border-accent focus:outline-none"
+          >
+            {groups.map((group) => (
+              <option key={group.account_id ?? "unknown"} value={group.account_id ?? ""}>
+                {group.account_name ?? "Unknown Account"}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <label htmlFor="relationship-status-filter" className="font-semibold text-accent">
+            filter
+          </label>
+          <select
+            id="relationship-status-filter"
+            value={statusFilter}
+            onChange={(event) => setStatusFilter(event.target.value)}
+            className="border border-foreground/20 bg-transparent px-2 py-1 focus:border-accent focus:outline-none"
+          >
+            {STATUS_FILTER_OPTIONS.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {selectedGroup && (
@@ -148,16 +198,32 @@ export default function RelationshipView() {
           <table className="w-full border-collapse text-xs">
             <thead>
               <tr className="border-b border-foreground/20 text-left text-muted">
-                <th className="py-1 pr-4 font-semibold">Applicant</th>
-                <th className="py-1 pr-4 font-semibold">Amount</th>
-                <th className="py-1 pr-4 font-semibold">Status</th>
-                <th className="py-1 pr-4 font-semibold">Submitted</th>
-                <th className="py-1 pr-4 font-semibold">Decision</th>
+                {COLUMNS.map((column) => (
+                  <th key={column.field} className="py-1 pr-4 font-semibold">
+                    <button
+                      type="button"
+                      onClick={() => handleSort(column.field)}
+                      className="inline-flex items-center gap-1 hover:text-accent"
+                    >
+                      {column.label}
+                      {sortField === column.field && (
+                        <span aria-hidden>{sortDirection === "asc" ? "▲" : "▼"}</span>
+                      )}
+                    </button>
+                  </th>
+                ))}
                 <th className="py-1 font-semibold">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {selectedGroup.applications.map((app) => {
+              {sortedApplications.length === 0 && (
+                <tr>
+                  <td colSpan={6} className="py-2 text-muted">
+                    No Loan Applications match this filter.
+                  </td>
+                </tr>
+              )}
+              {sortedApplications.map((app) => {
                 const recommendation = recommendations[app.id];
                 const history = histories[app.id];
                 return (
