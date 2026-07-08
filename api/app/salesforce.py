@@ -43,10 +43,6 @@ class SalesforceAPIError(Exception):
     """Raised when a Salesforce REST API call fails."""
 
 
-class SalesforceLookupError(Exception):
-    """Raised when a referenced Applicant/Account name can't be resolved."""
-
-
 def _soql_escape(value: str) -> str:
     return value.replace("\\", "\\\\").replace("'", "\\'")
 
@@ -124,35 +120,53 @@ async def list_loan_applications() -> list[dict]:
     return response.json().get("records", [])
 
 
-async def _find_id_by_name(sobject: str, name: str) -> str:
+async def _create_sobject(sobject: str, fields: dict) -> str:
+    response = await _request(
+        "POST", f"/services/data/{API_VERSION}/sobjects/{sobject}", json=fields
+    )
+    if response.status_code != 201:
+        logging.error("Salesforce create failed: %s %s", response.status_code, response.text)
+        raise SalesforceAPIError("Salesforce create failed")
+    return response.json()["id"]
+
+
+async def _find_or_create_id(sobject: str, name: str, create_fields: dict) -> str:
     soql = f"SELECT Id FROM {sobject} WHERE Name = '{_soql_escape(name)}' LIMIT 1"
     response = await _request("GET", f"/services/data/{API_VERSION}/query", params={"q": soql})
     if response.status_code != 200:
         logging.error("Salesforce lookup failed: %s %s", response.status_code, response.text)
         raise SalesforceAPIError("Salesforce lookup failed")
     records = response.json().get("records", [])
-    if not records:
-        raise SalesforceLookupError(f"No {sobject} found named {name!r}")
-    return records[0]["Id"]
+    if records:
+        return records[0]["Id"]
+
+    return await _create_sobject(sobject, create_fields)
+
+
+def _contact_create_fields(name: str) -> dict:
+    # Naive split: last word is LastName (required on Contact), everything
+    # before it is FirstName if present.
+    parts = name.split()
+    if len(parts) == 1:
+        return {"LastName": parts[0]}
+    return {"FirstName": " ".join(parts[:-1]), "LastName": parts[-1]}
 
 
 async def create_loan_application(applicant_name: str, account_name: str, amount_requested: float) -> str:
-    applicant_id = await _find_id_by_name("Contact", applicant_name)
-    account_id = await _find_id_by_name("Account", account_name)
-
-    payload = {
-        "Applicant__c": applicant_id,
-        "Account__c": account_id,
-        "Amount_Requested__c": amount_requested,
-        "Status__c": "Draft",
-    }
-    response = await _request(
-        "POST", f"/services/data/{API_VERSION}/sobjects/Loan_Application__c", json=payload
+    applicant_id = await _find_or_create_id(
+        "Contact", applicant_name, _contact_create_fields(applicant_name)
     )
-    if response.status_code != 201:
-        logging.error("Salesforce create failed: %s %s", response.status_code, response.text)
-        raise SalesforceAPIError("Salesforce create failed")
-    return response.json()["id"]
+    account_id = await _find_or_create_id("Account", account_name, {"Name": account_name})
+
+    return await _create_sobject(
+        "Loan_Application__c",
+        {
+            "Applicant__c": applicant_id,
+            "Account__c": account_id,
+            "Amount_Requested__c": amount_requested,
+            "Status__c": "Draft",
+        },
+    )
 
 
 def _client_ip(request: Request) -> str:
@@ -241,8 +255,6 @@ async def post_loan_application(
 
     try:
         record_id = await create_loan_application(applicant_name, account_name, payload.amount_requested)
-    except SalesforceLookupError:
-        raise HTTPException(status_code=422, detail="Unknown applicant or account")
     except (SalesforceAuthError, SalesforceAPIError):
         raise HTTPException(status_code=502, detail="Unable to reach Salesforce right now")
 
