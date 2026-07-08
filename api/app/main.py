@@ -25,7 +25,7 @@ app.add_middleware(
         "https://www.robinsamways.ca",
         "http://localhost:3000",
     ],
-    allow_methods=["GET", "POST"],
+    allow_methods=["GET", "POST", "PATCH", "DELETE"],
     allow_headers=["Content-Type"],
 )
 

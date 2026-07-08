@@ -192,235 +192,234 @@ export default function LoanDemoWidget() {
     }
   };
 
+  if (listStatus === "loading") {
+    return <p className="text-muted">Loading live data from Salesforce…</p>;
+  }
+  if (listStatus === "error") {
+    return (
+      <p className="text-sm">
+        Couldn&rsquo;t reach the live Salesforce data right now. Try
+        refreshing, or see the architecture notes above in the meantime.
+      </p>
+    );
+  }
+
   return (
-    <div className="space-y-6 text-sm">
-      <div>
-        {listStatus === "loading" && (
-          <p className="text-muted">Loading live data from Salesforce…</p>
-        )}
-        {listStatus === "error" && (
-          <p>
-            Couldn&rsquo;t reach the live Salesforce data right now. Try
-            refreshing, or see the architecture notes above in the meantime.
-          </p>
-        )}
-        {listStatus === "loaded" && applications.length === 0 && (
-          <p className="text-muted">
-            No loan applications yet — be the first to create one below.
-          </p>
-        )}
-        {listStatus === "loaded" && applications.length > 0 && (
-          <>
-            <div className="mb-2 flex flex-wrap items-center gap-2 text-xs">
-              <label htmlFor="status-filter" className="font-semibold text-accent">
-                filter
-              </label>
-              <select
-                id="status-filter"
-                value={statusFilter}
-                onChange={(event) => setStatusFilter(event.target.value)}
-                className="border border-foreground/20 bg-transparent px-2 py-1 focus:border-accent focus:outline-none"
-              >
-                {STATUS_FILTER_OPTIONS.map((option) => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse text-xs">
-                <thead>
-                  <tr className="border-b border-foreground/20 text-left text-muted">
-                    {COLUMNS.map((column) => (
-                      <th key={column.field} className="py-1 pr-4 font-semibold">
-                        <button
-                          type="button"
-                          onClick={() => handleSort(column.field)}
-                          className="inline-flex items-center gap-1 hover:text-accent"
-                        >
-                          {column.label}
-                          {sortField === column.field && (
-                            <span aria-hidden>{sortDirection === "asc" ? "▲" : "▼"}</span>
-                          )}
-                        </button>
-                      </th>
-                    ))}
-                    <th className="py-1 font-semibold">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {sortedApplications.map((app) => {
-                    const isArchived = app.status === "Archived";
-                    const actionState = rowActions[app.id];
-                    return (
-                      <tr key={app.id} className="border-b border-foreground/10">
-                        <td className="py-1 pr-4">{app.applicant_name ?? "—"}</td>
-                        <td className="py-1 pr-4">{app.account_name ?? "—"}</td>
-                        <td className="py-1 pr-4">
-                          {app.amount_requested != null
-                            ? `$${app.amount_requested.toLocaleString()}`
-                            : "—"}
-                        </td>
-                        <td className="py-1 pr-4">
-                          {isArchived ? (
-                            <span className="text-accent">Archived</span>
-                          ) : (
-                            <select
-                              value={app.status ?? ""}
-                              disabled={actionState?.statusSaving}
-                              onChange={(event) => handleStatusChange(app.id, event.target.value)}
-                              className="border border-foreground/20 bg-transparent px-1 py-0.5 text-xs text-accent focus:border-accent focus:outline-none disabled:opacity-50"
-                            >
-                              {SETTABLE_STATUSES.map((option) => (
-                                <option key={option} value={option}>
-                                  {option}
-                                </option>
-                              ))}
-                            </select>
-                          )}
-                          {actionState?.statusSaving && (
-                            <span className="ml-1 text-muted">saving…</span>
-                          )}
-                          {actionState?.statusError && (
-                            <p className="mt-1 text-[10px]">Update failed.</p>
-                          )}
-                        </td>
-                        <td className="py-1 pr-4">{app.submitted_date ?? "—"}</td>
-                        <td className="py-1 pr-4">{app.decision_date ?? "—"}</td>
-                        <td className="py-1">
-                          {!isArchived && (
-                            <button
-                              type="button"
-                              onClick={() => handleDelete(app.id)}
-                              disabled={actionState?.deleting}
-                              className="text-accent underline disabled:opacity-50"
-                            >
-                              {actionState?.deleting ? "deleting…" : "delete"}
-                            </button>
-                          )}
-                          {actionState?.deleteError && (
-                            <p className="mt-1 text-[10px]">Delete failed.</p>
-                          )}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          </>
-        )}
+    <div className="text-sm">
+      <div className="mb-2 flex flex-wrap items-center gap-2 text-xs">
+        <label htmlFor="status-filter" className="font-semibold text-accent">
+          filter
+        </label>
+        <select
+          id="status-filter"
+          value={statusFilter}
+          onChange={(event) => setStatusFilter(event.target.value)}
+          className="border border-foreground/20 bg-transparent px-2 py-1 focus:border-accent focus:outline-none"
+        >
+          {STATUS_FILTER_OPTIONS.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
       </div>
 
-      <form onSubmit={handleSubmit} noValidate className="max-w-md space-y-4">
-        <p className="font-semibold text-accent">create a demo application</p>
-
-        <div className="absolute -left-[9999px]">
-          <label htmlFor="loan-website">Website</label>
-          <input
-            id="loan-website"
-            name="website"
-            type="text"
-            tabIndex={-1}
-            autoComplete="off"
-            value={honeypot}
-            onChange={(event) => setHoneypot(event.target.value)}
-          />
+      <form onSubmit={handleSubmit} noValidate>
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse text-xs">
+            <thead>
+              <tr className="border-b border-foreground/20 text-left text-muted">
+                {COLUMNS.map((column) => (
+                  <th key={column.field} className="py-1 pr-4 font-semibold">
+                    <button
+                      type="button"
+                      onClick={() => handleSort(column.field)}
+                      className="inline-flex items-center gap-1 hover:text-accent"
+                    >
+                      {column.label}
+                      {sortField === column.field && (
+                        <span aria-hidden>{sortDirection === "asc" ? "▲" : "▼"}</span>
+                      )}
+                    </button>
+                  </th>
+                ))}
+                <th className="py-1 font-semibold">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b border-foreground/10 align-top">
+                <td className="py-1 pr-4">
+                  <div className="absolute -left-[9999px]">
+                    <label htmlFor="loan-website">Website</label>
+                    <input
+                      id="loan-website"
+                      name="website"
+                      type="text"
+                      tabIndex={-1}
+                      autoComplete="off"
+                      value={honeypot}
+                      onChange={(event) => setHoneypot(event.target.value)}
+                    />
+                  </div>
+                  <input
+                    id="loan-applicant"
+                    list="applicant-options"
+                    placeholder="applicant"
+                    value={applicantName}
+                    onChange={(event) => setApplicantName(event.target.value)}
+                    className="w-full border border-foreground/20 bg-transparent px-1 py-0.5 text-xs focus:border-accent focus:outline-none"
+                  />
+                  <datalist id="applicant-options">
+                    {applicantOptions.map((name) => (
+                      <option key={name} value={name} />
+                    ))}
+                  </datalist>
+                  {errors.applicantName && (
+                    <p className="mt-0.5 text-[10px]">{errors.applicantName}</p>
+                  )}
+                </td>
+                <td className="py-1 pr-4">
+                  <input
+                    id="loan-account"
+                    list="account-options"
+                    placeholder="account"
+                    value={accountName}
+                    onChange={(event) => setAccountName(event.target.value)}
+                    className="w-full border border-foreground/20 bg-transparent px-1 py-0.5 text-xs focus:border-accent focus:outline-none"
+                  />
+                  <datalist id="account-options">
+                    {accountOptions.map((name) => (
+                      <option key={name} value={name} />
+                    ))}
+                  </datalist>
+                  {errors.accountName && <p className="mt-0.5 text-[10px]">{errors.accountName}</p>}
+                </td>
+                <td className="py-1 pr-4">
+                  <input
+                    id="loan-amount"
+                    type="number"
+                    min="0"
+                    step="1"
+                    placeholder="amount"
+                    value={amountRequested}
+                    onChange={(event) => setAmountRequested(event.target.value)}
+                    className="w-full border border-foreground/20 bg-transparent px-1 py-0.5 text-xs focus:border-accent focus:outline-none"
+                  />
+                  {errors.amountRequested && (
+                    <p className="mt-0.5 text-[10px]">{errors.amountRequested}</p>
+                  )}
+                </td>
+                <td className="py-1 pr-4">
+                  <select
+                    id="loan-status"
+                    value={status}
+                    onChange={(event) => setStatus(event.target.value)}
+                    className="border border-foreground/20 bg-transparent px-1 py-0.5 text-xs focus:border-accent focus:outline-none"
+                  >
+                    {SETTABLE_STATUSES.map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+                </td>
+                <td className="py-1 pr-4 text-muted">—</td>
+                <td className="py-1 pr-4 text-muted">—</td>
+                <td className="py-1">
+                  <button
+                    type="submit"
+                    disabled={createStatus === "submitting"}
+                    className="text-accent underline disabled:opacity-50"
+                  >
+                    {createStatus === "submitting" ? "adding…" : "+ add"}
+                  </button>
+                </td>
+              </tr>
+              {(createStatus === "success" || createStatus === "error") && (
+                <tr className="border-b border-foreground/10">
+                  <td colSpan={7} className="py-1 text-xs">
+                    {createStatus === "success" && (
+                      <span>
+                        <span className="text-accent">›</span>{" "}
+                        Created — it&rsquo;s in the table below.
+                      </span>
+                    )}
+                    {createStatus === "error" && (
+                      <span>
+                        Something went wrong creating that record. Double-check
+                        the applicant/account name matches an existing one, or
+                        try again.
+                      </span>
+                    )}
+                  </td>
+                </tr>
+              )}
+              {sortedApplications.length === 0 && (
+                <tr>
+                  <td colSpan={7} className="py-2 text-muted">
+                    No loan applications yet — create the first one above.
+                  </td>
+                </tr>
+              )}
+              {sortedApplications.map((app) => {
+                const isArchived = app.status === "Archived";
+                const actionState = rowActions[app.id];
+                return (
+                  <tr key={app.id} className="border-b border-foreground/10">
+                    <td className="py-1 pr-4">{app.applicant_name ?? "—"}</td>
+                    <td className="py-1 pr-4">{app.account_name ?? "—"}</td>
+                    <td className="py-1 pr-4">
+                      {app.amount_requested != null
+                        ? `$${app.amount_requested.toLocaleString()}`
+                        : "—"}
+                    </td>
+                    <td className="py-1 pr-4">
+                      {isArchived ? (
+                        <span className="text-accent">Archived</span>
+                      ) : (
+                        <select
+                          value={app.status ?? ""}
+                          disabled={actionState?.statusSaving}
+                          onChange={(event) => handleStatusChange(app.id, event.target.value)}
+                          className="border border-foreground/20 bg-transparent px-1 py-0.5 text-xs text-accent focus:border-accent focus:outline-none disabled:opacity-50"
+                        >
+                          {SETTABLE_STATUSES.map((option) => (
+                            <option key={option} value={option}>
+                              {option}
+                            </option>
+                          ))}
+                        </select>
+                      )}
+                      {actionState?.statusSaving && (
+                        <span className="ml-1 text-muted">saving…</span>
+                      )}
+                      {actionState?.statusError && (
+                        <p className="mt-1 text-[10px]">Update failed.</p>
+                      )}
+                    </td>
+                    <td className="py-1 pr-4">{app.submitted_date ?? "—"}</td>
+                    <td className="py-1 pr-4">{app.decision_date ?? "—"}</td>
+                    <td className="py-1">
+                      {!isArchived && (
+                        <button
+                          type="button"
+                          onClick={() => handleDelete(app.id)}
+                          disabled={actionState?.deleting}
+                          className="text-accent underline disabled:opacity-50"
+                        >
+                          {actionState?.deleting ? "deleting…" : "delete"}
+                        </button>
+                      )}
+                      {actionState?.deleteError && (
+                        <p className="mt-1 text-[10px]">Delete failed.</p>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
-
-        <div>
-          <label htmlFor="loan-applicant" className="block font-semibold text-accent">
-            applicant
-          </label>
-          <input
-            id="loan-applicant"
-            list="applicant-options"
-            value={applicantName}
-            onChange={(event) => setApplicantName(event.target.value)}
-            className="mt-1 w-full border border-foreground/20 bg-transparent px-3 py-2 focus:border-accent focus:outline-none"
-          />
-          <datalist id="applicant-options">
-            {applicantOptions.map((name) => (
-              <option key={name} value={name} />
-            ))}
-          </datalist>
-          {errors.applicantName && <p className="mt-1 text-xs">{errors.applicantName}</p>}
-        </div>
-
-        <div>
-          <label htmlFor="loan-account" className="block font-semibold text-accent">
-            account
-          </label>
-          <input
-            id="loan-account"
-            list="account-options"
-            value={accountName}
-            onChange={(event) => setAccountName(event.target.value)}
-            className="mt-1 w-full border border-foreground/20 bg-transparent px-3 py-2 focus:border-accent focus:outline-none"
-          />
-          <datalist id="account-options">
-            {accountOptions.map((name) => (
-              <option key={name} value={name} />
-            ))}
-          </datalist>
-          {errors.accountName && <p className="mt-1 text-xs">{errors.accountName}</p>}
-        </div>
-
-        <div>
-          <label htmlFor="loan-amount" className="block font-semibold text-accent">
-            amount requested
-          </label>
-          <input
-            id="loan-amount"
-            type="number"
-            min="0"
-            step="1"
-            value={amountRequested}
-            onChange={(event) => setAmountRequested(event.target.value)}
-            className="mt-1 w-full border border-foreground/20 bg-transparent px-3 py-2 focus:border-accent focus:outline-none"
-          />
-          {errors.amountRequested && <p className="mt-1 text-xs">{errors.amountRequested}</p>}
-        </div>
-
-        <div>
-          <label htmlFor="loan-status" className="block font-semibold text-accent">
-            status
-          </label>
-          <select
-            id="loan-status"
-            value={status}
-            onChange={(event) => setStatus(event.target.value)}
-            className="mt-1 w-full border border-foreground/20 bg-transparent px-3 py-2 focus:border-accent focus:outline-none"
-          >
-            {SETTABLE_STATUSES.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <button
-          type="submit"
-          disabled={createStatus === "submitting"}
-          className="border border-accent px-4 py-2 font-semibold text-accent transition hover:bg-accent hover:text-background disabled:opacity-50"
-        >
-          {createStatus === "submitting" ? "Creating…" : "Create"}
-        </button>
-
-        {createStatus === "success" && (
-          <p className="text-sm">
-            <span className="text-accent">›</span>{" "}
-            Created — the new application is in the list above.
-          </p>
-        )}
-        {createStatus === "error" && (
-          <p className="text-xs">
-            Something went wrong creating that record. Double-check the
-            applicant/account name matches an existing one, or try again.
-          </p>
-        )}
       </form>
     </div>
   );

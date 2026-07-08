@@ -9,6 +9,8 @@ import httpx
 from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel
 
+from app.ai import AnthropicAPIError, get_recommendation
+
 SALESFORCE_DOMAIN = os.environ.get("SALESFORCE_DOMAIN", "")
 SALESFORCE_CLIENT_ID = os.environ.get("SALESFORCE_CLIENT_ID", "")
 SALESFORCE_CLIENT_SECRET = os.environ.get("SALESFORCE_CLIENT_SECRET", "")
@@ -26,6 +28,17 @@ LOAN_APPLICATION_FIELDS = (
     "Id, Applicant__r.Name, Account__r.Name, Amount_Requested__c, "
     "Status__c, Submitted_Date__c, Decision_Date__c"
 )
+
+# Same shape as LOAN_APPLICATION_FIELDS plus the raw Account__c id, needed to
+# group applications by Account rather than just display the Account name.
+ACCOUNT_GROUPED_FIELDS = (
+    "Id, Applicant__r.Name, Account__c, Account__r.Name, Amount_Requested__c, "
+    "Status__c, Submitted_Date__c, Decision_Date__c"
+)
+
+# Custom-object field history tracking objects are named by replacing the
+# trailing "__c" with "__History".
+LOAN_APPLICATION_HISTORY_OBJECT = "Loan_Application__History"
 
 # Archived is a real Status__c value (used for the original seed records) but is
 # deliberately unreachable through any writable control — it's set only by editing
@@ -127,6 +140,47 @@ async def list_loan_applications() -> list[dict]:
         logging.error("Salesforce query failed: %s %s", response.status_code, response.text)
         raise SalesforceAPIError("Salesforce query failed")
     return response.json().get("records", [])
+
+
+async def list_loan_applications_by_account() -> list[dict]:
+    soql = (
+        f"SELECT {ACCOUNT_GROUPED_FIELDS} FROM Loan_Application__c "
+        "ORDER BY Account__r.Name, CreatedDate DESC LIMIT 200"
+    )
+    response = await _request("GET", f"/services/data/{API_VERSION}/query", params={"q": soql})
+    if response.status_code != 200:
+        logging.error("Salesforce query failed: %s %s", response.status_code, response.text)
+        raise SalesforceAPIError("Salesforce query failed")
+    return response.json().get("records", [])
+
+
+async def get_status_history(record_id: str) -> list[dict]:
+    soql = (
+        "SELECT OldValue, NewValue, CreatedDate "
+        f"FROM {LOAN_APPLICATION_HISTORY_OBJECT} "
+        f"WHERE ParentId = '{_soql_escape(record_id)}' AND Field = 'Status__c' "
+        "ORDER BY CreatedDate ASC"
+    )
+    response = await _request("GET", f"/services/data/{API_VERSION}/query", params={"q": soql})
+    if response.status_code != 200:
+        logging.error("Salesforce history query failed: %s %s", response.status_code, response.text)
+        raise SalesforceAPIError("Salesforce history query failed")
+    return response.json().get("records", [])
+
+
+async def get_status_and_submitted(record_id: str) -> tuple[str | None, str | None] | None:
+    soql = (
+        "SELECT Status__c, Submitted_Date__c FROM Loan_Application__c "
+        f"WHERE Id = '{_soql_escape(record_id)}' LIMIT 1"
+    )
+    response = await _request("GET", f"/services/data/{API_VERSION}/query", params={"q": soql})
+    if response.status_code != 200:
+        logging.error("Salesforce lookup failed: %s %s", response.status_code, response.text)
+        raise SalesforceAPIError("Salesforce lookup failed")
+    records = response.json().get("records", [])
+    if not records:
+        return None
+    return records[0].get("Status__c"), records[0].get("Submitted_Date__c")
 
 
 async def _create_sobject(sobject: str, fields: dict) -> str:
@@ -242,6 +296,22 @@ class LoanApplicationOut(BaseModel):
     decision_date: str | None = None
 
 
+class AccountGroupOut(BaseModel):
+    account_id: str | None = None
+    account_name: str | None = None
+    applications: list[LoanApplicationOut]
+
+
+class HistoryEntryOut(BaseModel):
+    old_value: str | None = None
+    new_value: str | None = None
+    changed_at: str | None = None
+
+
+class RecommendationOut(BaseModel):
+    suggestion: str
+
+
 class LoanApplicationCreateRequest(BaseModel):
     applicant_name: str
     account_name: str
@@ -264,6 +334,42 @@ class ActionResponse(BaseModel):
     status: str
 
 
+def _to_loan_application_out(record: dict) -> LoanApplicationOut:
+    return LoanApplicationOut(
+        id=record["Id"],
+        applicant_name=(record.get("Applicant__r") or {}).get("Name"),
+        account_name=(record.get("Account__r") or {}).get("Name"),
+        amount_requested=record.get("Amount_Requested__c"),
+        status=record.get("Status__c"),
+        submitted_date=record.get("Submitted_Date__c"),
+        decision_date=record.get("Decision_Date__c"),
+    )
+
+
+def _days_since(date_str: str | None) -> int | None:
+    if not date_str:
+        return None
+    try:
+        submitted = date.fromisoformat(date_str)
+    except ValueError:
+        return None
+    return (date.today() - submitted).days
+
+
+def _build_recommendation_prompt(status: str, days_since_submitted: int | None) -> str:
+    duration_clause = (
+        f"It has been {days_since_submitted} day(s) since it was submitted."
+        if days_since_submitted is not None
+        else "No submission date is on record."
+    )
+    return (
+        "You are assisting a loan officer reviewing a loan application in a demo system. "
+        f"The application's current status is '{status}'. {duration_clause} "
+        "In one short sentence, suggest the most useful next action for the loan officer "
+        "to take. Be specific and concise — no preamble, no markdown, just the suggestion."
+    )
+
+
 @router.get("/salesforce/loan-applications", response_model=list[LoanApplicationOut])
 async def get_loan_applications() -> list[LoanApplicationOut]:
     try:
@@ -271,18 +377,86 @@ async def get_loan_applications() -> list[LoanApplicationOut]:
     except (SalesforceAuthError, SalesforceAPIError):
         raise HTTPException(status_code=502, detail="Unable to reach Salesforce right now")
 
+    return [_to_loan_application_out(record) for record in records]
+
+
+@router.get("/salesforce/accounts", response_model=list[AccountGroupOut])
+async def get_accounts_view() -> list[AccountGroupOut]:
+    try:
+        records = await list_loan_applications_by_account()
+    except (SalesforceAuthError, SalesforceAPIError):
+        raise HTTPException(status_code=502, detail="Unable to reach Salesforce right now")
+
+    groups: dict[str, AccountGroupOut] = {}
+    order: list[str] = []
+    for record in records:
+        account_id = record.get("Account__c")
+        account_name = (record.get("Account__r") or {}).get("Name")
+        key = account_id or "unknown"
+        if key not in groups:
+            groups[key] = AccountGroupOut(
+                account_id=account_id, account_name=account_name, applications=[]
+            )
+            order.append(key)
+        groups[key].applications.append(_to_loan_application_out(record))
+
+    return [groups[key] for key in order]
+
+
+@router.get(
+    "/salesforce/loan-applications/{record_id}/history", response_model=list[HistoryEntryOut]
+)
+async def get_loan_application_history(record_id: str) -> list[HistoryEntryOut]:
+    if not RECORD_ID_RE.match(record_id):
+        raise HTTPException(status_code=422, detail="Invalid record id")
+
+    try:
+        records = await get_status_history(record_id)
+    except (SalesforceAuthError, SalesforceAPIError):
+        raise HTTPException(status_code=502, detail="Unable to reach Salesforce right now")
+
     return [
-        LoanApplicationOut(
-            id=record["Id"],
-            applicant_name=(record.get("Applicant__r") or {}).get("Name"),
-            account_name=(record.get("Account__r") or {}).get("Name"),
-            amount_requested=record.get("Amount_Requested__c"),
-            status=record.get("Status__c"),
-            submitted_date=record.get("Submitted_Date__c"),
-            decision_date=record.get("Decision_Date__c"),
+        HistoryEntryOut(
+            old_value=record.get("OldValue"),
+            new_value=record.get("NewValue"),
+            changed_at=record.get("CreatedDate"),
         )
         for record in records
     ]
+
+
+@router.get(
+    "/salesforce/loan-applications/{record_id}/recommendation", response_model=RecommendationOut
+)
+async def get_recommendation_route(record_id: str, request: Request) -> RecommendationOut:
+    ip = _client_ip(request)
+
+    if _is_rate_limited(ip):
+        raise HTTPException(status_code=429, detail="Too many requests")
+
+    if not RECORD_ID_RE.match(record_id):
+        raise HTTPException(status_code=422, detail="Invalid record id")
+
+    try:
+        result = await get_status_and_submitted(record_id)
+    except (SalesforceAuthError, SalesforceAPIError):
+        raise HTTPException(status_code=502, detail="Unable to reach Salesforce right now")
+
+    if result is None:
+        raise HTTPException(status_code=404, detail="Loan application not found")
+
+    status, submitted_date = result
+    if not status:
+        raise HTTPException(status_code=404, detail="Loan application not found")
+
+    prompt = _build_recommendation_prompt(status, _days_since(submitted_date))
+
+    try:
+        suggestion = await get_recommendation(prompt)
+    except AnthropicAPIError:
+        raise HTTPException(status_code=502, detail="Unable to generate a recommendation right now")
+
+    return RecommendationOut(suggestion=suggestion)
 
 
 @router.post(
