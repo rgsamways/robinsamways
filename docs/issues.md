@@ -6,13 +6,6 @@ Each entry includes the literal handoff text given to CLI, not just a summary, s
 
 ## Open
 
-- [ ] 2026-07-08 — Site favicon is still the default, never-customized `create-next-app` icon (a white triangle) — Robin wants it replaced with a mark matching the site's own branding: an orange `$` on a black circle.
-
-  **Handoff given to CLI (2026-07-08):**
-  > Replace `web/src/app/favicon.ico` with a proper site icon: a black circle background with the `$` character centered on it, in the site's accent color (`--accent: #d97706` in `globals.css`) — echoing the "`$` Robin Samways" header treatment already used elsewhere. No image-editing tool needed: use Next.js's file-based icon convention — add `web/src/app/icon.tsx` using `ImageResponse` from `next/og` to code-generate the icon (a styled `<div>` with the black circle background and the orange `$`, no external image asset). Check current Next.js docs on whether a static `favicon.ico` should stay alongside `icon.tsx` for broader browser-tab compatibility, or whether `icon.tsx` alone is sufficient — follow whatever the framework's own convention recommends rather than guessing.
-  >
-  > Verify: the new icon renders correctly in a browser tab (favicon) across at least two browsers; no console warnings/errors from the new icon route; `npm run build` clean.
-
 - [ ] 2026-07-07 — `/ops/deploy` still drifted from `docs/deployment-guide.md` in three places, on top of the Part 6a/8 sync just completed. Two were flagged by CLI as out-of-scope-but-noticed; one (Part 3) hadn't been surfaced yet because the guide edit happened after the original sync handoff was written.
 
   **Handoff given to CLI (2026-07-07):**
@@ -24,6 +17,15 @@ Each entry includes the literal handoff text given to CLI, not just a summary, s
   > Update the "Last updated" date on the page if it changes. Same verification bar as last time: `npm run build` clean, check for the JSX whitespace-glue bug proactively, no console warnings.
 
 ## Resolved
+
+- [x] 2026-07-08 — Site favicon is still the default, never-customized `create-next-app` icon (a white triangle) — Robin wants it replaced with a mark matching the site's own branding: an orange `$` on a black circle.
+
+  **Handoff given to CLI (2026-07-08):**
+  > Replace `web/src/app/favicon.ico` with a proper site icon: a black circle background with the `$` character centered on it, in the site's accent color (`--accent: #d97706` in `globals.css`) — echoing the "`$` Robin Samways" header treatment already used elsewhere. No image-editing tool needed: use Next.js's file-based icon convention — add `web/src/app/icon.tsx` using `ImageResponse` from `next/og` to code-generate the icon (a styled `<div>` with the black circle background and the orange `$`, no external image asset). Check current Next.js docs on whether a static `favicon.ico` should stay alongside `icon.tsx` for broader browser-tab compatibility, or whether `icon.tsx` alone is sufficient — follow whatever the framework's own convention recommends rather than guessing.
+  >
+  > Verify: the new icon renders correctly in a browser tab (favicon) across at least two browsers; no console warnings/errors from the new icon route; `npm run build` clean.
+
+  **Resolution:** checked the framework's own docs (`node_modules/next/dist/docs/.../app-icons.md`) before writing anything, per the note in the handoff — `favicon.ico` and `icon.tsx` are alternative file conventions, not complementary ones ("You cannot generate a `favicon` icon. Use `icon` or a `favicon.ico` file instead."); `icon.tsx` alone produces a proper `<link rel="icon">` tag, so no reason to keep both. Deleted `web/src/app/favicon.ico` and added `web/src/app/icon.tsx`: a 32×32 `ImageResponse` — a `black` circle (`borderRadius: "50%"`) with the `$` centered in `#d97706` at `fontSize: 20`, `fontWeight: 700`. `npm run build` picked it up automatically as a new `/icon` static route. Verified the actual generated PNG directly (fetched `/icon`, confirmed 32×32 `image/png`, then rendered it upscaled 10× via a headless browser to inspect it closely — clean circle, correctly centered/colored `$`, no clipping or antialiasing artifacts). Verified across two real browser engines via Playwright (downloaded a matching Firefox binary, since the one cached on this machine was a version behind what this Playwright install expected): both Chromium and Firefox report the identical `<link rel="icon" href="/icon?..." type="image/png" sizes="32x32">` tag and both successfully fetch the icon directly (200, `image/png`, 799 bytes, byte-identical). `npm run build` clean, no console warnings.
 
 - [x] 2026-07-08 — Add a curated screenshot gallery to `/portfolio`, sourced from 6 PNGs Robin captured tonight (`docs/screens/`), showing the real Salesforce Setup work and live data behind this case study.
 

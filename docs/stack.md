@@ -24,6 +24,7 @@ Exhaustive, running list of every technology, library, and tool used to build an
 - React
 - Tailwind CSS v4
 - `next/font` (self-hosted JetBrains Mono)
+- `next/og` (`ImageResponse`) — used in `web/src/app/icon.tsx` (2026-07-08) to code-generate the site favicon (black circle, accent-color `$`) at build time, replacing the static `favicon.ico`; no image editor involved.
 
 **Hosting / infra (planned, not yet live)**
 - Vercel — `/web`
