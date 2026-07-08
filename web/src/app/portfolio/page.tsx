@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import Farpost from "@/components/Farpost";
+import InfoTooltip from "@/components/InfoTooltip";
 import SectionHeader from "@/components/SectionHeader";
 import LoanDemoWidget from "@/components/portfolio/LoanDemoWidget";
+
+const PROFESSIONAL_REPUTATION_GRAPH_EXPLANATION =
+  "Farpost's professional-reputation graph: a network connecting insurance-industry professionals — adjusters, inspectors, contractors, agents — and building owners through the actual jobs they've worked together, with reputation and verification signals attached to each relationship. It's the same underlying data shape as a Salesforce Account/Contact household view: distinct entities connected by records that carry status and history — just applied to a professional network instead of a family.";
 
 export const metadata: Metadata = {
   title: "Portfolio · Robin Samways",
@@ -73,12 +77,13 @@ export default function PortfolioPage() {
         <p className="text-sm leading-relaxed">
           The Applicant → Loan Application → Account relationship model
           here is structurally the same shape as <Farpost />
-          &rsquo;s own professional-reputation graph — entities
-          (adjusters, inspectors, contractors, agents, building owners)
-          linked through records that carry status and a decision trail.
-          Same underlying pattern — a graph of related parties and the
-          records that move between statuses — applied to a different
-          domain.
+          &rsquo;s own professional-reputation graph
+          <InfoTooltip text={PROFESSIONAL_REPUTATION_GRAPH_EXPLANATION} />
+          {" "}— entities (adjusters, inspectors, contractors, agents,
+          building owners) linked through records that carry status and a
+          decision trail. Same underlying pattern — a graph of related
+          parties and the records that move between statuses — applied to
+          a different domain.
         </p>
       </section>
 
