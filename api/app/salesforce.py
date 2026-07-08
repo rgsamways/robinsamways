@@ -1,7 +1,9 @@
 import logging
 import os
+import re
 import time
 from collections import defaultdict
+from datetime import date
 
 import httpx
 from fastapi import APIRouter, HTTPException, Request
@@ -24,6 +26,13 @@ LOAN_APPLICATION_FIELDS = (
     "Id, Applicant__r.Name, Account__r.Name, Amount_Requested__c, "
     "Status__c, Submitted_Date__c, Decision_Date__c"
 )
+
+# Archived is a real Status__c value (used for the original seed records) but is
+# deliberately unreachable through any writable control — it's set only by editing
+# Salesforce directly. Never include it here.
+SETTABLE_STATUSES = ("Draft", "Submitted", "Under Review", "Approved", "Denied")
+
+RECORD_ID_RE = re.compile(r"^[a-zA-Z0-9]{15,18}$")
 
 MIN_FILL_SECONDS = 2.0
 RATE_LIMIT_WINDOW_SECONDS = 60.0
@@ -152,7 +161,9 @@ def _contact_create_fields(name: str) -> dict:
     return {"FirstName": " ".join(parts[:-1]), "LastName": parts[-1]}
 
 
-async def create_loan_application(applicant_name: str, account_name: str, amount_requested: float) -> str:
+async def create_loan_application(
+    applicant_name: str, account_name: str, amount_requested: float, status: str
+) -> str:
     applicant_id = await _find_or_create_id(
         "Contact", applicant_name, _contact_create_fields(applicant_name)
     )
@@ -164,9 +175,42 @@ async def create_loan_application(applicant_name: str, account_name: str, amount
             "Applicant__c": applicant_id,
             "Account__c": account_id,
             "Amount_Requested__c": amount_requested,
-            "Status__c": "Draft",
+            "Status__c": status,
+            "Submitted_Date__c": date.today().isoformat(),
         },
     )
+
+
+async def _get_status(record_id: str) -> str | None:
+    soql = f"SELECT Status__c FROM Loan_Application__c WHERE Id = '{_soql_escape(record_id)}' LIMIT 1"
+    response = await _request("GET", f"/services/data/{API_VERSION}/query", params={"q": soql})
+    if response.status_code != 200:
+        logging.error("Salesforce status lookup failed: %s %s", response.status_code, response.text)
+        raise SalesforceAPIError("Salesforce status lookup failed")
+    records = response.json().get("records", [])
+    if not records:
+        return None
+    return records[0].get("Status__c")
+
+
+async def update_loan_application_status(record_id: str, status: str) -> None:
+    response = await _request(
+        "PATCH",
+        f"/services/data/{API_VERSION}/sobjects/Loan_Application__c/{record_id}",
+        json={"Status__c": status},
+    )
+    if response.status_code != 204:
+        logging.error("Salesforce update failed: %s %s", response.status_code, response.text)
+        raise SalesforceAPIError("Salesforce update failed")
+
+
+async def delete_loan_application(record_id: str) -> None:
+    response = await _request(
+        "DELETE", f"/services/data/{API_VERSION}/sobjects/Loan_Application__c/{record_id}"
+    )
+    if response.status_code != 204:
+        logging.error("Salesforce delete failed: %s %s", response.status_code, response.text)
+        raise SalesforceAPIError("Salesforce delete failed")
 
 
 def _client_ip(request: Request) -> str:
@@ -202,13 +246,22 @@ class LoanApplicationCreateRequest(BaseModel):
     applicant_name: str
     account_name: str
     amount_requested: float
+    status: str = "Draft"
     honeypot: str = ""
     rendered_at: float
+
+
+class LoanApplicationUpdateRequest(BaseModel):
+    status: str
 
 
 class LoanApplicationCreateResponse(BaseModel):
     status: str
     id: str | None = None
+
+
+class ActionResponse(BaseModel):
+    status: str
 
 
 @router.get("/salesforce/loan-applications", response_model=list[LoanApplicationOut])
@@ -250,12 +303,71 @@ async def post_loan_application(
     applicant_name = payload.applicant_name.strip()
     account_name = payload.account_name.strip()
 
-    if not applicant_name or not account_name or payload.amount_requested <= 0:
+    if (
+        not applicant_name
+        or not account_name
+        or payload.amount_requested <= 0
+        or payload.status not in SETTABLE_STATUSES
+    ):
         raise HTTPException(status_code=422, detail="Invalid submission")
 
     try:
-        record_id = await create_loan_application(applicant_name, account_name, payload.amount_requested)
+        record_id = await create_loan_application(
+            applicant_name, account_name, payload.amount_requested, payload.status
+        )
     except (SalesforceAuthError, SalesforceAPIError):
         raise HTTPException(status_code=502, detail="Unable to reach Salesforce right now")
 
     return LoanApplicationCreateResponse(status="ok", id=record_id)
+
+
+@router.patch("/salesforce/loan-applications/{record_id}", response_model=ActionResponse)
+async def patch_loan_application(
+    record_id: str, payload: LoanApplicationUpdateRequest, request: Request
+) -> ActionResponse:
+    ip = _client_ip(request)
+
+    if _is_rate_limited(ip):
+        raise HTTPException(status_code=429, detail="Too many requests")
+
+    if not RECORD_ID_RE.match(record_id):
+        raise HTTPException(status_code=422, detail="Invalid record id")
+
+    if payload.status not in SETTABLE_STATUSES:
+        raise HTTPException(status_code=422, detail="Invalid status")
+
+    try:
+        await update_loan_application_status(record_id, payload.status)
+    except (SalesforceAuthError, SalesforceAPIError):
+        raise HTTPException(status_code=502, detail="Unable to reach Salesforce right now")
+
+    return ActionResponse(status="ok")
+
+
+@router.delete("/salesforce/loan-applications/{record_id}", response_model=ActionResponse)
+async def delete_loan_application_route(record_id: str, request: Request) -> ActionResponse:
+    ip = _client_ip(request)
+
+    if _is_rate_limited(ip):
+        raise HTTPException(status_code=429, detail="Too many requests")
+
+    if not RECORD_ID_RE.match(record_id):
+        raise HTTPException(status_code=422, detail="Invalid record id")
+
+    try:
+        current_status = await _get_status(record_id)
+    except (SalesforceAuthError, SalesforceAPIError):
+        raise HTTPException(status_code=502, detail="Unable to reach Salesforce right now")
+
+    if current_status is None:
+        raise HTTPException(status_code=404, detail="Loan application not found")
+
+    if current_status == "Archived":
+        raise HTTPException(status_code=403, detail="Archived records can't be deleted")
+
+    try:
+        await delete_loan_application(record_id)
+    except (SalesforceAuthError, SalesforceAPIError):
+        raise HTTPException(status_code=502, detail="Unable to reach Salesforce right now")
+
+    return ActionResponse(status="ok")

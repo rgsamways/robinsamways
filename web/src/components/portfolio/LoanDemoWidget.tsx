@@ -15,16 +15,50 @@ type LoanApplication = {
 type ListStatus = "loading" | "loaded" | "error";
 type CreateStatus = "idle" | "submitting" | "success" | "error";
 type Errors = { applicantName?: string; accountName?: string; amountRequested?: string };
+type RowActionState = {
+  statusSaving?: boolean;
+  statusError?: boolean;
+  deleting?: boolean;
+  deleteError?: boolean;
+};
+type SortField =
+  | "applicant_name"
+  | "account_name"
+  | "amount_requested"
+  | "status"
+  | "submitted_date"
+  | "decision_date";
+type SortDirection = "asc" | "desc";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+
+// Archived is a real Status value (the original seed records), but it's
+// deliberately reachable only by editing Salesforce directly — never offered
+// as a settable option in the create form or the per-row update control.
+const SETTABLE_STATUSES = ["Draft", "Submitted", "Under Review", "Approved", "Denied"];
+const STATUS_FILTER_OPTIONS = ["All", ...SETTABLE_STATUSES, "Archived"];
+
+const COLUMNS: { field: SortField; label: string }[] = [
+  { field: "applicant_name", label: "Applicant" },
+  { field: "account_name", label: "Account" },
+  { field: "amount_requested", label: "Amount" },
+  { field: "status", label: "Status" },
+  { field: "submitted_date", label: "Submitted" },
+  { field: "decision_date", label: "Decision" },
+];
 
 export default function LoanDemoWidget() {
   const [applications, setApplications] = useState<LoanApplication[]>([]);
   const [listStatus, setListStatus] = useState<ListStatus>("loading");
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [sortField, setSortField] = useState<SortField | null>(null);
+  const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
+  const [rowActions, setRowActions] = useState<Record<string, RowActionState>>({});
 
   const [applicantName, setApplicantName] = useState("");
   const [accountName, setAccountName] = useState("");
   const [amountRequested, setAmountRequested] = useState("");
+  const [status, setStatus] = useState("Draft");
   const [honeypot, setHoneypot] = useState("");
   const [renderedAt] = useState(() => Date.now() / 1000);
   const [errors, setErrors] = useState<Errors>({});
@@ -56,6 +90,32 @@ export default function LoanDemoWidget() {
     new Set(applications.map((app) => app.account_name).filter((name): name is string => Boolean(name)))
   );
 
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      setSortDirection((direction) => (direction === "asc" ? "desc" : "asc"));
+    } else {
+      setSortField(field);
+      setSortDirection("asc");
+    }
+  };
+
+  const filteredApplications =
+    statusFilter === "All" ? applications : applications.filter((app) => app.status === statusFilter);
+
+  const sortedApplications = [...filteredApplications].sort((a, b) => {
+    if (!sortField) return 0;
+    const aVal = a[sortField];
+    const bVal = b[sortField];
+    if (aVal == null && bVal == null) return 0;
+    if (aVal == null) return 1;
+    if (bVal == null) return -1;
+    const cmp =
+      typeof aVal === "number" && typeof bVal === "number"
+        ? aVal - bVal
+        : String(aVal).localeCompare(String(bVal));
+    return sortDirection === "asc" ? cmp : -cmp;
+  });
+
   const validate = () => {
     const next: Errors = {};
     if (!applicantName.trim()) next.applicantName = "Applicant is required";
@@ -81,6 +141,7 @@ export default function LoanDemoWidget() {
           applicant_name: applicantName.trim(),
           account_name: accountName.trim(),
           amount_requested: Number(amountRequested),
+          status,
           honeypot,
           rendered_at: renderedAt,
         }),
@@ -90,9 +151,44 @@ export default function LoanDemoWidget() {
       setApplicantName("");
       setAccountName("");
       setAmountRequested("");
+      setStatus("Draft");
       await loadApplications();
     } catch {
       setCreateStatus("error");
+    }
+  };
+
+  const handleStatusChange = async (id: string, newStatus: string) => {
+    setRowActions((prev) => ({ ...prev, [id]: { statusSaving: true } }));
+    try {
+      const response = await fetch(`${API_URL}/salesforce/loan-applications/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: newStatus }),
+      });
+      if (!response.ok) throw new Error("request failed");
+      await loadApplications();
+      setRowActions((prev) => ({ ...prev, [id]: {} }));
+    } catch {
+      setRowActions((prev) => ({ ...prev, [id]: { statusError: true } }));
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    setRowActions((prev) => ({ ...prev, [id]: { deleting: true } }));
+    try {
+      const response = await fetch(`${API_URL}/salesforce/loan-applications/${id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) throw new Error("request failed");
+      setApplications((prev) => prev.filter((app) => app.id !== id));
+      setRowActions((prev) => {
+        const next = { ...prev };
+        delete next[id];
+        return next;
+      });
+    } catch {
+      setRowActions((prev) => ({ ...prev, [id]: { deleteError: true } }));
     }
   };
 
@@ -114,38 +210,106 @@ export default function LoanDemoWidget() {
           </p>
         )}
         {listStatus === "loaded" && applications.length > 0 && (
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse text-xs">
-              <thead>
-                <tr className="border-b border-foreground/20 text-left text-muted">
-                  <th className="py-1 pr-4 font-semibold">Applicant</th>
-                  <th className="py-1 pr-4 font-semibold">Account</th>
-                  <th className="py-1 pr-4 font-semibold">Amount</th>
-                  <th className="py-1 pr-4 font-semibold">Status</th>
-                  <th className="py-1 pr-4 font-semibold">Submitted</th>
-                  <th className="py-1 font-semibold">Decision</th>
-                </tr>
-              </thead>
-              <tbody>
-                {applications.map((app) => (
-                  <tr key={app.id} className="border-b border-foreground/10">
-                    <td className="py-1 pr-4">{app.applicant_name ?? "—"}</td>
-                    <td className="py-1 pr-4">{app.account_name ?? "—"}</td>
-                    <td className="py-1 pr-4">
-                      {app.amount_requested != null
-                        ? `$${app.amount_requested.toLocaleString()}`
-                        : "—"}
-                    </td>
-                    <td className="py-1 pr-4">
-                      <span className="text-accent">{app.status ?? "—"}</span>
-                    </td>
-                    <td className="py-1 pr-4">{app.submitted_date ?? "—"}</td>
-                    <td className="py-1">{app.decision_date ?? "—"}</td>
-                  </tr>
+          <>
+            <div className="mb-2 flex flex-wrap items-center gap-2 text-xs">
+              <label htmlFor="status-filter" className="font-semibold text-accent">
+                filter
+              </label>
+              <select
+                id="status-filter"
+                value={statusFilter}
+                onChange={(event) => setStatusFilter(event.target.value)}
+                className="border border-foreground/20 bg-transparent px-2 py-1 focus:border-accent focus:outline-none"
+              >
+                {STATUS_FILTER_OPTIONS.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
                 ))}
-              </tbody>
-            </table>
-          </div>
+              </select>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse text-xs">
+                <thead>
+                  <tr className="border-b border-foreground/20 text-left text-muted">
+                    {COLUMNS.map((column) => (
+                      <th key={column.field} className="py-1 pr-4 font-semibold">
+                        <button
+                          type="button"
+                          onClick={() => handleSort(column.field)}
+                          className="inline-flex items-center gap-1 hover:text-accent"
+                        >
+                          {column.label}
+                          {sortField === column.field && (
+                            <span aria-hidden>{sortDirection === "asc" ? "▲" : "▼"}</span>
+                          )}
+                        </button>
+                      </th>
+                    ))}
+                    <th className="py-1 font-semibold">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {sortedApplications.map((app) => {
+                    const isArchived = app.status === "Archived";
+                    const actionState = rowActions[app.id];
+                    return (
+                      <tr key={app.id} className="border-b border-foreground/10">
+                        <td className="py-1 pr-4">{app.applicant_name ?? "—"}</td>
+                        <td className="py-1 pr-4">{app.account_name ?? "—"}</td>
+                        <td className="py-1 pr-4">
+                          {app.amount_requested != null
+                            ? `$${app.amount_requested.toLocaleString()}`
+                            : "—"}
+                        </td>
+                        <td className="py-1 pr-4">
+                          {isArchived ? (
+                            <span className="text-accent">Archived</span>
+                          ) : (
+                            <select
+                              value={app.status ?? ""}
+                              disabled={actionState?.statusSaving}
+                              onChange={(event) => handleStatusChange(app.id, event.target.value)}
+                              className="border border-foreground/20 bg-transparent px-1 py-0.5 text-xs text-accent focus:border-accent focus:outline-none disabled:opacity-50"
+                            >
+                              {SETTABLE_STATUSES.map((option) => (
+                                <option key={option} value={option}>
+                                  {option}
+                                </option>
+                              ))}
+                            </select>
+                          )}
+                          {actionState?.statusSaving && (
+                            <span className="ml-1 text-muted">saving…</span>
+                          )}
+                          {actionState?.statusError && (
+                            <p className="mt-1 text-[10px]">Update failed.</p>
+                          )}
+                        </td>
+                        <td className="py-1 pr-4">{app.submitted_date ?? "—"}</td>
+                        <td className="py-1 pr-4">{app.decision_date ?? "—"}</td>
+                        <td className="py-1">
+                          {!isArchived && (
+                            <button
+                              type="button"
+                              onClick={() => handleDelete(app.id)}
+                              disabled={actionState?.deleting}
+                              className="text-accent underline disabled:opacity-50"
+                            >
+                              {actionState?.deleting ? "deleting…" : "delete"}
+                            </button>
+                          )}
+                          {actionState?.deleteError && (
+                            <p className="mt-1 text-[10px]">Delete failed.</p>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
 
@@ -219,6 +383,24 @@ export default function LoanDemoWidget() {
           {errors.amountRequested && <p className="mt-1 text-xs">{errors.amountRequested}</p>}
         </div>
 
+        <div>
+          <label htmlFor="loan-status" className="block font-semibold text-accent">
+            status
+          </label>
+          <select
+            id="loan-status"
+            value={status}
+            onChange={(event) => setStatus(event.target.value)}
+            className="mt-1 w-full border border-foreground/20 bg-transparent px-3 py-2 focus:border-accent focus:outline-none"
+          >
+            {SETTABLE_STATUSES.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+        </div>
+
         <button
           type="submit"
           disabled={createStatus === "submitting"}
@@ -230,7 +412,7 @@ export default function LoanDemoWidget() {
         {createStatus === "success" && (
           <p className="text-sm">
             <span className="text-accent">›</span>{" "}
-            Created — the new Draft application is in the list above.
+            Created — the new application is in the list above.
           </p>
         )}
         {createStatus === "error" && (
