@@ -15,7 +15,7 @@ const roles: Role[] = [
     company: "Farpost",
     isFarpost: true,
     location: "Maynooth, ON",
-    dates: "2025 — Present",
+    dates: "2026 — Present",
     bullets: [
       "Architected and shipped a full-stack building-intelligence platform: FastAPI / Python backend (deployed on Railway), React / Next.js front end, and NFC-anchored pre-loss property documentation",
       "Designed the event-driven data model and professional-reputation graph serving adjusters, inspectors, contractors, agents, and building owners",

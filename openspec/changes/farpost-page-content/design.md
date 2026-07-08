@@ -8,11 +8,11 @@ The exact, final text for all four sections. Verbatim — do not reword, condens
 
 ### ORIGIN_STORY
 
-> I didn't set out to build a building-intelligence platform. In late May 2025, an insurance adjuster I knew had a rural claim and couldn't find anyone to work it — no contractor, no inspector willing to make the drive out from the city for one job. It wasn't a technology problem, it was an availability problem nobody's software was built to solve. I built a dispatch app in about a week to fix exactly that: get the right professional to the right claim, regardless of how far out it was.
+> I didn't set out to build a building-intelligence platform. In late May 2026, an insurance adjuster I knew had a rural claim and couldn't find anyone to work it — no contractor, no inspector willing to make the drive out from the city for one job. It wasn't a technology problem, it was an availability problem nobody's software was built to solve. I built a dispatch app in about a week to fix exactly that: get the right professional to the right claim, regardless of how far out it was.
 >
 > Three weeks later, deep into a second, unrelated project — an Android compliance app called TapLog, built around RFID tags for verifying physical inspections — I found out another company was already building almost the same thing. Not similar. The same thing, down to a striking number of features I'd built without ever knowing theirs existed. That's a hard thing to sit with three weeks in, and there wasn't a version of finishing TapLog that still made sense, so I stopped.
 >
-> I didn't throw the idea away, though. The part of TapLog that actually mattered — an RFID tag verifying a physical location, logging what happened there over time — got folded straight into the dispatch app I'd already built. Dispatch the right professional to the right building, and keep a real, tag-verified record of what happened at that building afterward. That fusion, arrived at by mid-June 2025, is what Farpost actually is.
+> I didn't throw the idea away, though. The part of TapLog that actually mattered — an RFID tag verifying a physical location, logging what happened there over time — got folded straight into the dispatch app I'd already built. Dispatch the right professional to the right building, and keep a real, tag-verified record of what happened at that building afterward. That fusion, arrived at by mid-June 2026, is what Farpost actually is.
 
 ### PROBLEMS_FARPOST_SOLVES
 

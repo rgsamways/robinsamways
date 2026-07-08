@@ -49,7 +49,7 @@ export default function FarpostPage() {
         <div className="space-y-4 text-sm leading-relaxed">
           <p>
             I didn&rsquo;t set out to build a building-intelligence platform.
-            In late May 2025, an insurance adjuster I knew had a rural claim
+            In late May 2026, an insurance adjuster I knew had a rural claim
             and couldn&rsquo;t find anyone to work it — no contractor, no
             inspector willing to make the drive out from the city for one
             job. It wasn&rsquo;t a technology problem, it was an
@@ -76,7 +76,7 @@ export default function FarpostPage() {
             straight into the dispatch app I&rsquo;d already built. Dispatch
             the right professional to the right building, and keep a real,
             tag-verified record of what happened at that building
-            afterward. That fusion, arrived at by mid-June 2025, is what
+            afterward. That fusion, arrived at by mid-June 2026, is what
             Farpost actually is.
           </p>
         </div>

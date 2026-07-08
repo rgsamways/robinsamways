@@ -18,6 +18,16 @@ Each entry includes the literal handoff text given to CLI, not just a summary, s
 
 ## Resolved
 
+- [x] 2026-07-08 — Two small date corrections, bundled into one handoff: the `farpost-page-content` `ORIGIN_STORY` copy had the wrong year (2025 instead of 2026) in two places, and the homepage Experience section's Farpost date range was wrong for the same reason.
+
+  **Handoff given to CLI (2026-07-08):**
+  > 1. **Fix the already-shipped Farpost page copy** — Robin confirmed the dispatch app was built in late May 2026, not 2025, and the TapLog-to-Farpost synthesis happened mid-June 2026. `design.md`'s Final Copy section is already fixed (both dates now say 2026). Update `web/src/app/farpost/page.tsx` to match — same two date mentions, everything else in that paragraph unchanged.
+  > 2. **Resume date fix** — new OpenSpec change `fix-farpost-start-date` corrects the homepage's Farpost entry from "2025 — Present" to "2026 — Present" in `web/src/components/resume/Experience.tsx`. Don't touch Impres Pharma's "2012 — 2025" or any other entry — only the Farpost date was wrong.
+  >
+  > Verify: `/farpost`'s origin story reads 2026 in both places; the homepage Experience section shows "2026 — Present" for Farpost with every other entry unchanged. `npm run build` clean.
+
+  **Resolution:** both were one-line date swaps. `web/src/app/farpost/page.tsx`'s two mentions ("In late May 2025" → "In late May 2026", "arrived at by mid-June 2025" → "arrived at by mid-June 2026") now match `design.md`'s corrected Final Copy exactly; nothing else in either sentence touched. `web/src/components/resume/Experience.tsx`'s Farpost `dates` field changed from `"2025 — Present"` to `"2026 — Present"`; every other role's date range (Impres Pharma's `"2012 — 2025"` included) left untouched. Verified via headless browser on both pages: `/farpost`'s two date sentences read correctly, the homepage's Farpost row shows "2026 — Present" and the Impres Pharma row still shows "2012 — 2025", zero console warnings. `npm run build` clean.
+
 - [x] 2026-07-08 — New OpenSpec change `farpost-page-content` proposed and validated (not a bug — logged here per the handoff-logging convention). Replaces the `/farpost` page's placeholder with four fully-drafted sections: `ORIGIN_STORY`, `PROBLEMS_FARPOST_SOLVES`, `BUILDING_LIFECYCLE_EXAMPLE`, `PROCESS`. Full detail in `openspec/changes/farpost-page-content/`.
 
   **Handoff given to CLI (2026-07-08):**
