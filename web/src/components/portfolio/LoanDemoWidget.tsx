@@ -361,6 +361,7 @@ export default function LoanDemoWidget({ onMutate }: { onMutate?: () => void }) 
                         <span className="text-accent">Archived</span>
                       ) : (
                         <select
+                          name={`status-${app.id}`}
                           value={app.status ?? ""}
                           disabled={actionState?.statusSaving}
                           onChange={(event) => handleStatusChange(app.id, event.target.value)}

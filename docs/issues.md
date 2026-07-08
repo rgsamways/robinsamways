@@ -6,6 +6,30 @@ Each entry includes the literal handoff text given to CLI, not just a summary, s
 
 ## Open
 
+- [ ] 2026-07-08 — Neither `LoanDemoWidget`'s flat table nor `RelationshipView`'s per-Account table has pagination — both render every row from the already-fetched, sorted/filtered list at once. Robin wants paging at 10 records per page plus a total-results counter on each.
+
+  **Handoff given to CLI (2026-07-08):**
+  > Add client-side pagination (10 records per page) to both `LoanDemoWidget.tsx`'s flat table and `RelationshipView.tsx`'s per-Account table. Both already share `loanApplication.ts` for types/constants/the sort comparator — add a shared `PAGE_SIZE = 10` constant there too rather than duplicating the number.
+  >
+  > 1. Add `page` state (starting at 1) to each component. Slice the existing sorted+filtered array to the current page's 10 records for rendering — don't change how sorting/filtering themselves work, just what subset of the result renders.
+  > 2. Below each table, add a "Showing X–Y of Z" counter plus Previous/Next controls (disable Previous on page 1, disable Next on the last page), matching the site's existing monospace/single-accent-color styling — no need for numbered page buttons, Prev/Next is enough at this scale.
+  > 3. **Reset to page 1 whenever the underlying result set changes**: `LoanDemoWidget` when `statusFilter` changes; `RelationshipView` when `selectedAccountId` or its own status filter changes. Otherwise a visitor can land on a page number that's now out of range for the new, smaller filtered set.
+  > 4. **Clamp the current page after a mutation** (delete especially) — if the current page no longer exists after `applications`/`groups` shrinks (e.g. you were on page 2 of 2 and deleted the only record on that page), fall back to the new last valid page rather than showing an empty page with a working Previous button that goes nowhere useful.
+  > 5. `LoanDemoWidget`'s inline create-row (and its success/error message row) and `RelationshipView`'s Account/filter selectors are **not** part of the paginated data — they always render above the current page's rows, unaffected by paging.
+  >
+  > Verify: with more than 10 applications in a filtered view, only 10 show per page and the counter/Prev/Next reflect the true total; changing the status filter resets to page 1; deleting the last record on the last page clamps back to a valid page instead of showing empty; the create-row stays visible regardless of which page you're on. `npm run build` clean.
+
+- [ ] 2026-07-08 — `POST /salesforce/loan-applications` has no content moderation on `applicant_name`/`account_name` — a visitor could type vulgar/offensive text into either free-text field, which then displays publicly on `/portfolio` in both `LoanDemoWidget` and `RelationshipView`, and gets sent as context to the Anthropic recommendation endpoint. Robin wants a blocklist, same approach as a past project ("Mr.Commish").
+
+  **Handoff given to CLI (2026-07-08):**
+  > Add a server-side profanity blocklist check to `create_loan_application`/`POST /salesforce/loan-applications` in `api/app/salesforce.py`, applied to `applicant_name` and `account_name` only (not `amount_requested`, which is numeric). Reject with the existing generic 422 ("Invalid submission") if either field matches — don't reveal that it's specifically a profanity check, same principle as not leaking why other validation failed.
+  >
+  > 1. Add a small local module (e.g. `api/app/moderation.py`) holding a `BLOCKED_WORDS` set — no external moderation API call, no new dependency, self-contained like the rest of this codebase. Source the word list from an established public-domain list (e.g. the commonly-used "LDNOOBW" — List of Dirty, Naughty, Obscene, and Otherwise Bad Words — MIT/CC0-licensed English list on GitHub) rather than hand-authoring one; trim/curate as you see fit.
+  > 2. **Match on word boundaries, case-insensitive** (`\bword\b`-style, not a plain substring check) — a naive substring match produces false positives on innocuous names that happen to contain a blocked word as part of a longer word (the classic "Scunthorpe problem"). Whole-word matching only.
+  > 3. Apply the check only at creation — `PATCH` never touches these fields, so nothing else needs it.
+  >
+  > Verify: a submission with a blocked word in either field is rejected with the same generic 422 as other invalid submissions; a legitimate name that merely *contains* a blocked substring inside a longer, innocuous word is NOT rejected (test at least one such case); normal valid submissions are unaffected. `npm run build`/tests clean.
+
 - [ ] 2026-07-07 — `/ops/deploy` still drifted from `docs/deployment-guide.md` in three places, on top of the Part 6a/8 sync just completed. Two were flagged by CLI as out-of-scope-but-noticed; one (Part 3) hadn't been surfaced yet because the guide edit happened after the original sync handoff was written.
 
   **Handoff given to CLI (2026-07-07):**
@@ -17,6 +41,15 @@ Each entry includes the literal handoff text given to CLI, not just a summary, s
   > Update the "Last updated" date on the page if it changes. Same verification bar as last time: `npm run build` clean, check for the JSX whitespace-glue bug proactively, no console warnings.
 
 ## Resolved
+
+- [x] 2026-07-08 — Chrome DevTools Issues tab (not Console — no errors/warnings there) flags "A form field element should have an id or name attribute," 7 violating nodes, on `/portfolio`. Cause: the per-row Status-update `<select>` in `LoanDemoWidget.tsx` (the one that changes an existing record's status) has no `id`/`name` at all — likely unnoticed because the whole table got wrapped in one `<form>` for the inline create-row work, sweeping every field inside it into the browser's form-autofill scan. Both of `RelationshipView.tsx`'s selects (`account-select`, `relationship-status-filter`) already have proper ids and aren't affected.
+
+  **Handoff given to CLI (2026-07-08):**
+  > `LoanDemoWidget.tsx`'s per-row Status-update `<select>` (around line 363, inside the `sortedApplications.map` — the one wired to `handleStatusChange`, distinct from the create-row's `#loan-status` select which already has an id) has no `id` or `name` attribute, which Chrome's Issues tab flags across every non-Archived row. A static id would create duplicate-id violations across rows, so give it a **unique per-row** value instead — e.g. `` name={`status-${app.id}`} `` (or `id`, either satisfies the check). Purely a browser-advisory fix, no functional behavior change.
+  >
+  > Verify: Chrome DevTools Issues tab no longer reports this issue on `/portfolio`; the per-row Status select still works identically (same `onChange`/PATCH behavior). `npm run build` clean.
+
+  **Resolution:** added `name={`status-${app.id}`}` to the per-row Status `<select>` in `LoanDemoWidget.tsx` — unique per row (avoids the duplicate-id problem a static `id` would've caused), no other change. Couldn't drive Chrome's actual Issues-tab panel directly through Playwright: this specific advisory is generated by DevTools' autofill-heuristic scan, and listening for it via CDP's `Audits.issueAdded` (the protocol event the Issues tab is built on) produced zero events even against a deliberately bad control page (`<form><select>` with no id/name at all) — so the headless CDP path doesn't reliably surface this particular check regardless of whether the underlying page is fixed. Verified the actual condition Chrome's message describes instead: enumerated every `<input>`/`<select>`/`<textarea>` inside a `<form>` on `/portfolio` and confirmed each now has an `id` or `name` (7 fields total, 0 missing both — previously the two per-row Status selects, one per loaded application, had neither). Confirmed the per-row select still works identically: selecting a new status still calls `handleStatusChange`, the underlying mock's `PATCH` succeeds, the select's value updates to reflect the new status, and no error state appears. `npm run build` clean.
 
 - [x] 2026-07-08 — `LoanDemoWidget` (flat table) and `RelationshipView` (Account-grouped view) each fetch their own independent copy of the Loan Application data — a mutation in one (create/status-update/delete) never reaches the other, so e.g. deleting a record leaves it visible in the Account dropdown's grouped data until an unrelated remount.
 
