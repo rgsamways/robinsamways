@@ -5,7 +5,7 @@ import SectionHeader from "@/components/SectionHeader";
 import LoanDemoWidget from "@/components/portfolio/LoanDemoWidget";
 
 const PROFESSIONAL_REPUTATION_GRAPH_EXPLANATION =
-  "Farpost's professional-reputation graph: a network connecting insurance-industry professionals — adjusters, inspectors, contractors, agents — and building owners through the actual jobs they've worked together, with reputation and verification signals attached to each relationship. It's the same underlying data shape as a Salesforce Account/Contact household view: distinct entities connected by records that carry status and history — just applied to a professional network instead of a family.";
+  "Farpost's professional-reputation graph: not a score or star rating — a computed timeline. Every action a professional takes (inspections, claims, relationships with buildings) is an event; reputation is assembled fresh from those events on each request, surfacing activity history and breadth of engagement rather than a single number. Professionals whose roles haven't yet earned trust are excluded entirely — no score, no timeline, nothing to game. It's the same underlying entities-connected-by-records shape as a Salesforce Account/Contact view, just applied to a professional network instead of a household.";
 
 export const metadata: Metadata = {
   title: "Portfolio · Robin Samways",

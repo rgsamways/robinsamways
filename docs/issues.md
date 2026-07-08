@@ -18,6 +18,17 @@ Each entry includes the literal handoff text given to CLI, not just a summary, s
 
 ## Resolved
 
+- [x] 2026-07-07 — Update the `/portfolio` page's "professional-reputation graph" info-bubble copy — Robin shared the real mechanics from Farpost's actual `reputation.py` service and the current copy undersells it (doesn't clarify it's explicitly *not* a score, and misses the quarantine/trust-gate detail).
+
+  **Handoff given to CLI (2026-07-07):**
+  > Replace the `InfoTooltip` copy next to "professional-reputation graph" in `web/src/app/portfolio/page.tsx` (the one you just built) with this text — same component, same placement, just swap the string:
+  >
+  > "Farpost's professional-reputation graph: not a score or star rating — a computed timeline. Every action a professional takes (inspections, claims, relationships with buildings) is an event; reputation is assembled fresh from those events on each request, surfacing activity history and breadth of engagement rather than a single number. Professionals whose roles haven't yet earned trust are excluded entirely — no score, no timeline, nothing to game. It's the same underlying entities-connected-by-records shape as a Salesforce Account/Contact view, just applied to a professional network instead of a household."
+  >
+  > No structural/behavioral changes needed to `InfoTooltip.tsx` itself — this is a copy-only swap. Confirm `npm run build` still clean. Check off here when done.
+
+  **Resolution:** swapped the `PROFESSIONAL_REPUTATION_GRAPH_EXPLANATION` string constant in `web/src/app/portfolio/page.tsx` — no changes to `InfoTooltip.tsx` or the wiring around it. Verified via headless browser: rendered tooltip text matches the new copy byte-for-byte, and re-checked the core interaction behaviors (hover open/close, keyboard focus opens it, Escape dismisses) still work unchanged. `npm run build` clean, no new console warnings.
+
 - [x] 2026-07-07 — Robin wants an info-bubble on the `/portfolio` page next to "professional-reputation graph" (in the `FARPOST_PARALLEL` section, `web/src/app/portfolio/page.tsx` line ~76) that fully explains the term for a visitor who doesn't have Farpost context.
 
   **Handoff given to CLI (2026-07-07):**
