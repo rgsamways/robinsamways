@@ -3,6 +3,7 @@
 import { useEffect, useState, type FormEvent } from "react";
 import {
   compareLoanApplications,
+  PAGE_SIZE,
   SETTABLE_STATUSES,
   STATUS_FILTER_OPTIONS,
   type LoanApplication,
@@ -43,6 +44,7 @@ export default function LoanDemoWidget({ onMutate }: { onMutate?: () => void }) 
   const [statusFilter, setStatusFilter] = useState("All");
   const [sortField, setSortField] = useState<SortField | null>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
+  const [page, setPage] = useState(1);
   const [rowActions, setRowActions] = useState<Record<string, RowActionState>>({});
 
   const [applicantName, setApplicantName] = useState("");
@@ -95,6 +97,18 @@ export default function LoanDemoWidget({ onMutate }: { onMutate?: () => void }) 
   const sortedApplications = [...filteredApplications].sort((a, b) =>
     sortField ? compareLoanApplications(a, b, sortField, sortDirection) : 0
   );
+
+  const totalItems = sortedApplications.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE));
+  const pagedApplications = sortedApplications.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
+  useEffect(() => {
+    setPage(1);
+  }, [statusFilter]);
+
+  useEffect(() => {
+    setPage((current) => Math.min(current, totalPages));
+  }, [totalPages]);
 
   const validate = () => {
     const next: Errors = {};
@@ -337,14 +351,14 @@ export default function LoanDemoWidget({ onMutate }: { onMutate?: () => void }) 
                   </td>
                 </tr>
               )}
-              {sortedApplications.length === 0 && (
+              {totalItems === 0 && (
                 <tr>
                   <td colSpan={7} className="py-2 text-muted">
                     No loan applications yet — create the first one above.
                   </td>
                 </tr>
               )}
-              {sortedApplications.map((app) => {
+              {pagedApplications.map((app) => {
                 const isArchived = app.status === "Archived";
                 const actionState = rowActions[app.id];
                 return (
@@ -405,6 +419,38 @@ export default function LoanDemoWidget({ onMutate }: { onMutate?: () => void }) 
           </table>
         </div>
       </form>
+
+      <div className="mt-2 flex flex-wrap items-center justify-between gap-2 text-xs text-muted">
+        <span>
+          {totalItems === 0
+            ? "Showing 0 of 0"
+            : `Showing ${(page - 1) * PAGE_SIZE + 1}–${Math.min(
+                page * PAGE_SIZE,
+                totalItems
+              )} of ${totalItems}`}
+        </span>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setPage((current) => Math.max(1, current - 1))}
+            disabled={page <= 1}
+            className="text-accent underline disabled:opacity-50 disabled:no-underline"
+          >
+            Previous
+          </button>
+          <span>
+            page {page} of {totalPages}
+          </span>
+          <button
+            type="button"
+            onClick={() => setPage((current) => Math.min(totalPages, current + 1))}
+            disabled={page >= totalPages}
+            className="text-accent underline disabled:opacity-50 disabled:no-underline"
+          >
+            Next
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

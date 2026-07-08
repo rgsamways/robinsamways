@@ -10,6 +10,7 @@ from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel
 
 from app.ai import AnthropicAPIError, get_recommendation
+from app.moderation import contains_blocked_word
 
 SALESFORCE_DOMAIN = os.environ.get("SALESFORCE_DOMAIN", "")
 SALESFORCE_CLIENT_ID = os.environ.get("SALESFORCE_CLIENT_ID", "")
@@ -482,6 +483,8 @@ async def post_loan_application(
         or not account_name
         or payload.amount_requested <= 0
         or payload.status not in SETTABLE_STATUSES
+        or contains_blocked_word(applicant_name)
+        or contains_blocked_word(account_name)
     ):
         raise HTTPException(status_code=422, detail="Invalid submission")
 

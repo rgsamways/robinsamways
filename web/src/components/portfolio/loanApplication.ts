@@ -10,6 +10,8 @@ export type LoanApplication = {
 
 export type SortDirection = "asc" | "desc";
 
+export const PAGE_SIZE = 10;
+
 // Archived is a real Status value (the original seed records), but it's
 // deliberately reachable only by editing Salesforce directly — never offered
 // as a settable option in any create/update control.
