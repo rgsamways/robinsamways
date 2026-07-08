@@ -45,3 +45,4 @@ Reached for to accomplish a specific task, not part of the running app.
 - **Playwright** (with Chromium) — used 2026-07-07 for automated screenshot-based visual verification of the homepage and placeholder routes against the resume PDF.
 - **Docker** — used 2026-07-07 to run a local Postgres container for verifying the FastAPI + SQLModel + asyncpg wiring end-to-end before cleanup.
 - **psql** — used 2026-07-07 to manually confirm Postgres connectivity during local testing.
+- **.NET `System.Drawing` (via PowerShell)** — used 2026-07-08 to read the actual pixel dimensions of the 6 `SETUP_GALLERY` screenshots (neither PIL nor a JS image library was on hand), so `next/image`'s `width`/`height` props could reflect each image's real aspect ratio rather than an assumed one.

@@ -3,6 +3,7 @@ import Farpost from "@/components/Farpost";
 import InfoTooltip from "@/components/InfoTooltip";
 import SectionHeader from "@/components/SectionHeader";
 import PortfolioDemos from "@/components/portfolio/PortfolioDemos";
+import SetupGallery from "@/components/portfolio/SetupGallery";
 
 const PROFESSIONAL_REPUTATION_GRAPH_EXPLANATION =
   "Farpost's professional-reputation graph: not a score or star rating — a computed timeline. Every action a professional takes (inspections, claims, relationships with buildings) is an event; reputation is assembled fresh from those events on each request, surfacing activity history and breadth of engagement rather than a single number. Professionals whose roles haven't yet earned trust are excluded entirely — no score, no timeline, nothing to game. It's the same underlying entities-connected-by-records shape as a Salesforce Account/Contact view, just applied to a professional network instead of a household.";
@@ -88,6 +89,8 @@ export default function PortfolioPage() {
       </section>
 
       <PortfolioDemos />
+
+      <SetupGallery />
     </main>
   );
 }

@@ -451,6 +451,12 @@ export default function LoanDemoWidget({ onMutate }: { onMutate?: () => void }) 
           </button>
         </div>
       </div>
+
+      <p className="mt-2 text-xs text-muted">
+        Protected against spam and abuse: a honeypot field, per-visitor rate
+        limiting, and a profanity blocklist all run server-side before
+        anything reaches Salesforce.
+      </p>
     </div>
   );
 }
