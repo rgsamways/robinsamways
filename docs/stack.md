@@ -37,6 +37,7 @@ Exhaustive, running list of every technology, library, and tool used to build an
 - ESLint
 - Python `venv` / pip
 - OpenSpec — spec-driven change workflow (`openspec/`)
+- **scc** (Sloc Cloc and Code, `boyter/scc`, 2026-07-10) — code volume/complexity/redundancy (DRYness) metrics, snapshotted to `docs/metrics.md` at every OpenSpec archive (see `CLAUDE.md`). Not an npm/pip package — a standalone Go binary. `choco install scc` / `winget install --id benboyter.scc` both work with admin rights; installed here via the [direct release binary](https://github.com/boyter/scc/releases) instead, since this shell doesn't have elevated rights for Chocolatey. Currently at `c:/dev/tools/scc/scc.exe`, outside the repo — not on `PATH` by default.
 
 ## One-off / ad hoc tools
 Reached for to accomplish a specific task, not part of the running app.

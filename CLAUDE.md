@@ -17,6 +17,10 @@ Robin actively watches CLI's terminal output during a build to make sense of the
 
 Changes are proposed via OpenSpec (`openspec new change <name>`) with proposal.md, design.md, specs/, and tasks.md, validated (`openspec validate`), then implemented by a CLI session against tasks.md, then reviewed by Robin via a drift audit against the specs before `openspec archive`.
 
+## Code metrics — scc
+
+`scc` (Sloc Cloc and Code) measures code volume, complexity, and redundancy — not just line counts; its DRYness metric (`ULOC / SLOC`) is a direct signal of duplication. Right before archiving an OpenSpec change, same checkpoint as the drift audit, run it against `web/src` and `api` and log the result to `docs/metrics.md`: date, the change being archived, headline numbers (lines, code, complexity, DRYness %), and a one-line delta from the previous snapshot. The point is a running trend line that catches creeping duplication early and gives a refactor an explicit before/after target, not a one-time curiosity. Not an npm/pip package — see `docs/stack.md` for how the binary was obtained.
+
 ## Resume content changes
 
 The `resume-homepage` spec encodes literal resume content (specific employers, dates, bullets) directly in its requirements — so a substantive content change (new job, changed dates, new skill category, restructured section) is a spec-level change, not just a code edit. Route it through a lightweight OpenSpec change: proposal.md plus a MODIFIED delta on the `resume-homepage` spec is enough, design.md can be skipped. Pure wording/typo fixes that don't change any fact don't need this — a normal commit is fine. No separate changelog file; the OpenSpec change history is the record.
