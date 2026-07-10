@@ -19,7 +19,7 @@ Changes are proposed via OpenSpec (`openspec new change <name>`) with proposal.m
 
 ## Code metrics — scc
 
-`scc` (Sloc Cloc and Code) measures code volume, complexity, and redundancy — not just line counts; its DRYness metric (`ULOC / SLOC`) is a direct signal of duplication. Right before archiving an OpenSpec change, same checkpoint as the drift audit, run it against `web/src` and `api` and log the result to `docs/metrics.md`: date, the change being archived, headline numbers (lines, code, complexity, DRYness %), and a one-line delta from the previous snapshot. The point is a running trend line that catches creeping duplication early and gives a refactor an explicit before/after target, not a one-time curiosity. Not an npm/pip package — see `docs/stack.md` for how the binary was obtained.
+`scc` (Sloc Cloc and Code) measures code volume, complexity, and redundancy — not just line counts; its DRYness metric (`ULOC / SLOC`) is a direct signal of duplication. Right before archiving an OpenSpec change, same checkpoint as the drift audit, run it against every top-level folder that holds this site's own source code (`web/src`, `api`, and any portfolio-piece folder added since, e.g. `farpost-pulse-func`) and log the result to `docs/metrics.md`: date, the change being archived, headline numbers (lines, code, complexity, DRYness %), and a one-line delta from the previous snapshot. The point is a running trend line that catches creeping duplication early and gives a refactor an explicit before/after target, not a one-time curiosity. Not an npm/pip package — see `docs/stack.md` for how the binary was obtained.
 
 ## Resume content changes
 
