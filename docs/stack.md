@@ -39,12 +39,16 @@ Exhaustive, running list of every technology, library, and tool used to build an
 - OpenSpec — spec-driven change workflow (`openspec/`)
 - **scc** (Sloc Cloc and Code, `boyter/scc`, 2026-07-10) — code volume/complexity/redundancy (DRYness) metrics, snapshotted to `docs/metrics.md` at every OpenSpec archive (see `CLAUDE.md`). Not an npm/pip package — a standalone Go binary. `choco install scc` / `winget install --id benboyter.scc` both work with admin rights; installed here via the [direct release binary](https://github.com/boyter/scc/releases) instead, since this shell doesn't have elevated rights for Chocolatey. Currently at `c:/dev/tools/scc/scc.exe`, outside the repo — not on `PATH` by default.
 
+## Testing & verification
+See `docs/testing.md` for the full consolidated picture — what tool covers which layer, and why.
+
+- **Playwright** (with Chromium, occasionally Firefox) — first used 2026-07-07, and the recurring method since for browser-driven UI verification (navigation, interaction, mobile viewports, screenshots). Not a one-off despite where it used to be filed.
+
 ## One-off / ad hoc tools
 Reached for to accomplish a specific task, not part of the running app.
 
 - **PyMuPDF** (`pymupdf` / `fitz`) — used 2026-07-07 by CLI to extract the headshot image directly out of `resume.pdf` into `web/public/images/headshot.png`.
 - **pikepdf** — briefly evaluated 2026-07-07 as an alternative for the same PDF image extraction; not what ended up being used.
-- **Playwright** (with Chromium) — used 2026-07-07 for automated screenshot-based visual verification of the homepage and placeholder routes against the resume PDF.
 - **Docker** — used 2026-07-07 to run a local Postgres container for verifying the FastAPI + SQLModel + asyncpg wiring end-to-end before cleanup.
 - **psql** — used 2026-07-07 to manually confirm Postgres connectivity during local testing.
 - **.NET `System.Drawing` (via PowerShell)** — used 2026-07-08 to read the actual pixel dimensions of the 6 `SETUP_GALLERY` screenshots (neither PIL nor a JS image library was on hand), so `next/image`'s `width`/`height` props could reflect each image's real aspect ratio rather than an assumed one.
