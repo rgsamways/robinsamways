@@ -6,7 +6,14 @@ Each entry includes the literal handoff text given to CLI, not just a summary, s
 
 ## Open
 
-- [ ] 2026-07-10 — `npm run seed` fails against the real, free-tier Cosmos DB account (`farpost-pulse-cosmos`, 1000 RU/s total throughput cap) with `BadRequest`/substatus 1028: "would have increased the total throughput to 1200 RU/s." Caught while actually running the seed step during deployment, not in dev — this never surfaced against the in-memory fake client `scripts/testHandlers.js` uses.
+- [ ] 2026-07-10 — `/ops/deploy` drifted from `docs/deployment-guide.md` again — Part 8a gained a missing step (seeding the real Cosmos DB locally before deploy, since there's no seed-triggering endpoint on the deployed Function App and the seed script is deliberately excluded from what ships to Azure) and its remaining steps renumbered from 1-5 to 1-7.
+
+  **Handoff given to CLI (2026-07-10):**
+  > Sync `web/src/app/ops/deploy/page.tsx`'s Part 8a (Farpost Pulse/Azure) against `docs/deployment-guide.md`'s current version: new step 2 ("Locally, in `pieces/farpost-pulse-func/`: `cp local.settings.json.example local.settings.json`, fill in `COSMOS_CONNECTION_STRING`... then `npm run seed`"), inserted between "get the connection string" and "deploy the source" — the rest of the steps shift down accordingly (deploy is now 3, app settings 4, CORS 5, Vercel env var 6, verify 7). Update the "Last updated" date if it changes. `npm run build` clean, no console warnings.
+
+## Resolved
+
+- [x] 2026-07-10 — `npm run seed` fails against the real, free-tier Cosmos DB account (`farpost-pulse-cosmos`, 1000 RU/s total throughput cap) with `BadRequest`/substatus 1028: "would have increased the total throughput to 1200 RU/s." Caught while actually running the seed step during deployment, not in dev — this never surfaced against the in-memory fake client `scripts/testHandlers.js` uses.
 
   **Handoff given to CLI (2026-07-10):**
   > `pieces/farpost-pulse-func/scripts/seed.js`'s `main()` creates the database with `client.databases.createIfNotExists({ id: DATABASE_NAME })` — no throughput specified — then `ensureContainer()` creates all three containers (`techs`, `jobs`, `coachingHistory`) each with their own implicit dedicated throughput (Cosmos defaults new containers to 400 RU/s when neither the database nor the container specifies shared throughput). 3 × 400 = 1200 RU/s, over the free tier's 1000 RU/s account-wide cap.
@@ -15,12 +22,7 @@ Each entry includes the literal handoff text given to CLI, not just a summary, s
   >
   > Verify: `npm run seed` succeeds against the real `farpost-pulse-cosmos` account without a throughput error, and confirm in the Azure Portal (Cosmos DB account → Data Explorer, or → Settings → Scale) that the database shows 1000 RU/s shared throughput with all three containers drawing from it, not each holding its own allocation.
 
-- [ ] 2026-07-10 — `/ops/deploy` drifted from `docs/deployment-guide.md` again — Part 8a gained a missing step (seeding the real Cosmos DB locally before deploy, since there's no seed-triggering endpoint on the deployed Function App and the seed script is deliberately excluded from what ships to Azure) and its remaining steps renumbered from 1-5 to 1-7.
-
-  **Handoff given to CLI (2026-07-10):**
-  > Sync `web/src/app/ops/deploy/page.tsx`'s Part 8a (Farpost Pulse/Azure) against `docs/deployment-guide.md`'s current version: new step 2 ("Locally, in `pieces/farpost-pulse-func/`: `cp local.settings.json.example local.settings.json`, fill in `COSMOS_CONNECTION_STRING`... then `npm run seed`"), inserted between "get the connection string" and "deploy the source" — the rest of the steps shift down accordingly (deploy is now 3, app settings 4, CORS 5, Vercel env var 6, verify 7). Update the "Last updated" date if it changes. `npm run build` clean, no console warnings.
-
-## Resolved
+  **Resolution:** applied the one-line fix in `pieces/farpost-pulse-func/scripts/seed.js` exactly as specified. Before running the real verification, checked the live account read-only first and found the earlier failed run had already left real state behind: the `farpost-pulse` database existed with no database-level throughput, and `jobs`/`techs` already had their own dedicated 400 RU/s offers locked in from creation (`coachingHistory` never got created — that's where the original run hit the 1200 RU/s cap). Since `createIfNotExists` is a no-op on existing resources, the code fix alone couldn't retroactively change already-provisioned throughput — flagged this to Robin and got explicit confirmation before deleting the existing database (seed data only, fully regenerable) and letting `npm run seed` recreate it fresh. Verified against the live account: `npm run seed` completed with no throughput error (6 techs, 144 jobs upserted); a follow-up read-only check confirmed the database now carries a 1000 RU/s shared offer and none of the three containers have their own dedicated offer (`readOffer()` returns `resource: undefined` for each, meaning they draw from the shared pool). Used small temporary Node scripts against the real `@azure/cosmos` SDK for both the inspection and the deletion step, deleted immediately after use — not part of the app.
 
 - [x] 2026-07-10 — `/ops/deploy` drifted from `docs/deployment-guide.md` again, on top of the 2026-07-07 sync below. This one's from adding a new Part 8 (Portfolio piece deployments, with a Farpost Pulse/Azure subsection) ahead of the actual build, per Robin's request to nail this convention down now rather than let it accumulate. The page also had two other stale spots unrelated to Part 8, caught while making this edit.
 

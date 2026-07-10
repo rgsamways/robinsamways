@@ -50,7 +50,10 @@ async function main() {
   }
 
   const client = new CosmosClient(connectionString);
-  const { database } = await client.databases.createIfNotExists({ id: DATABASE_NAME });
+  const { database } = await client.databases.createIfNotExists({
+    id: DATABASE_NAME,
+    throughput: 1000,
+  });
 
   console.log(`Seeding Cosmos DB database "${DATABASE_NAME}"...`);
 
