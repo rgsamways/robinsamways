@@ -10,9 +10,9 @@ The `/narrative` route SHALL render a showcase index of Narrative-type project p
 - **WHEN** a visitor loads `/narrative`
 - **THEN** the page shows a teaser entry for Credential Flow, linking to `/narrative/credential-flow`
 
-#### Scenario: Index lists the Farpost Pulse placeholder
+#### Scenario: Index lists the Farpost Pulse project
 - **WHEN** a visitor loads `/narrative`
-- **THEN** the page shows a teaser entry for Farpost Pulse, linking to `/narrative/farpost-pulse`
+- **THEN** the page shows a teaser entry for Farpost Pulse, accurately describing it as a real, built project on this site (not a placeholder, and not framed as a separate project elsewhere), linking to `/narrative/farpost-pulse`
 
 #### Scenario: Index is capable of holding more than one project
 - **WHEN** a third Narrative-type project is added to the index in the future
@@ -25,8 +25,12 @@ A project entry in a showcase index (Method or Narrative) SHALL support an optio
 - **WHEN** a visitor views Credential Flow's entry on the `/narrative` index
 - **THEN** the entry displays its tags (e.g. Salesforce, OAuth 2.0, Anthropic AI) beneath its teaser text
 
+#### Scenario: Farpost Pulse's entry shows its tags
+- **WHEN** a visitor views Farpost Pulse's entry on the `/narrative` index
+- **THEN** the entry displays its tags (e.g. Azure Functions, Cosmos DB, React) beneath its teaser text
+
 #### Scenario: An entry with no tags renders without a tag row
-- **WHEN** a project entry (e.g. the Farpost Pulse placeholder) has no tags defined
+- **WHEN** a project entry with no tags defined is added to an index (e.g. a future placeholder entry, before its real content and tags exist)
 - **THEN** no tag row renders for that entry
 
 ### Requirement: Credential Flow content lives at its own route
@@ -35,11 +39,4 @@ The Credential Flow case-study content and live demo widget (as defined by the `
 #### Scenario: Credential Flow page renders under its new heading
 - **WHEN** a visitor navigates to `/narrative/credential-flow`
 - **THEN** the page renders the same case-study content and live demo widget previously served at `/portfolio/salesforce-loan-demo`, under a "$ Credential Flow" heading and matching metadata title, with "Salesforce Loan Demo" retained as descriptive subtitle text rather than removed
-
-### Requirement: Farpost Pulse placeholder route
-The site SHALL have a placeholder route at `/narrative/farpost-pulse`, rendering a minimal placeholder page (a heading and short "coming soon" style message) rather than a 404, listed as an entry on the `/narrative` index.
-
-#### Scenario: Farpost Pulse route renders a placeholder page
-- **WHEN** a visitor navigates to `/narrative/farpost-pulse`
-- **THEN** a page renders with a heading identifying it as Farpost Pulse and placeholder content, using the site's monospace/terminal styling
 
