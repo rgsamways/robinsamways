@@ -2,7 +2,7 @@
 
 Running `scc` (Sloc Cloc and Code) snapshots, taken right before archiving each OpenSpec change — same checkpoint as the drift audit. Tracks code volume, complexity, and redundancy (DRYness = `ULOC / SLOC`) over time, so duplication growth is visible early and a refactor has an explicit before/after target instead of a vibe. See `CLAUDE.md`'s "Code metrics — scc" section for the convention, `docs/stack.md` for how the binary was obtained.
 
-Command: `scc --dryness` against every top-level folder holding this site's own source code — `web/src api` today, growing to include each new portfolio-piece folder as one gets added (e.g. `farpost-pulse-func`). Run from repo root.
+Command: `scc --dryness web/src api pieces` (run from repo root) — `pieces` covers every promoted portfolio-piece backend as one argument, no per-piece updates needed here as new ones get added.
 
 ## Snapshots
 

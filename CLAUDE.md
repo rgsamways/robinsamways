@@ -19,7 +19,7 @@ Changes are proposed via OpenSpec (`openspec new change <name>`) with proposal.m
 
 ## Code metrics — scc
 
-`scc` (Sloc Cloc and Code) measures code volume, complexity, and redundancy — not just line counts; its DRYness metric (`ULOC / SLOC`) is a direct signal of duplication. Right before archiving an OpenSpec change, same checkpoint as the drift audit, run it against every top-level folder that holds this site's own source code (`web/src`, `api`, and any portfolio-piece folder added since, e.g. `farpost-pulse-func`) and log the result to `docs/metrics.md`: date, the change being archived, headline numbers (lines, code, complexity, DRYness %), and a one-line delta from the previous snapshot. The point is a running trend line that catches creeping duplication early and gives a refactor an explicit before/after target, not a one-time curiosity. Not an npm/pip package — see `docs/stack.md` for how the binary was obtained.
+`scc` (Sloc Cloc and Code) measures code volume, complexity, and redundancy — not just line counts; its DRYness metric (`ULOC / SLOC`) is a direct signal of duplication. Right before archiving an OpenSpec change, same checkpoint as the drift audit, run it against every top-level folder that holds this site's own source code (`web/src`, `api`, and `pieces` — scanning `pieces` as one argument automatically covers every promoted portfolio-piece backend inside it, no per-piece updates needed here as new ones get added) and log the result to `docs/metrics.md`: date, the change being archived, headline numbers (lines, code, complexity, DRYness %), and a one-line delta from the previous snapshot. The point is a running trend line that catches creeping duplication early and gives a refactor an explicit before/after target, not a one-time curiosity. Not an npm/pip package — see `docs/stack.md` for how the binary was obtained.
 
 ## Resume content changes
 
@@ -31,12 +31,12 @@ The `resume-homepage` spec encodes literal resume content (specific employers, d
 
 ## Portfolio piece isolation
 
-`web/` and `api/` are this site's own core — always present, shared by default. A new portfolio piece's backend logic starts as an isolated module inside `api/` (its own file, no shared state with any other piece's module — same pattern `api/app/salesforce.py` already uses). It only gets promoted to its own top-level folder with its own separately-deployed backend when one of two things is true:
+`web/` and `api/` are this site's own core — always present, shared by default. A new portfolio piece's backend logic starts as an isolated module inside `api/` (its own file, no shared state with any other piece's module — same pattern `api/app/salesforce.py` already uses). It only gets promoted to its own separately-deployed backend, at `pieces/<piece-name>/`, when one of two things is true:
 
-1. **It genuinely needs a different runtime or language than Python** — not a preference, a requirement of what the piece is meant to demonstrate. Farpost Pulse's Azure Functions backend (`farpost-pulse-func/`) is this: the whole point is proving real Node.js/Azure serverless experience, so it has to actually be Node, not Python pretending to be Node.
+1. **It genuinely needs a different runtime or language than Python** — not a preference, a requirement of what the piece is meant to demonstrate. Farpost Pulse's Azure Functions backend (`pieces/farpost-pulse-func/`) is this: the whole point is proving real Node.js/Azure serverless experience, so it has to actually be Node, not Python pretending to be Node.
 2. **It needs a heavy or native Python dependency** — real GIS libraries (`geopandas`/GDAL), AutoCAD file parsing, anything beyond `api/`'s existing lightweight `httpx`-based pattern — that risks conflicting with what other pieces already share in `api/`'s one `requirements.txt`. `api/` is one shared Python environment and one Railway deployment; a version conflict or a failed native build in one piece's dependency would break every piece sharing that deploy, not just the new one.
 
-A promoted piece is a genuinely separate runtime on separate infrastructure, callable over HTTP, never touching `api/`'s own dependencies at all — any additional top-level folder beyond `web/`/`api/` is a named, isolated backend belonging to exactly one portfolio piece.
+Every promoted piece lives under `pieces/`, one folder per piece, never bare at the repo root — this keeps the root itself (`web/`, `api/`, `pieces/`, plus `docs/`/`openspec/`) stable no matter how many pieces accumulate, and means moving a piece's folder later is never necessary. A promoted piece is a genuinely separate runtime on separate infrastructure, callable over HTTP, never touching `api/`'s own dependencies at all.
 
 ## Issues / QA notes
 
