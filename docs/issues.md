@@ -6,6 +6,18 @@ Each entry includes the literal handoff text given to CLI, not just a summary, s
 
 ## Open
 
+- [ ] 2026-07-10 — `/ops/deploy` drifted from `docs/deployment-guide.md` again, on top of the still-open 2026-07-07 sync below. This one's from adding a new Part 8 (Portfolio piece deployments, with a Farpost Pulse/Azure subsection) ahead of the actual build, per Robin's request to nail this convention down now rather than let it accumulate. The page also has two other stale spots unrelated to Part 8, caught while making this edit.
+
+  **Handoff given to CLI (2026-07-10):**
+  > Sync `web/src/app/ops/deploy/page.tsx` against `docs/deployment-guide.md` (source of truth):
+  > 1. **New Part 8 — Portfolio piece deployments**, with its Farpost Pulse (Azure) subsection — add this section to the page in full, matching the guide's wording.
+  > 2. **Troubleshooting renumbered** from Part 8 to Part 9 (it now comes after the new Part 8) — update the page's heading to match.
+  > 3. **Intro line** now says "the five core services ... plus each promoted portfolio piece's own infrastructure as one gets added (see Part 8)" instead of "across five services" — update to match.
+  > 4. **Part 7 verification checklist**: the menu-navigation line now says "Home / Method / Narrative / Farpost / Dev Log" (was still "Portfolio / Farpost / Dev Log placeholder routes," stale since the Method/Narrative restructure); a new checklist line was added about a deployed piece loading real data.
+  > 5. **"Last updated" date** on the page should become 2026-07-10.
+  >
+  > This is documentation ahead of the actual Farpost Pulse deployment — the guide's new Part 8 describes what *will* need doing once `pieces/farpost-pulse-func/` exists and is deployed, not something to execute yet. Just sync the page's content to match the guide. `npm run build` clean, check for the JSX whitespace-glue bug proactively, no console warnings.
+
 - [ ] 2026-07-07 — `/ops/deploy` still drifted from `docs/deployment-guide.md` in three places, on top of the Part 6a/8 sync just completed. Two were flagged by CLI as out-of-scope-but-noticed; one (Part 3) hadn't been surfaced yet because the guide edit happened after the original sync handoff was written.
 
   **Handoff given to CLI (2026-07-07):**

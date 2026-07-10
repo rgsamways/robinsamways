@@ -1,8 +1,8 @@
 # Going live: robinsamways.ca deployment manual
 
-A complete, ordered runbook for taking robinsamways.ca from a local repo to a live, production site across five services: GoDaddy, Cloudflare, Vercel, Railway, and Resend. Written so it can be followed start to finish, or handed to someone else to execute.
+A complete, ordered runbook for taking robinsamways.ca from a local repo to a live, production site — the five core services (GoDaddy, Cloudflare, Vercel, Railway, Resend), plus each promoted portfolio piece's own infrastructure as one gets added (see Part 8). Written so it can be followed start to finish, or handed to someone else to execute.
 
-Last updated: 2026-07-07.
+Last updated: 2026-07-10.
 
 ## Prerequisites
 
@@ -107,11 +107,30 @@ For anything the site or API needs to *send* programmatically — the homepage c
 - [ ] `https://www.robinsamways.ca` loads correctly
 - [ ] `https://robinsamways.com` 301-redirects to `https://robinsamways.ca`
 - [ ] `https://api.robinsamways.ca/health` returns 200 with `database: ok` against **production** Postgres
-- [ ] Menu navigation works in production (Portfolio / Farpost / Dev Log placeholder routes)
+- [ ] Menu navigation works in production (Home / Method / Narrative / Farpost / Dev Log)
+- [ ] Once a portfolio piece is deployed per Part 8, its page on `robinsamways.ca` loads real data from its own live infrastructure, not local/mock data
 - [ ] A test email to `robin@robinsamways.ca`, sent from an account other than `rgsamways@gmail.com`, arrives in Gmail (see the self-send caveat in Part 6a)
 - [ ] Resend shows the sending domain as **Verified**
 
-## Part 8 — Troubleshooting
+## Part 8 — Portfolio piece deployments
+
+Some portfolio pieces need their own separate infrastructure beyond the five core services above (see `CLAUDE.md`'s "Portfolio piece isolation" convention). Each one gets its own numbered subsection here as it's promoted, documenting exactly what needs configuring for it to actually work in production. Every promoted piece follows the same shape: its own cloud resources (provisioned manually, same as the core services above), CORS configured to allow `robinsamways.ca` (and `localhost` during development), and its secrets held entirely on its own platform — never committed to this repo, never exposed to the browser. `web/` only ever holds a public base-URL reference to it, via a `NEXT_PUBLIC_<PIECE>_API_URL` environment variable in Vercel — never an actual secret.
+
+### 9a. Farpost Pulse (Azure)
+
+Resources already provisioned by Robin directly in the Azure Portal (not through this repo):
+- Resource Group: `farpost-pulse-rg` (East US)
+- Cosmos DB account: `farpost-pulse-cosmos` (NoSQL API, free tier)
+- Function App: `farpost-pulse-func` (Flex Consumption, Node.js 22 LTS)
+- Azure OpenAI (Foundry project): `rgsamways-0644` / resource `rgsamways-0644-resource` — model deployment pending a quota increase as of 2026-07-10; the app runs against a mocked coaching-tip function until it clears
+
+1. Deploy `pieces/farpost-pulse-func/`'s source to the `farpost-pulse-func` Function App (`func azure functionapp publish farpost-pulse-func` from within that folder, or via the Azure Portal's deployment center — whichever's more convenient at deploy time).
+2. On the Function App, set application settings (Azure Portal → Function App → Configuration) for the Cosmos DB connection string and, once wired in, the Azure OpenAI key — never commit either to this repo, never expose either to the browser.
+3. Configure CORS on the Function App (Azure Portal → Function App → CORS) to allow `https://robinsamways.ca` and `http://localhost:3000`.
+4. In Vercel, set `NEXT_PUBLIC_FARPOST_PULSE_API_URL` to the Function App's public base URL (Project → Settings → Environment Variables, same page used for `NEXT_PUBLIC_API_URL` in Part 3). **Trigger a new deploy after adding it** — env var changes don't apply to existing deployments, same gotcha as Part 3.
+5. Confirm `https://robinsamways.ca/narrative/farpost-pulse` loads real data from the live Function App, not local/mock data.
+
+## Part 9 — Troubleshooting
 
 - **DNS not resolving after the nameserver change:** can take up to 48h though it's usually much faster. Cloudflare's dashboard shows **Active** once it recognizes the delegation — check there before assuming something's broken.
 - **Vercel/Railway domain stuck on "pending verification":** re-check the exact record type/value the platform is currently asking for (they can differ from what's documented here) and confirm Cloudflare isn't proxying (orange cloud) if the platform expects direct DNS-only resolution.
