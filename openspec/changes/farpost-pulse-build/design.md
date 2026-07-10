@@ -5,7 +5,7 @@ Farpost Pulse's placeholder shipped as part of `method-narrative-navigation` (ar
 ## Goals / Non-Goals
 
 **Goals:**
-- Replace the placeholder with a real, working three-route app that demonstrates hands-on Node.js + Azure serverless + an AI SDK — the specific gap named in the a company feedback that motivated this whole project.
+- Replace the placeholder with a real, working three-route app that demonstrates genuine hands-on Node.js + Azure serverless + an AI SDK experience — the specific skill gap that motivated this whole project.
 - Keep the frontend inside this repo (consistent with every other page on the site) while keeping the backend genuinely on Azure (consistent with the demo's actual purpose and with this repo's `CLAUDE.md` "Portfolio piece isolation" convention).
 - Ship something fully functional and demoable today, without waiting on the Azure OpenAI quota increase.
 - Correct the wrong "separate project" framing currently live on the `/narrative` index.
@@ -45,5 +45,5 @@ Farpost Pulse's placeholder shipped as part of `method-narrative-navigation` (ar
 
 ## Open Questions
 
-- Exact wording for the landing page's case-study narrative prose (the a company origin story, architecture rationale) — first-pass draft acceptable, same "flag if exact wording is wanted instead" pattern used on prior changes.
+- Exact wording for the landing page's case-study narrative prose (the curiosity-driven learning origin story, architecture rationale) — first-pass draft acceptable, same "flag if exact wording is wanted instead" pattern used on prior changes.
 - Whether `POST /api/coaching/generate`'s rate limit threshold should match Credential Flow's exact numbers or be set independently — left to whoever implements this, using Credential Flow's existing limiter as a starting point.

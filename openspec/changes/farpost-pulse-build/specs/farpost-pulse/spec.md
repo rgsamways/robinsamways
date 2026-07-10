@@ -1,7 +1,7 @@
 ## ADDED Requirements
 
 ### Requirement: Farpost Pulse landing page
-The `/narrative/farpost-pulse` route SHALL render a landing page combining written case-study narrative (the a company feedback origin story, architecture rationale, tech stack reasoning) with a tech roster listing 5-8 seeded field technicians, each showing one snapshot stat and linking to that tech's own detail page.
+The `/narrative/farpost-pulse` route SHALL render a landing page combining written case-study narrative (a curiosity-driven learning story — getting genuine hands-on time with a stack the author wanted to actually know, not just read about — plus architecture rationale and tech stack reasoning) with a tech roster listing 5-8 seeded field technicians, each showing one snapshot stat and linking to that tech's own detail page. The narrative SHALL NOT reference any specific company, interview, or named individual — the framing is exploratory learning, not a response to feedback from any real party.
 
 #### Scenario: Visitor sees the roster
 - **WHEN** a visitor loads `/narrative/farpost-pulse`

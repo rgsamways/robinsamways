@@ -1,6 +1,6 @@
 ## Why
 
-Farpost Pulse currently exists only as a "coming soon" placeholder at `/narrative/farpost-pulse`, and its teaser text on the `/narrative` index incorrectly describes it as "a separate, already-scoped project" — a stale framing from earlier confusion, not accurate to how it's actually meant to work. Robin was rejected from an interview at a company; a dev there (a developer) gave specific, named-stack feedback: strong CV, but no proof of current hands-on experience in React, Node, Azure serverless, and an AI SDK. Farpost Pulse exists to close exactly that gap — building it for real, not leaving it as a placeholder, is the actual point.
+Farpost Pulse currently exists only as a "coming soon" placeholder at `/narrative/farpost-pulse`, and its teaser text on the `/narrative` index incorrectly describes it as "a separate, already-scoped project" — a stale framing from earlier confusion, not accurate to how it's actually meant to work. Robin wanted genuine, current hands-on experience with React, Node.js, Azure serverless, and an AI SDK — not just familiarity on paper. Farpost Pulse exists to close that gap through real, hands-on building — a curiosity-driven learning project, not a response to any specific external party's feedback — and building it for real, not leaving it as a placeholder, is the actual point.
 
 ## What Changes
 
