@@ -1,3 +1,7 @@
+## RENAMED Requirements
+- FROM: `### Requirement: A project page's local menu links to its own sections`
+- TO: `### Requirement: A project page's local menu links to its own sections and back to its parent index`
+
 ## MODIFIED Requirements
 
 ### Requirement: A project page's local menu links to its own sections and back to its parent index

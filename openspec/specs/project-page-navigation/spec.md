@@ -14,13 +14,6 @@ The site SHALL provide a reusable hamburger-menu component, distinct from the gl
 - **WHEN** a visitor opens the local menu on two different pages
 - **THEN** each menu shows a different set of links, appropriate to that specific page
 
-### Requirement: A project page's local menu links to its own sections
-An individual project page (e.g. the Credential Flow project page) SHALL include a local navigation menu listing links to its own sections.
-
-#### Scenario: Credential Flow's local menu lists its sections
-- **WHEN** a visitor opens the local menu beside the Credential Flow project page's heading
-- **THEN** the menu includes links to that page's own sections (Overview, Why Client Credentials Flow, Licensing Limitations, Farpost Parallel, Live Demo, Relationship View, and Setup Gallery)
-
 ### Requirement: Farpost's local menu links to its own sections
 The `/farpost` page's heading SHALL include a local navigation menu listing links to its own sections.
 
@@ -41,4 +34,15 @@ The `/narrative` index page's heading SHALL include a local navigation menu list
 #### Scenario: Narrative's local menu lists its published projects
 - **WHEN** a visitor opens the local menu beside the "$ Narrative" heading
 - **THEN** the menu includes a link to the Credential Flow project page and a link to the Farpost Pulse placeholder page
+
+### Requirement: A project page's local menu links to its own sections and back to its parent index
+An individual project page (e.g. Credential Flow, Farpost Pulse) SHALL include a local navigation menu listing links to its own sections, plus a link back to the parent index (Method or Narrative) it is published under. Farpost is exempt from the parent-link portion of this requirement — it has no parent index, since it sits at the same top-level tier as Method and Narrative rather than being published under either.
+
+#### Scenario: Credential Flow's local menu lists its sections and links back to Narrative
+- **WHEN** a visitor opens the local menu beside the Credential Flow project page's heading
+- **THEN** the menu includes links to that page's own sections (Overview, Why Client Credentials Flow, Licensing Limitations, Farpost Parallel, Live Demo, Relationship View, and Setup Gallery), plus a link back to the Narrative index
+
+#### Scenario: Farpost Pulse's local menu lists its sections and links back to Narrative
+- **WHEN** a visitor opens the local menu beside the Farpost Pulse landing page's heading
+- **THEN** the menu includes links to that page's own sections (Origin Story, Architecture, Tech Stack, Design Notes, and Tech Roster), plus a link back to the Narrative index
 
