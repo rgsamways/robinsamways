@@ -25,8 +25,9 @@ export default function FarpostPulsePage() {
             <span className="text-accent">$</span> Farpost Pulse
           </h1>
           <p className="mt-2 text-sm text-muted">
-            A field-tech coaching dashboard — real Azure serverless, built in
-            direct response to specific interview feedback.
+            A field-tech coaching dashboard — real Azure serverless, built to
+            get genuine hands-on time with a stack I wanted to actually know,
+            not just read about.
           </p>
         </div>
       </div>
@@ -35,21 +36,20 @@ export default function FarpostPulsePage() {
         <SectionHeader id="origin-story" title="ORIGIN_STORY" />
         <div className="space-y-4 text-sm leading-relaxed">
           <p>
-            I interviewed at a company and didn&rsquo;t get the role. a developer, one
-            of their developers, gave me feedback that was specific and named
-            the exact gap: a strong CV, but no proof of current, hands-on
-            experience in React, Node.js, Azure serverless, and an AI SDK.
-            Not a vague &ldquo;needs more experience&rdquo; — a named stack.
+            React and Node.js I already know well. Azure serverless and
+            building against a real AI SDK were pieces I&rsquo;d only read
+            about, never actually built with — the gap between knowing a
+            stack exists on paper and having current, hands-on time in it. I
+            wanted to close that the honest way: build something real with
+            it, not work through another tutorial.
           </p>
           <p>
-            This page is a direct answer to that feedback, not a rebuild of
-            whatever a company itself builds — I don&rsquo;t know the details
-            of their actual product, and I&rsquo;m not guessing at them here.
-            What I do know is Farpost&rsquo;s own field-documentation problem
-            firsthand, so I applied the named stack to that domain instead:
-            a real Azure Functions backend, a real Cosmos DB, called directly
-            from a real React frontend, coaching field technicians on the
-            same kind of job-quality patterns Farpost itself cares about.
+            Rather than a generic to-do-list demo, I applied the stack to a
+            domain I actually know firsthand — Farpost&rsquo;s own
+            field-documentation problem — coaching field technicians on the
+            same kind of job-quality patterns Farpost itself cares about: a
+            real Azure Functions backend, a real Cosmos DB, called directly
+            from a real React frontend.
           </p>
         </div>
       </section>
@@ -63,9 +63,9 @@ export default function FarpostPulsePage() {
             app (<code>farpost-pulse-func</code>), calling a real Cosmos DB
             account (<code>farpost-pulse-cosmos</code>) — not reimplemented
             in this site&rsquo;s own Python/FastAPI <code>api/</code>, on
-            purpose. The whole point of this page is proving Node.js and
-            Azure serverless specifically; doing it in Python would prove
-            nothing about the actual gap named in the feedback.
+            purpose. The whole point of this page is getting genuine,
+            hands-on time with Node.js and Azure serverless specifically;
+            doing it in Python would defeat that entirely.
           </p>
           <p>
             Unlike Credential Flow&rsquo;s relationship with Salesforce,
@@ -118,9 +118,9 @@ export default function FarpostPulsePage() {
                   Azure Functions, Node.js, Flex Consumption
                 </td>
                 <td className="py-2 align-top">
-                  The actual gap named in the interview feedback — proving
-                  hands-on Node.js/Azure serverless experience, not just
-                  claiming it on a resume.
+                  The stack I wanted genuine hands-on time with — proving
+                  real Node.js/Azure serverless experience, not just reading
+                  about it.
                 </td>
               </tr>
               <tr className="border-b border-foreground/10">
