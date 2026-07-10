@@ -6,6 +6,11 @@ Each entry includes the literal handoff text given to CLI, not just a summary, s
 
 ## Open
 
+- [ ] 2026-07-10 — `/ops/deploy` drifted from `docs/deployment-guide.md` again — Part 8a gained a missing step (seeding the real Cosmos DB locally before deploy, since there's no seed-triggering endpoint on the deployed Function App and the seed script is deliberately excluded from what ships to Azure) and its remaining steps renumbered from 1-5 to 1-7.
+
+  **Handoff given to CLI (2026-07-10):**
+  > Sync `web/src/app/ops/deploy/page.tsx`'s Part 8a (Farpost Pulse/Azure) against `docs/deployment-guide.md`'s current version: new step 2 ("Locally, in `pieces/farpost-pulse-func/`: `cp local.settings.json.example local.settings.json`, fill in `COSMOS_CONNECTION_STRING`... then `npm run seed`"), inserted between "get the connection string" and "deploy the source" — the rest of the steps shift down accordingly (deploy is now 3, app settings 4, CORS 5, Vercel env var 6, verify 7). Update the "Last updated" date if it changes. `npm run build` clean, no console warnings.
+
 ## Resolved
 
 - [x] 2026-07-10 — `/ops/deploy` drifted from `docs/deployment-guide.md` again, on top of the 2026-07-07 sync below. This one's from adding a new Part 8 (Portfolio piece deployments, with a Farpost Pulse/Azure subsection) ahead of the actual build, per Robin's request to nail this convention down now rather than let it accumulate. The page also had two other stale spots unrelated to Part 8, caught while making this edit.
