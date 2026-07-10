@@ -1,6 +1,14 @@
 import type { Metadata } from "next";
 import Farpost from "@/components/Farpost";
+import HamburgerMenu from "@/components/HamburgerMenu";
 import SectionHeader from "@/components/SectionHeader";
+
+const SECTION_LINKS = [
+  { href: "#origin-story", label: "Origin Story" },
+  { href: "#problems-farpost-solves", label: "Problems Farpost Solves" },
+  { href: "#building-lifecycle-example", label: "Building Lifecycle Example" },
+  { href: "#process", label: "Process" },
+];
 
 export const metadata: Metadata = {
   title: "Farpost · Robin Samways",
@@ -40,12 +48,15 @@ const LIFECYCLE_ENTRIES: { date: string; text: string }[] = [
 export default function FarpostPage() {
   return (
     <main className="py-10">
-      <h1 className="text-xl font-bold">
-        <span className="text-accent">$</span> <Farpost />
-      </h1>
+      <div className="flex items-start gap-3">
+        <HamburgerMenu links={SECTION_LINKS} ariaLabel="page sections menu" />
+        <h1 className="text-xl font-bold">
+          <span className="text-accent">$</span> <Farpost />
+        </h1>
+      </div>
 
       <section>
-        <SectionHeader title="ORIGIN_STORY" />
+        <SectionHeader id="origin-story" title="ORIGIN_STORY" />
         <div className="space-y-4 text-sm leading-relaxed">
           <p>
             I didn&rsquo;t set out to build a building-intelligence platform.
@@ -83,7 +94,7 @@ export default function FarpostPage() {
       </section>
 
       <section>
-        <SectionHeader title="PROBLEMS_FARPOST_SOLVES" />
+        <SectionHeader id="problems-farpost-solves" title="PROBLEMS_FARPOST_SOLVES" />
         <div className="space-y-4 text-sm leading-relaxed">
           <p>
             <strong>
@@ -155,7 +166,7 @@ export default function FarpostPage() {
       </section>
 
       <section>
-        <SectionHeader title="BUILDING_LIFECYCLE_EXAMPLE" />
+        <SectionHeader id="building-lifecycle-example" title="BUILDING_LIFECYCLE_EXAMPLE" />
         <div className="mb-4 border-l-4 border-accent bg-skills-bg px-4 py-3 text-sm">
           A fictional example, illustrating how a Farpost record actually
           behaves over a building&rsquo;s life — not a real property, but a
@@ -176,7 +187,7 @@ export default function FarpostPage() {
       </section>
 
       <section>
-        <SectionHeader title="PROCESS" />
+        <SectionHeader id="process" title="PROCESS" />
         <div className="space-y-4 text-sm leading-relaxed">
           <p>
             Building Farpost solo means there&rsquo;s no one else to catch

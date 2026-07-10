@@ -12,12 +12,12 @@ export default function PortfolioDemos() {
   return (
     <>
       <section>
-        <SectionHeader title="LIVE_DEMO" />
+        <SectionHeader id="live-demo" title="LIVE_DEMO" />
         <LoanDemoWidget onMutate={() => setRefreshKey((key) => key + 1)} />
       </section>
 
       <section>
-        <SectionHeader title="RELATIONSHIP_VIEW" />
+        <SectionHeader id="relationship-view" title="RELATIONSHIP_VIEW" />
         <p className="text-sm leading-relaxed">
           Three more read-only additions, chosen to speak directly to{" "}
           this role&rsquo;s actual priorities rather than to be generically
