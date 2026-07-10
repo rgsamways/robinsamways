@@ -29,6 +29,10 @@ The `resume-homepage` spec encodes literal resume content (specific employers, d
 
 `docs/stack.md` is an exhaustive, running list of every technology used to build this site — including one-off dev-time tools that never become a runtime dependency (e.g. a PDF library reached for once to extract an image). Whenever you introduce anything new, even something ephemeral, add it there before considering the task done.
 
+## Portfolio piece isolation
+
+A portfolio piece's own backend logic for talking to an external system (Salesforce, Azure, a future GIS/AutoCAD integration, whatever comes next) lives in its own isolated module, never sharing state or dependencies with another piece. If a piece needs a heavy or native Python dependency — real GIS libraries (`geopandas`/GDAL), AutoCAD file parsing, anything beyond `api/`'s existing lightweight `httpx`-based pattern — give it its own separately-deployed backend instead of adding it to `api/`'s shared `requirements.txt`. `api/` is one shared Python environment and one Railway deployment; a version conflict or a failed native build in one piece's dependency would break every piece sharing that deploy, not just the new one. Farpost Pulse's Azure Functions backend is the existing model for this: a genuinely separate runtime on separate infrastructure, callable over HTTP, never touching `api/`'s own dependencies at all.
+
 ## Issues / QA notes
 
 Lightweight "something's off" capture lives in `docs/issues.md` — quick, low-ceremony, not the formal OpenSpec or Sreditor flows. Robin flags things he spots in the running app there; CLI checks them off when fixed.
