@@ -6,5 +6,4 @@ local.settings.json.example
 test
 scripts
 tests
-node_modules
 .gitignore
