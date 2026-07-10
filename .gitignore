@@ -252,5 +252,18 @@ next-env.d.ts
 # Claude Code local settings (machine-specific permission allowlists, not project config)
 .claude/settings.local.json
 
+# Azure Functions local secrets (Cosmos DB connection string, etc.) — never committed,
+# same spirit as .env* above. See pieces/farpost-pulse-func/local.settings.json.example.
+local.settings.json
+.azure/
+
+# The Python-boilerplate `lib/` rule above (a setuptools/distutils build-artifact
+# pattern, meant for a package root) unintentionally matches any directory named
+# "lib" anywhere in this monorepo, including Node.js pieces' conventional
+# `src/lib/` — un-ignore it explicitly rather than reformatting the inherited
+# Python template block.
+!pieces/**/src/lib/
+!pieces/**/src/lib/**
+
 # Source asset only — resume content is hardcoded in the React homepage, not read at runtime
 /resume.pdf

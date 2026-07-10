@@ -1,0 +1,10 @@
+*.js.map
+.git*
+.vscode
+local.settings.json
+local.settings.json.example
+test
+scripts
+tests
+node_modules
+.gitignore

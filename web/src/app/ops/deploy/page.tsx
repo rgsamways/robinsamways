@@ -22,11 +22,13 @@ export default function DeployRunbookPage() {
       </h1>
       <p className="mt-2 text-sm text-muted">
         A complete, ordered runbook for taking robinsamways.ca from a local
-        repo to a live, production site across five services: GoDaddy,
-        Cloudflare, Vercel, Railway, and Resend. Written so it can be followed
-        start to finish, or handed to someone else to execute.
+        repo to a live, production site — the five core services (GoDaddy,
+        Cloudflare, Vercel, Railway, Resend), plus each promoted portfolio
+        piece&rsquo;s own infrastructure as one gets added (see Part 8).
+        Written so it can be followed start to finish, or handed to someone
+        else to execute.
       </p>
-      <p className="mt-1 text-sm text-muted">Last updated: 2026-07-07.</p>
+      <p className="mt-1 text-sm text-muted">Last updated: 2026-07-10.</p>
 
       <section>
         <SectionHeader title="PREREQUISITES" />
@@ -152,12 +154,22 @@ export default function DeployRunbookPage() {
               zero-config deploy).
             </>,
             <>
-              No environment variables are required yet — the homepage
-              content is hardcoded, not fetched from the API. (Note for
-              later: if <code>/web</code> ever calls <code>/api</code>{" "}
-              directly, e.g. for a live Salesforce-backed feature, that&rsquo;s
-              when a <code>NEXT_PUBLIC_API_URL</code> variable gets added
-              here.)
+              <strong>
+                Set <code>NEXT_PUBLIC_API_URL</code> ={" "}
+                <code>https://api.robinsamways.ca</code> as a Production
+                environment variable
+              </strong>{" "}
+              (Project → Settings → Environment Variables — note this is a
+              different page from &quot;Environments&quot;). This became
+              required once <code>/web</code> started calling{" "}
+              <code>/api</code> directly (first landed with the{" "}
+              <code>contact-form</code> change) — without it, the app falls
+              back to <code>http://localhost:8000</code>, which fails with a
+              CORS error in production.{" "}
+              <strong>
+                Environment variable changes don&rsquo;t apply to existing
+                deployments — trigger a new deploy after adding it.
+              </strong>
             </>,
             <>
               Deploy. Confirm the generated <code>*.vercel.app</code> preview
@@ -410,9 +422,9 @@ export default function DeployRunbookPage() {
         </h3>
         <p className="mt-1 text-sm leading-relaxed">
           For anything the site or API needs to <em>send</em>{" "}
-          programmatically later — a contact form, a notification — not
-          needed by anything currently built, but worth setting up now so the
-          domain is pre-verified when that feature arrives.
+          programmatically — the homepage contact form&rsquo;s notification
+          email is the first real user of this (see the{" "}
+          <code>contact-form</code> OpenSpec change).
         </p>
         <Steps
           items={[
@@ -440,9 +452,10 @@ export default function DeployRunbookPage() {
               <code>api/.env.example</code> only.
             </>,
             <>
-              No send-email code exists in <code>/api</code> yet — this step
-              just gets the account and domain pre-verified so a future
-              feature can start sending immediately without a DNS detour.
+              Store the same key on <code>/web</code> only if a build-time
+              need arises — as of the <code>contact-form</code> change, only{" "}
+              <code>/api</code> sends email, so <code>/web</code> never needs
+              this key.
             </>,
           ]}
         />
@@ -488,15 +501,24 @@ export default function DeployRunbookPage() {
             <li className="flex gap-2">
               <span aria-hidden>☐</span>
               <span>
-                Menu navigation works in production (Portfolio / Farpost /
-                Dev Log placeholder routes)
+                Menu navigation works in production (Home / Method /
+                Narrative / Farpost / Dev Log)
               </span>
             </li>
             <li className="flex gap-2">
               <span aria-hidden>☐</span>
               <span>
-                A test email to <code>robin@robinsamways.ca</code> arrives in
-                Gmail
+                Once a portfolio piece is deployed per Part 8, its page on{" "}
+                <code>robinsamways.ca</code> loads real data from its own live
+                infrastructure, not local/mock data
+              </span>
+            </li>
+            <li className="flex gap-2">
+              <span aria-hidden>☐</span>
+              <span>
+                A test email to <code>robin@robinsamways.ca</code>, sent from
+                an account other than <code>rgsamways@gmail.com</code>,
+                arrives in Gmail (see the self-send caveat in Part 6a)
               </span>
             </li>
             <li className="flex gap-2">
@@ -508,7 +530,94 @@ export default function DeployRunbookPage() {
       </section>
 
       <section>
-        <SectionHeader title="PART_8_TROUBLESHOOTING" />
+        <SectionHeader title="PART_8_PORTFOLIO_PIECE_DEPLOYMENTS" />
+        <p className="-mt-2 mb-3 text-sm leading-relaxed">
+          Some portfolio pieces need their own separate infrastructure beyond
+          the five core services above (see <code>CLAUDE.md</code>&rsquo;s
+          &quot;Portfolio piece isolation&quot; convention). Each one gets its
+          own numbered subsection here as it&rsquo;s promoted, documenting
+          exactly what needs configuring for it to actually work in
+          production. Every promoted piece follows the same shape: its own
+          cloud resources (provisioned manually, same as the core services
+          above), CORS configured to allow <code>robinsamways.ca</code> (and{" "}
+          <code>localhost</code> during development), and its secrets held
+          entirely on its own platform — never committed to this repo, never
+          exposed to the browser. <code>web/</code> only ever holds a public
+          base-URL reference to it, via a{" "}
+          <code>NEXT_PUBLIC_&lt;PIECE&gt;_API_URL</code> environment variable
+          in Vercel — never an actual secret.
+        </p>
+
+        <h3 className="mt-4 font-bold">8a. Farpost Pulse (Azure)</h3>
+        <p className="mt-1 text-sm leading-relaxed">
+          Resources already provisioned by Robin directly in the Azure
+          Portal (not through this repo):
+        </p>
+        <Steps
+          items={[
+            <>
+              Resource Group: <code>farpost-pulse-rg</code> (East US)
+            </>,
+            <>
+              Cosmos DB account: <code>farpost-pulse-cosmos</code> (NoSQL
+              API, free tier)
+            </>,
+            <>
+              Function App: <code>farpost-pulse-func</code> (Flex
+              Consumption, Node.js 22 LTS)
+            </>,
+            <>
+              Azure OpenAI (Foundry project):{" "}
+              <code>rgsamways-0644</code> / resource{" "}
+              <code>rgsamways-0644-resource</code> — model deployment
+              pending a quota increase as of 2026-07-10; the app runs
+              against a mocked coaching-tip function until it clears
+            </>,
+          ]}
+        />
+        <Steps
+          items={[
+            <>
+              Deploy <code>pieces/farpost-pulse-func/</code>&rsquo;s source
+              to the <code>farpost-pulse-func</code> Function App (
+              <code>func azure functionapp publish farpost-pulse-func</code>{" "}
+              from within that folder, or via the Azure Portal&rsquo;s
+              deployment center — whichever&rsquo;s more convenient at
+              deploy time).
+            </>,
+            <>
+              On the Function App, set application settings (Azure Portal →
+              Function App → Configuration) for the Cosmos DB connection
+              string and, once wired in, the Azure OpenAI key — never
+              commit either to this repo, never expose either to the
+              browser.
+            </>,
+            <>
+              Configure CORS on the Function App (Azure Portal → Function
+              App → CORS) to allow <code>https://robinsamways.ca</code> and{" "}
+              <code>http://localhost:3000</code>.
+            </>,
+            <>
+              In Vercel, set <code>NEXT_PUBLIC_FARPOST_PULSE_API_URL</code>{" "}
+              to the Function App&rsquo;s public base URL (Project →
+              Settings → Environment Variables, same page used for{" "}
+              <code>NEXT_PUBLIC_API_URL</code> in Part 3).{" "}
+              <strong>Trigger a new deploy after adding it</strong>{" "}
+              — env var changes don&rsquo;t apply to existing deployments,
+              same gotcha as Part 3.
+            </>,
+            <>
+              Confirm{" "}
+              <code>https://robinsamways.ca/narrative/farpost-pulse</code>{" "}
+              loads real data from the live Function App, not local/mock
+              data.
+            </>,
+          ]}
+        />
+      </section>
+
+      <section>
+        <SectionHeader title="PART_9_TROUBLESHOOTING" />
         <Callout>
           <ul className="space-y-3">
             <li className="flex gap-2">

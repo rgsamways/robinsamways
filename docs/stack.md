@@ -26,9 +26,15 @@ Exhaustive, running list of every technology, library, and tool used to build an
 - `next/font` (self-hosted JetBrains Mono)
 - `next/og` (`ImageResponse`) — used in `web/src/app/icon.tsx` (2026-07-08) to code-generate the site favicon (black circle, accent-color `$`) at build time, replacing the static `favicon.ico`; no image editor involved.
 
+**Portfolio pieces (`pieces/`)** — see `CLAUDE.md`'s "Portfolio piece isolation" convention for why these live outside `api/`
+- `pieces/farpost-pulse-func/` (2026-07-10) — Node.js 22, Azure Functions v4 programming model (`@azure/functions`), targeting the already-provisioned `farpost-pulse-func` Azure resource (Flex Consumption). Four HTTP-triggered, anonymous-auth endpoints backing `/narrative/farpost-pulse`'s three routes; called directly from the browser (no proxy through this repo's own `/api`) via `NEXT_PUBLIC_FARPOST_PULSE_API_URL`.
+- Azure Cosmos DB (NoSQL API, `@azure/cosmos` SDK) — `farpost-pulse-cosmos` account, three containers (`techs`, `jobs`, `coachingHistory`). Real cloud dependency once deployed; source code is git-tracked in this repo, the Cosmos DB connection string is not (Function App application setting only).
+- Azure OpenAI (Foundry project `rgsamways-0644`) — provisioned but not yet called; `generateCoachingTip()` runs against a mocked/templated function until the model deployment quota clears, isolated so the real call is a one-file swap later.
+
 **Hosting / infra (planned, not yet live)**
 - Vercel — `/web`
 - Railway — `/api` + Postgres
+- Azure — `pieces/farpost-pulse-func/` (Function App) + Cosmos DB, deployed independently of Vercel/Railway
 - Cloudflare — DNS
 - GoDaddy — domain registration + `.com` → `.ca` forwarding
 

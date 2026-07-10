@@ -1,0 +1,19 @@
+{
+  "name": "farpost-pulse-func",
+  "version": "1.0.0",
+  "description": "Farpost Pulse — Azure Functions backend (Node.js, Cosmos DB)",
+  "main": "src/functions/*.js",
+  "scripts": {
+    "start": "func start",
+    "seed": "node scripts/seed.js",
+    "test:seed-shape": "node scripts/checkSeedShape.js",
+    "test:handlers": "node scripts/testHandlers.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@azure/cosmos": "^4.2.0",
+    "@azure/functions": "^4.5.0"
+  }
+}

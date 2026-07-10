@@ -116,7 +116,7 @@ For anything the site or API needs to *send* programmatically — the homepage c
 
 Some portfolio pieces need their own separate infrastructure beyond the five core services above (see `CLAUDE.md`'s "Portfolio piece isolation" convention). Each one gets its own numbered subsection here as it's promoted, documenting exactly what needs configuring for it to actually work in production. Every promoted piece follows the same shape: its own cloud resources (provisioned manually, same as the core services above), CORS configured to allow `robinsamways.ca` (and `localhost` during development), and its secrets held entirely on its own platform — never committed to this repo, never exposed to the browser. `web/` only ever holds a public base-URL reference to it, via a `NEXT_PUBLIC_<PIECE>_API_URL` environment variable in Vercel — never an actual secret.
 
-### 9a. Farpost Pulse (Azure)
+### 8a. Farpost Pulse (Azure)
 
 Resources already provisioned by Robin directly in the Azure Portal (not through this repo):
 - Resource Group: `farpost-pulse-rg` (East US)

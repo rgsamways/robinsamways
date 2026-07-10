@@ -21,7 +21,8 @@ const PROJECTS: Project[] = [
     slug: "farpost-pulse",
     title: "Farpost Pulse",
     teaser:
-      "A coming-soon entry — the real build (Azure Functions, Cosmos DB, an AI coaching demo) is a separate, already-scoped project.",
+      "A field-tech coaching dashboard, built in direct response to specific interview feedback — a real Azure Functions backend and Cosmos DB, called directly from a React frontend, coaching seeded field technicians on job-quality patterns.",
+    tags: ["Azure Functions", "Cosmos DB", "React"],
   },
 ];
 
