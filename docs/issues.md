@@ -6,6 +6,15 @@ Each entry includes the literal handoff text given to CLI, not just a summary, s
 
 ## Open
 
+- [ ] 2026-07-10 — The real Function App deploy (`func azure functionapp publish farpost-pulse-func`) reports success and Azure's own Deployment Center shows "Succeeded (Active)," but the live Log stream shows the host finding zero functions: `Reading functions metadata (Custom)` → `0 functions found (Custom)` → `0 functions loaded`, and every endpoint (confirmed via `GET /api/techs`) 404s. Caught live while walking through the actual production deploy for the first time — this is a genuine bug in the deployed package, not a config-in-Azure-Portal issue (app settings and CORS are both confirmed correctly saved).
+
+  **Handoff given to CLI (2026-07-10):**
+  > `pieces/farpost-pulse-func/.funcignore` excludes `node_modules`, but this deploy used `func azure functionapp publish` with no `--build remote` flag, so it went through local build, not Azure's own Oryx/remote build — the deploy log itself confirms this: `remotebuild = false`, `Skipping oryx build (remotebuild = false)`. With `node_modules` excluded from the local zip *and* no remote build to reinstall it server-side, the deployed package almost certainly has the four function files but no `@azure/functions`/`@azure/cosmos` packages to `require()` — every function file fails to load, which matches "0 functions found" exactly (a load failure prevents the file's `app.http(...)` registration call from ever running).
+  >
+  > Fix: remove `node_modules` from `.funcignore`, so the already-installed local dependencies ship as part of the local-build zip deploy (matching how this deploy actually works today, rather than switching to remote build, which would be a bigger change). Confirm nothing else in `.funcignore` needs the same reconsideration.
+  >
+  > Verify: after the fix, Robin will redeploy (`func azure functionapp publish farpost-pulse-func`) and confirm the Log stream shows `4 functions found` / `4 functions loaded` (not 0), and that `GET https://farpost-pulse-func-fygzfbekdeduc2bc.eastus-01.azurewebsites.net/api/techs` returns real seeded tech data instead of 404.
+
 - [ ] 2026-07-10 — `/ops/deploy` drifted from `docs/deployment-guide.md` again — Part 8a gained a missing step (seeding the real Cosmos DB locally before deploy, since there's no seed-triggering endpoint on the deployed Function App and the seed script is deliberately excluded from what ships to Azure) and its remaining steps renumbered from 1-5 to 1-7.
 
   **Handoff given to CLI (2026-07-10):**
