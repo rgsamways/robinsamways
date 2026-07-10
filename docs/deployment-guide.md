@@ -124,11 +124,13 @@ Resources already provisioned by Robin directly in the Azure Portal (not through
 - Function App: `farpost-pulse-func` (Flex Consumption, Node.js 22 LTS)
 - Azure OpenAI (Foundry project): `rgsamways-0644` / resource `rgsamways-0644-resource` — model deployment pending a quota increase as of 2026-07-10; the app runs against a mocked coaching-tip function until it clears
 
-1. Deploy `pieces/farpost-pulse-func/`'s source to the `farpost-pulse-func` Function App (`func azure functionapp publish farpost-pulse-func` from within that folder, or via the Azure Portal's deployment center — whichever's more convenient at deploy time).
-2. On the Function App, set application settings (Azure Portal → Function App → Configuration) for the Cosmos DB connection string and, once wired in, the Azure OpenAI key — never commit either to this repo, never expose either to the browser.
-3. Configure CORS on the Function App (Azure Portal → Function App → CORS) to allow `https://robinsamways.ca` and `http://localhost:3000`.
-4. In Vercel, set `NEXT_PUBLIC_FARPOST_PULSE_API_URL` to the Function App's public base URL (Project → Settings → Environment Variables, same page used for `NEXT_PUBLIC_API_URL` in Part 3). **Trigger a new deploy after adding it** — env var changes don't apply to existing deployments, same gotcha as Part 3.
-5. Confirm `https://robinsamways.ca/narrative/farpost-pulse` loads real data from the live Function App, not local/mock data.
+1. Get the Cosmos DB connection string: Azure Portal → `farpost-pulse-cosmos` → **Settings → Keys** → copy the Primary Connection String.
+2. Locally, in `pieces/farpost-pulse-func/`: `cp local.settings.json.example local.settings.json`, fill in `COSMOS_CONNECTION_STRING` with the real value from step 1 (never commit this file — it's already gitignored), then `npm run seed`. This writes the actual seed data (techs, jobs, patterned per `design.md`) directly to the real Cosmos DB. Skipping this step means the app deploys successfully but returns an empty roster — there's no seed-triggering endpoint on the deployed Function App itself, seeding only happens from this local script.
+3. Deploy `pieces/farpost-pulse-func/`'s source to the `farpost-pulse-func` Function App (`func azure functionapp publish farpost-pulse-func` from within that folder, or via the Azure Portal's deployment center — whichever's more convenient at deploy time).
+4. On the Function App, set application settings (Azure Portal → Function App → Configuration) for `COSMOS_CONNECTION_STRING` and `COSMOS_DATABASE_NAME` (same values as `local.settings.json`) and, once wired in, the Azure OpenAI key — never commit any of these to this repo, never expose them to the browser.
+5. Configure CORS on the Function App (Azure Portal → Function App → CORS) to allow `https://robinsamways.ca` and `http://localhost:3000`.
+6. In Vercel, set `NEXT_PUBLIC_FARPOST_PULSE_API_URL` to the Function App's public base URL (Project → Settings → Environment Variables, same page used for `NEXT_PUBLIC_API_URL` in Part 3). **Trigger a new deploy after adding it** — env var changes don't apply to existing deployments, same gotcha as Part 3.
+7. Confirm `https://robinsamways.ca/narrative/farpost-pulse` loads real data from the live Function App, not local/mock data.
 
 ## Part 9 — Troubleshooting
 
