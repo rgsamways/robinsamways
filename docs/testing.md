@@ -40,6 +40,13 @@ FastAPI's built-in `TestClient`, often with the outbound `_request` call monkeyp
 - `scc` — code volume/complexity/duplication metrics, tracked at every OpenSpec archive (see `docs/metrics.md`). Not a testing tool, but the same "know what's actually true instead of assuming" instinct.
 - ESLint — standard Next.js linting.
 
+### Code-quality tooling is a deliberate two-tier setup, not one tool
+
+This mirrors a standard industry pattern — platforms like SonarQube or CodeClimate bundle exactly this pairing into one dashboard: a cheap, always-on aggregate signal, plus a heavier diagnostic tool that only runs when the signal says something's worth investigating. Here it's two lightweight CLI tools instead of one heavy platform, which is a better fit for a solo project at this scale:
+
+- **Tier 1, continuous: `scc`.** Runs at every OpenSpec archive, no exceptions. Reports an aggregate DRYness percentage (`ULOC / SLOC`) — a trip-wire, not a diagnosis. It can't tell you *which* lines are duplicated, only *how much*, in aggregate.
+- **Tier 2, on-demand: `jscpd`** (copy-paste detector — not installed as of 2026-07-10, deliberately deferred). Localizes actual duplicate blocks, file-by-file and line-by-line. Reached for only when tier 1 trips a real threshold: DRYness below 55% (`scc`'s own "high repetition" line) or a drop of more than 10 points from the previous snapshot in one step (see `CLAUDE.md`'s "Code metrics — scc" section). Installing it before that threshold ever fires would be tooling ahead of a demonstrated need — the switching cost of adding an npm devDependency later is near zero, unlike infrastructure decisions (e.g. the `pieces/` folder layout) where waiting would mean real migration cost.
+
 ## For future portfolio pieces
 
 Any piece promoted to its own backend (see `CLAUDE.md`'s "Portfolio piece isolation") should still get the same layered treatment, adapted to its own stack: a build/compile check appropriate to its language, its own equivalent of `TestClient`-style endpoint testing, and Playwright-driven verification of anything it renders inside `web/`. The layers stay the same even when the technology underneath a given piece doesn't.
