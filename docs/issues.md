@@ -6,6 +6,11 @@ Each entry includes the literal handoff text given to CLI, not just a summary, s
 
 ## Open
 
+- [ ] 2026-07-10 — New OpenSpec change `project-page-parent-links` proposed and validated (not a bug — logged here per the handoff-logging convention). Individual project pages' local menus (Credential Flow, Farpost Pulse) only link to their own on-page sections — no way back to the Narrative index except the browser back button or the global menu. Full detail in `openspec/changes/project-page-parent-links/`.
+
+  **Handoff given to CLI (2026-07-10):**
+  > Add a link back to `/narrative` in both Credential Flow's and Farpost Pulse's local `HamburgerMenu` link lists, alongside their existing section links — labeled clearly as "Narrative," distinct from the section links. Farpost's local menu is untouched (no parent index to link back to). `npm run build` clean, check off tasks as you go.
+
 - [ ] 2026-07-10 — `/ops/deploy` drifted from `docs/deployment-guide.md` again — Part 8a gained a missing step (seeding the real Cosmos DB locally before deploy, since there's no seed-triggering endpoint on the deployed Function App and the seed script is deliberately excluded from what ships to Azure) and its remaining steps renumbered from 1-5 to 1-7.
 
   **Handoff given to CLI (2026-07-10):**
