@@ -31,7 +31,12 @@ The `resume-homepage` spec encodes literal resume content (specific employers, d
 
 ## Portfolio piece isolation
 
-A portfolio piece's own backend logic for talking to an external system (Salesforce, Azure, a future GIS/AutoCAD integration, whatever comes next) lives in its own isolated module, never sharing state or dependencies with another piece. If a piece needs a heavy or native Python dependency — real GIS libraries (`geopandas`/GDAL), AutoCAD file parsing, anything beyond `api/`'s existing lightweight `httpx`-based pattern — give it its own separately-deployed backend instead of adding it to `api/`'s shared `requirements.txt`. `api/` is one shared Python environment and one Railway deployment; a version conflict or a failed native build in one piece's dependency would break every piece sharing that deploy, not just the new one. Farpost Pulse's Azure Functions backend is the existing model for this: a genuinely separate runtime on separate infrastructure, callable over HTTP, never touching `api/`'s own dependencies at all.
+`web/` and `api/` are this site's own core — always present, shared by default. A new portfolio piece's backend logic starts as an isolated module inside `api/` (its own file, no shared state with any other piece's module — same pattern `api/app/salesforce.py` already uses). It only gets promoted to its own top-level folder with its own separately-deployed backend when one of two things is true:
+
+1. **It genuinely needs a different runtime or language than Python** — not a preference, a requirement of what the piece is meant to demonstrate. Farpost Pulse's Azure Functions backend (`farpost-pulse-func/`) is this: the whole point is proving real Node.js/Azure serverless experience, so it has to actually be Node, not Python pretending to be Node.
+2. **It needs a heavy or native Python dependency** — real GIS libraries (`geopandas`/GDAL), AutoCAD file parsing, anything beyond `api/`'s existing lightweight `httpx`-based pattern — that risks conflicting with what other pieces already share in `api/`'s one `requirements.txt`. `api/` is one shared Python environment and one Railway deployment; a version conflict or a failed native build in one piece's dependency would break every piece sharing that deploy, not just the new one.
+
+A promoted piece is a genuinely separate runtime on separate infrastructure, callable over HTTP, never touching `api/`'s own dependencies at all — any additional top-level folder beyond `web/`/`api/` is a named, isolated backend belonging to exactly one portfolio piece.
 
 ## Issues / QA notes
 
