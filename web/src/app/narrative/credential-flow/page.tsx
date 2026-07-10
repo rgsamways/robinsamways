@@ -10,6 +10,7 @@ const PROFESSIONAL_REPUTATION_GRAPH_EXPLANATION =
   "Farpost's professional-reputation graph: not a score or star rating — a computed timeline. Every action a professional takes (inspections, claims, relationships with buildings) is an event; reputation is assembled fresh from those events on each request, surfacing activity history and breadth of engagement rather than a single number. Professionals whose roles haven't yet earned trust are excluded entirely — no score, no timeline, nothing to game. It's the same underlying entities-connected-by-records shape as a Salesforce Account/Contact view, just applied to a professional network instead of a household.";
 
 const SECTION_LINKS = [
+  { href: "/narrative", label: "Narrative" },
   { href: "#overview", label: "Overview" },
   { href: "#why-client-credentials-flow", label: "Why Client Credentials Flow" },
   { href: "#licensing-limitations", label: "Licensing Limitations" },

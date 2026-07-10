@@ -5,6 +5,7 @@ import SectionHeader from "@/components/SectionHeader";
 import TechRoster from "@/components/farpost-pulse/TechRoster";
 
 const SECTION_LINKS = [
+  { href: "/narrative", label: "Narrative" },
   { href: "#origin-story", label: "Origin Story" },
   { href: "#architecture", label: "Architecture" },
   { href: "#tech-stack", label: "Tech Stack" },
