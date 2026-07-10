@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import HamburgerMenu from "@/components/HamburgerMenu";
 import SectionHeader from "@/components/SectionHeader";
 import TechRoster from "@/components/farpost-pulse/TechRoster";
@@ -169,6 +170,12 @@ export default function FarpostPulsePage() {
           coaching tip, and view their trend.
         </p>
         <TechRoster />
+        <Link
+          href="/narrative/farpost-pulse/dashboard"
+          className="mt-6 inline-block border border-accent px-4 py-2 text-sm font-semibold text-accent transition hover:bg-accent hover:text-background"
+        >
+          View team dashboard →
+        </Link>
       </section>
     </main>
   );

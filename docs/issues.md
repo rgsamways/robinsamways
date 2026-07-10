@@ -6,17 +6,19 @@ Each entry includes the literal handoff text given to CLI, not just a summary, s
 
 ## Open
 
-- [ ] 2026-07-10 — The landing page's local section menu (Origin Story, Architecture, Tech Stack, Design Notes, Tech Roster) links only to scroll-anchors on that same page — it never links to the Dashboard route (`/narrative/farpost-pulse/dashboard`), a third real page a visitor has no way to discover without the direct URL. The Tech Roster cards get a visitor to individual tech pages; nothing gets them to the dashboard.
-
-  **Handoff given to CLI (2026-07-10):**
-  > Add a way to reach `/narrative/farpost-pulse/dashboard` from the landing page — either as a sixth entry in the existing local `HamburgerMenu` (distinct from the five scroll-anchor entries, since it's a real navigation link, not a same-page anchor) or as its own visible link/button near the Tech Roster section (e.g. "View team dashboard →"). Use judgment on which reads better; either is fine as long as the dashboard is actually discoverable without knowing the URL. `npm run build` clean, no console warnings.
-
 - [ ] 2026-07-10 — `/ops/deploy` drifted from `docs/deployment-guide.md` again — Part 8a gained a missing step (seeding the real Cosmos DB locally before deploy, since there's no seed-triggering endpoint on the deployed Function App and the seed script is deliberately excluded from what ships to Azure) and its remaining steps renumbered from 1-5 to 1-7.
 
   **Handoff given to CLI (2026-07-10):**
   > Sync `web/src/app/ops/deploy/page.tsx`'s Part 8a (Farpost Pulse/Azure) against `docs/deployment-guide.md`'s current version: new step 2 ("Locally, in `pieces/farpost-pulse-func/`: `cp local.settings.json.example local.settings.json`, fill in `COSMOS_CONNECTION_STRING`... then `npm run seed`"), inserted between "get the connection string" and "deploy the source" — the rest of the steps shift down accordingly (deploy is now 3, app settings 4, CORS 5, Vercel env var 6, verify 7). Update the "Last updated" date if it changes. `npm run build` clean, no console warnings.
 
 ## Resolved
+
+- [x] 2026-07-10 — The landing page's local section menu (Origin Story, Architecture, Tech Stack, Design Notes, Tech Roster) links only to scroll-anchors on that same page — it never links to the Dashboard route (`/narrative/farpost-pulse/dashboard`), a third real page a visitor has no way to discover without the direct URL. The Tech Roster cards get a visitor to individual tech pages; nothing gets them to the dashboard.
+
+  **Handoff given to CLI (2026-07-10):**
+  > Add a way to reach `/narrative/farpost-pulse/dashboard` from the landing page — either as a sixth entry in the existing local `HamburgerMenu` (distinct from the five scroll-anchor entries, since it's a real navigation link, not a same-page anchor) or as its own visible link/button near the Tech Roster section (e.g. "View team dashboard →"). Use judgment on which reads better; either is fine as long as the dashboard is actually discoverable without knowing the URL. `npm run build` clean, no console warnings.
+
+  **Resolution:** Went with a visible button near Tech Roster rather than a sixth `HamburgerMenu` entry, since that menu's five existing links are same-page scroll-anchors and a real route change felt like a different kind of action worth its own affordance. Added a `Link` to `/narrative/farpost-pulse/dashboard` right after the `TechRoster` grid in `web/src/app/narrative/farpost-pulse/page.tsx`, styled with the same outlined-button pattern already used for `TechDetail`'s coaching-tip button and the homepage contact form (`border border-accent … hover:bg-accent hover:text-background`), labeled "View team dashboard →" per the suggested wording. Verified via a local dev server (port 3001 — 3000 was held by Farpost's own dev server): the link renders on the landing page and `/narrative/farpost-pulse/dashboard` returns 200. `npm run build` clean, no console warnings.
 
 - [x] 2026-07-10 — The real Function App deploy (`func azure functionapp publish farpost-pulse-func`) reported success and Azure's own Deployment Center showed "Succeeded (Active)," but the live Log stream showed the host finding zero functions: `Reading functions metadata (Custom)` → `0 functions found (Custom)` → `0 functions loaded`, and every endpoint (confirmed via `GET /api/techs`) 404d. Caught live while walking through the actual production deploy for the first time.
 
