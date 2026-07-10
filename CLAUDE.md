@@ -31,6 +31,10 @@ The `resume-homepage` spec encodes literal resume content (specific employers, d
 
 `docs/stack.md` is an exhaustive, running list of every technology used to build this site — including one-off dev-time tools that never become a runtime dependency (e.g. a PDF library reached for once to extract an image). Whenever you introduce anything new, even something ephemeral, add it there before considering the task done.
 
+## Setup galleries — real screenshots of genuine configuration work
+
+Any piece involving real external infrastructure (a cloud portal, a third-party admin console — anything beyond code in this repo) should get a setup gallery on its own page: real screenshots of the actual configuration work, not staged or illustrative ones, each with a caption explaining what it shows and why it matters. Follow the pattern already proven on Credential Flow's `SETUP_GALLERY` section: capture screenshots to `docs/screens/`, move them into `web/public/images/<piece>-setup/`, and build a piece-specific `SetupGallery.tsx` (a fixed array of `{src, width, height, label, caption}`, not a shared generic component — each gallery's content is specific to that piece) rendering a responsive thumbnail grid that opens into a modal dialog on click (close button, backdrop click, and Escape all dismiss it). Live in that piece's own components folder (e.g. `web/src/components/farpost-pulse/`), not the existing `web/src/components/portfolio/SetupGallery.tsx` — that path is a naming leftover from before the Method/Narrative restructure; new pieces shouldn't add to it.
+
 ## Portfolio piece isolation
 
 `web/` and `api/` are this site's own core — always present, shared by default. A new portfolio piece's backend logic starts as an isolated module inside `api/` (its own file, no shared state with any other piece's module — same pattern `api/app/salesforce.py` already uses). It only gets promoted to its own separately-deployed backend, at `pieces/<piece-name>/`, when one of two things is true:
