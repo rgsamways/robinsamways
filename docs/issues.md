@@ -6,6 +6,15 @@ Each entry includes the literal handoff text given to CLI, not just a summary, s
 
 ## Open
 
+- [ ] 2026-07-10 — `npm run seed` fails against the real, free-tier Cosmos DB account (`farpost-pulse-cosmos`, 1000 RU/s total throughput cap) with `BadRequest`/substatus 1028: "would have increased the total throughput to 1200 RU/s." Caught while actually running the seed step during deployment, not in dev — this never surfaced against the in-memory fake client `scripts/testHandlers.js` uses.
+
+  **Handoff given to CLI (2026-07-10):**
+  > `pieces/farpost-pulse-func/scripts/seed.js`'s `main()` creates the database with `client.databases.createIfNotExists({ id: DATABASE_NAME })` — no throughput specified — then `ensureContainer()` creates all three containers (`techs`, `jobs`, `coachingHistory`) each with their own implicit dedicated throughput (Cosmos defaults new containers to 400 RU/s when neither the database nor the container specifies shared throughput). 3 × 400 = 1200 RU/s, over the free tier's 1000 RU/s account-wide cap.
+  >
+  > Fix: give the database shared throughput at creation (`client.databases.createIfNotExists({ id: DATABASE_NAME, throughput: 1000 })`), and leave `ensureContainer()`'s per-container calls exactly as they are — with the database on shared throughput, containers created without their own `throughput` option draw from the shared pool instead of getting dedicated allocation. Confirmed the deployed Function App's own `src/lib/cosmosClient.js` never calls `createIfNotExists` (it only references containers by name, assuming they already exist), so this bug is isolated to the seed script — no other file needs touching.
+  >
+  > Verify: `npm run seed` succeeds against the real `farpost-pulse-cosmos` account without a throughput error, and confirm in the Azure Portal (Cosmos DB account → Data Explorer, or → Settings → Scale) that the database shows 1000 RU/s shared throughput with all three containers drawing from it, not each holding its own allocation.
+
 - [ ] 2026-07-10 — `/ops/deploy` drifted from `docs/deployment-guide.md` again — Part 8a gained a missing step (seeding the real Cosmos DB locally before deploy, since there's no seed-triggering endpoint on the deployed Function App and the seed script is deliberately excluded from what ships to Azure) and its remaining steps renumbered from 1-5 to 1-7.
 
   **Handoff given to CLI (2026-07-10):**
