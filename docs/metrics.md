@@ -51,3 +51,20 @@ First snapshot to include `pieces/` — `pieces/farpost-pulse-func/`'s Node.js s
 ULOC: 3,622 · **DRYness: 62%**
 
 Delta vs. previous: +23 files, +1,497 code lines, +104 complexity, DRYness down slightly (64% → 62%, still within scc's "healthy" band). Almost entirely new surface area, not duplication: the three new Farpost Pulse frontend routes plus their shared components (`api.ts`, `TrendChart.tsx`, `BarChart.tsx`, `TechRoster.tsx`, `TechDetail.tsx`, `DashboardContent.tsx`) account for the TypeScript growth; the entire JavaScript row is new — `pieces/farpost-pulse-func/`'s 4 Function handlers, 4 shared `lib/` modules, and 4 `scripts/` files (the seed generator plus its two no-live-Cosmos-needed verification scripts). The `scripts/` files never ship to Azure (excluded via `.funcignore`), but `scc` counts real `.js` files in the repo regardless of deploy-time exclusion.
+
+### 2026-07-10 — after archiving `project-page-parent-links`
+
+| Language | Files | Lines | Code | Complexity |
+|---|---|---|---|---|
+| TypeScript | 37 | 3,612 | 3,387 | 249 |
+| JavaScript | 12 | 868 | 713 | 56 |
+| Python | 8 | 1,231 | 1,016 | 116 |
+| JSON | 3 | 47 | 47 | 0 |
+| CSS | 1 | 24 | 21 | 0 |
+| Markdown | 1 | 40 | 31 | 0 |
+| Plain Text | 1 | 5 | 5 | 0 |
+| **Total** | **63** | **5,827** | **5,220** | **421** |
+
+ULOC: 3,640 · **DRYness: 62%**
+
+Delta vs. previous: essentially flat (+1 file, +25 code lines, complexity unchanged) — exactly what a two-line "Narrative" link added to two existing link arrays should look like. No trip-wire concern.
