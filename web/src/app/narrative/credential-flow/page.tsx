@@ -20,17 +20,17 @@ const SECTION_LINKS = [
 ];
 
 export const metadata: Metadata = {
-  title: "Portfolio · Robin Samways",
+  title: "Credential Flow · Robin Samways",
 };
 
-export default function PortfolioPage() {
+export default function CredentialFlowPage() {
   return (
     <main className="py-10">
       <div className="flex items-start gap-3">
         <HamburgerMenu links={SECTION_LINKS} ariaLabel="page sections menu" />
         <div>
           <h1 className="text-xl font-bold">
-            <span className="text-accent">$</span> Portfolio
+            <span className="text-accent">$</span> Credential Flow
           </h1>
           <p className="mt-2 text-sm text-muted">
             Salesforce loan-application integration — a live case study, not a

@@ -4,10 +4,10 @@ import HamburgerMenu from "./HamburgerMenu";
 
 const links = [
   { href: "/", label: "Home" },
-  { href: "/portfolio", label: "Portfolio" },
+  { href: "/method", label: "Method" },
+  { href: "/narrative", label: "Narrative" },
   { href: "/farpost", label: "Farpost" },
   { href: "/dev-log", label: "Dev Log" },
-  { href: "/sreditor", label: "Sreditor" },
 ];
 
 export default function MenuToggle() {
