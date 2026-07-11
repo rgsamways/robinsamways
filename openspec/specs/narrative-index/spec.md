@@ -14,6 +14,10 @@ The `/narrative` route SHALL render a showcase index of Narrative-type project p
 - **WHEN** a visitor loads `/narrative`
 - **THEN** the page shows a teaser entry for Farpost Pulse, accurately describing it as a real, built project on this site (not a placeholder, and not framed as a separate project elsewhere), linking to `/narrative/farpost-pulse`
 
+#### Scenario: Index lists the Farpost Atlas project
+- **WHEN** a visitor loads `/narrative`
+- **THEN** the page shows a teaser entry for Farpost Atlas, accurately describing it as a real, built project on this site, linking to `/narrative/farpost-atlas`
+
 #### Scenario: Index is capable of holding more than one project
 - **WHEN** a third Narrative-type project is added to the index in the future
 - **THEN** it can be added as an additional teaser entry without restructuring the index page itself
@@ -28,6 +32,10 @@ A project entry in a showcase index (Method or Narrative) SHALL support an optio
 #### Scenario: Farpost Pulse's entry shows its tags
 - **WHEN** a visitor views Farpost Pulse's entry on the `/narrative` index
 - **THEN** the entry displays its tags (e.g. Azure Functions, Cosmos DB, React) beneath its teaser text
+
+#### Scenario: Farpost Atlas's entry shows its tags
+- **WHEN** a visitor views Farpost Atlas's entry on the `/narrative` index
+- **THEN** the entry displays its tags (e.g. FastAPI, Shapely, Leaflet) beneath its teaser text
 
 #### Scenario: An entry with no tags renders without a tag row
 - **WHEN** a project entry with no tags defined is added to an index (e.g. a future placeholder entry, before its real content and tags exist)
