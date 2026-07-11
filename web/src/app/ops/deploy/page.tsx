@@ -28,7 +28,9 @@ export default function DeployRunbookPage() {
         Written so it can be followed start to finish, or handed to someone
         else to execute.
       </p>
-      <p className="mt-1 text-sm text-muted">Last updated: 2026-07-11.</p>
+      <p className="mt-1 text-sm text-muted">
+        Last updated: 2026-07-11 (Farpost Atlas deployed live to Railway).
+      </p>
 
       <section>
         <SectionHeader title="PREREQUISITES" />
@@ -578,6 +580,25 @@ export default function DeployRunbookPage() {
         <Steps
           items={[
             <>
+              Get the Cosmos DB connection string: Azure Portal →{" "}
+              <code>farpost-pulse-cosmos</code> →{" "}
+              <strong>Settings → Keys</strong> → copy the Primary Connection
+              String.
+            </>,
+            <>
+              Locally, in <code>pieces/farpost-pulse-func/</code>:{" "}
+              <code>cp local.settings.json.example local.settings.json</code>,
+              fill in <code>COSMOS_CONNECTION_STRING</code>{" "}
+              with the real value from the previous step (never commit this
+              file — it&rsquo;s already gitignored), then{" "}
+              <code>npm run seed</code>. This writes the actual seed data
+              (techs, jobs, patterned per <code>design.md</code>) directly to
+              the real Cosmos DB. Skipping this step means the app deploys
+              successfully but returns an empty roster — there&rsquo;s no
+              seed-triggering endpoint on the deployed Function App itself,
+              seeding only happens from this local script.
+            </>,
+            <>
               Deploy <code>pieces/farpost-pulse-func/</code>&rsquo;s source
               to the <code>farpost-pulse-func</code> Function App (
               <code>func azure functionapp publish farpost-pulse-func</code>{" "}
@@ -587,10 +608,12 @@ export default function DeployRunbookPage() {
             </>,
             <>
               On the Function App, set application settings (Azure Portal →
-              Function App → Configuration) for the Cosmos DB connection
-              string and, once wired in, the Azure OpenAI key — never
-              commit either to this repo, never expose either to the
-              browser.
+              Function App → Configuration) for{" "}
+              <code>COSMOS_CONNECTION_STRING</code> and{" "}
+              <code>COSMOS_DATABASE_NAME</code> (same values as{" "}
+              <code>local.settings.json</code>) and, once wired in, the
+              Azure OpenAI key — never commit any of these to this repo,
+              never expose them to the browser.
             </>,
             <>
               Configure CORS on the Function App (Azure Portal → Function
@@ -617,13 +640,10 @@ export default function DeployRunbookPage() {
 
         <h3 className="mt-6 font-bold">8b. Farpost Atlas (Railway)</h3>
         <p className="mt-1 text-sm leading-relaxed">
-          Not yet provisioned as of 2026-07-11 —{" "}
-          <code>pieces/farpost-atlas-geo/</code>&rsquo;s source code is
-          complete and verified locally (see its own{" "}
-          <code>README.md</code>), but the live Railway service, its
-          Postgres database, and the real seed data are Robin&rsquo;s
-          manual steps, same division of labour as Farpost Pulse&rsquo;s
-          Azure deployment above.
+          Live as of 2026-07-11 — deployed as its own Railway project
+          (separate from <code>/api</code>&rsquo;s), Postgres seeded with
+          all 13 real tracked buildings, confirmed working end to end at{" "}
+          <code>https://robinsamways.ca/narrative/farpost-atlas</code>.
         </p>
         <Steps
           items={[
@@ -631,47 +651,115 @@ export default function DeployRunbookPage() {
               Railway → <strong>New Project → Deploy from GitHub repo</strong>
               , same repo as <code>/api</code>, but set{" "}
               <strong>Root Directory</strong> to{" "}
-              <code>pieces/farpost-atlas-geo</code>.
+              <code>pieces/farpost-atlas-geo</code>{" "}
+              (Root Directory is set
+              from that service&rsquo;s <strong>Settings</strong> tab after
+              creation, not always offered on the initial creation screen).
             </>,
             <>
               Add a Postgres database to the same Railway project (
-              <strong>New → Database → PostgreSQL</strong>) — Railway wires{" "}
-              <code>DATABASE_URL</code>{" "}
-              into the service&rsquo;s environment
-              automatically, same pattern as Part 4&rsquo;s <code>/api</code>{" "}
-              Postgres.
+              <strong>New → Database → PostgreSQL</strong>). Railway&rsquo;s
+              Postgres plugin exposes its own connection variables (
+              <code>DATABASE_URL</code>, <code>DATABASE_PUBLIC_URL</code>,{" "}
+              <code>PGUSER</code>, <code>PGPASSWORD</code>,{" "}
+              <code>PGHOST</code>, <code>PGPORT</code>,{" "}
+              <code>PGDATABASE</code>) on the{" "}
+              <strong>Postgres service itself</strong> — these are{" "}
+              <em>not</em>{" "}
+              automatically injected into other services in the project;
+              the app service needs its own explicit{" "}
+              <code>DATABASE_URL</code> variable (next step).
             </>,
             <>
-              Railway&rsquo;s <code>DATABASE_URL</code> uses the{" "}
-              <code>postgresql://</code>{" "}
-              scheme; SQLAlchemy&rsquo;s asyncpg
-              driver needs <code>postgresql+asyncpg://</code> explicitly —
-              same gotcha already documented for <code>/api</code>&rsquo;s
-              own Postgres in Part 5, fix the same way.
+              On the <strong>app service itself</strong> (not Postgres), add
+              a <code>DATABASE_URL</code>{" "}
+              variable referencing
+              Postgres&rsquo;s private network values, rewritten with the{" "}
+              <code>+asyncpg</code> scheme SQLAlchemy&rsquo;s asyncpg driver
+              needs (Railway&rsquo;s own <code>DATABASE_URL</code> uses
+              plain <code>postgresql://</code> — same gotcha already
+              documented for <code>/api</code>&rsquo;s own Postgres in Part
+              5):
+            </>,
+          ]}
+        />
+        <CodeBlock>
+          {
+            "DATABASE_URL=postgresql+asyncpg://${{Postgres.PGUSER}}:${{Postgres.PGPASSWORD}}@${{Postgres.PGHOST}}:${{Postgres.PGPORT}}/${{Postgres.PGDATABASE}}"
+          }
+        </CodeBlock>
+        <Callout>
+          <strong>Gotcha actually hit:</strong> if you paste a{" "}
+          <code>KEY=value</code> line into a variable&rsquo;s{" "}
+          <em>value</em> field (rather than typing it into separate key/value
+          fields), the literal <code>DATABASE_URL=</code>{" "}
+          prefix ends up inside the value itself — producing{" "}
+          <code>
+            sqlalchemy.exc.ArgumentError: Could not parse SQLAlchemy URL from
+            given URL string
+          </code>{" "}
+          on boot, since the value no longer starts with a valid scheme.
+          Check the value field directly if this happens; the fix is
+          deleting the stray <code>DATABASE_URL=</code> text from the front
+          of it.
+        </Callout>
+        <Steps
+          items={[
+            <>
+              Once the service is live, seed it — but from your own machine,
+              you need the <strong>public</strong> connection string, not
+              the private one from the previous step (
+              <code>.railway.internal</code>{" "}
+              addresses aren&rsquo;t reachable
+              outside Railway&rsquo;s network). Copy{" "}
+              <code>DATABASE_PUBLIC_URL</code>{" "}
+              from the Postgres
+              service&rsquo;s Variables tab, rewrite its scheme the same
+              way, then from <code>pieces/farpost-atlas-geo/</code>:
+            </>,
+          ]}
+        />
+        <CodeBlock>
+          {
+            'pip install -r requirements.txt\n$env:DATABASE_URL = "<DATABASE_PUBLIC_URL, with postgresql+asyncpg:// scheme>"\npython -m scripts.seed'
+          }
+        </CodeBlock>
+        <Callout>
+          <strong>Gotcha actually hit:</strong> running{" "}
+          <code>python scripts/seed.py</code> directly (as a file path)
+          fails with{" "}
+          <code>ModuleNotFoundError: No module named &apos;app&apos;</code>{" "}
+          — Python only adds the script&rsquo;s own directory to its import
+          path that way, not the package root. Run it as a module (
+          <code>python -m scripts.seed</code>) instead, from{" "}
+          <code>pieces/farpost-atlas-geo/</code>. Should print{" "}
+          <code>Seeded 13 buildings, 36 tracked records.</code>
+        </Callout>
+        <Steps
+          items={[
+            <>
+              Configure CORS: this piece&rsquo;s <code>app/main.py</code>{" "}
+              already lists <code>https://robinsamways.ca</code>,{" "}
+              <code>https://www.robinsamways.ca</code>, and{" "}
+              <code>http://localhost:3000</code> in its{" "}
+              <code>CORSMiddleware</code>{" "}
+              — no separate portal configuration
+              step needed here, unlike Azure Functions&rsquo; CORS (8a step
+              5), since FastAPI&rsquo;s CORS is set in application code, not
+              platform config.
             </>,
             <>
-              Once the service is live, seed it: locally, with that real{" "}
-              <code>DATABASE_URL</code> set in the environment (
-              <code>pip install -r requirements.txt</code> first, from{" "}
-              <code>pieces/farpost-atlas-geo/</code>), run{" "}
-              <code>python scripts/seed.py</code>. This writes the 13 real
-              tracked buildings directly to the live database — there&rsquo;s
-              no seed-triggering endpoint on the deployed service itself,
-              matching Farpost Pulse&rsquo;s own seeding pattern exactly.
-            </>,
-            <>
-              CORS is already configured in application code (
-              <code>app/main.py</code>&rsquo;s <code>CORSMiddleware</code>{" "}
-              lists <code>https://robinsamways.ca</code> and{" "}
-              <code>http://localhost:3000</code>) — no separate portal
-              configuration step, unlike Azure Functions&rsquo; CORS (8a
-              step 5).
+              Get the app service&rsquo;s public URL:{" "}
+              <strong>Settings → Networking → Generate Domain</strong>{" "}
+              if
+              one isn&rsquo;t already listed, giving a{" "}
+              <code>*.up.railway.app</code> address.
             </>,
             <>
               In Vercel, set{" "}
               <code>NEXT_PUBLIC_FARPOST_ATLAS_API_URL</code>{" "}
-              to the Railway
-              service&rsquo;s public URL.{" "}
+              to that Railway URL (Project → Settings → Environment
+              Variables).{" "}
               <strong>Trigger a new deploy after adding it</strong> — same
               env var gotcha as Parts 3 and 8a.
             </>,
@@ -683,6 +771,14 @@ export default function DeployRunbookPage() {
             </>,
           ]}
         />
+        <Callout>
+          A <code>SetupGallery</code> component for this piece (real
+          screenshots of the Railway/Postgres provisioning, per{" "}
+          <code>CLAUDE.md</code>&rsquo;s &quot;Setup galleries&quot;
+          convention) is a reasonable follow-up now that the above is
+          actually done — not part of this note, same precedent as Farpost
+          Pulse&rsquo;s own still-pending Azure setup gallery.
+        </Callout>
       </section>
 
       <section>
@@ -723,6 +819,42 @@ export default function DeployRunbookPage() {
                 mismatch from Part 4 — confirm it starts with{" "}
                 <code>postgresql+asyncpg://</code>, not{" "}
                 <code>postgresql://</code>.
+              </span>
+            </li>
+            <li className="flex gap-2">
+              <span aria-hidden>›</span>
+              <span>
+                <strong>
+                  API fails to boot on Railway with{" "}
+                  <code>
+                    sqlalchemy.exc.ArgumentError: Could not parse SQLAlchemy
+                    URL from given URL string
+                  </code>
+                  :
+                </strong>{" "}
+                different from the scheme-mismatch error above — this means
+                the value itself isn&rsquo;t a URL at all. Check the
+                variable&rsquo;s value field directly for a stray{" "}
+                <code>DATABASE_URL=</code>{" "}
+                (or similar) prefix left over from pasting a{" "}
+                <code>KEY=value</code> line into the value box instead of
+                typing the value alone.
+              </span>
+            </li>
+            <li className="flex gap-2">
+              <span aria-hidden>›</span>
+              <span>
+                <strong>
+                  A Python service&rsquo;s own scripts fail with{" "}
+                  <code>ModuleNotFoundError</code> for a local package (e.g.{" "}
+                  <code>app</code>) when run directly (
+                  <code>python scripts/seed.py</code>):
+                </strong>{" "}
+                running a script by file path only adds that script&rsquo;s
+                own directory to Python&rsquo;s import path, not the package
+                root. Run it as a module instead (
+                <code>python -m scripts.seed</code>), from the
+                package&rsquo;s own root directory.
               </span>
             </li>
             <li className="flex gap-2">
