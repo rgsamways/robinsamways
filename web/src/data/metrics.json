@@ -75,12 +75,12 @@
     "date": "2026-07-11",
     "change": "sreditor-page-content",
     "label": "after archiving sreditor-page-content",
-    "files": 76,
-    "lines": 6948,
-    "code": 6203,
+    "files": 77,
+    "lines": 7024,
+    "code": 6282,
     "complexity": 460,
-    "uloc": 4315,
+    "uloc": 4369,
     "drynessPercent": 62,
-    "note": "No new files — a content-only page rewrite in place, no new logic."
+    "note": "Content-only page rewrite, no new logic — the one new file counted here is web/src/data/metrics.json itself, which entered the scc scan path for the first time in this same commit when it was relocated out of docs/. Corrected during a later drift audit; the originally-logged snapshot (76 files) was captured before that relocation was reflected on disk."
   }
 ]

@@ -113,20 +113,22 @@ Delta vs. previous: +6 files, +435 code lines, +24 complexity, DRYness flat (62%
 
 ### 2026-07-11 — after archiving `sreditor-page-content`
 
-No new files — `/method/sreditor` was rewritten in place from its placeholder to real content, and `web/src/app/method/page.tsx`'s Sreditor entry got an updated teaser and tags. All of this snapshot's growth is content (six required sections' worth of verbatim, voice-adapted copy), not new logic — no new test files, matching the fact this change had no pure-logic surface to test.
+`/method/sreditor` was rewritten in place from its placeholder to real content, and `web/src/app/method/page.tsx`'s Sreditor entry got an updated teaser and tags — no new files from that work. But this same commit (`c2ce224`) also relocated `docs/metrics.json` to `web/src/data/metrics.json`, which brought it inside this scan's scope for the first time, so the file count does move: +1.
 
 | Language | Files | Lines | Code | Complexity |
 |---|---|---|---|---|
-| TypeScript | 45 | 4,497 | 4,198 | 283 |
+| TypeScript | 45 | 4,487 | 4,191 | 283 |
 | JavaScript | 12 | 892 | 731 | 52 |
 | Python | 11 | 1,435 | 1,163 | 125 |
-| JSON | 3 | 46 | 46 | 0 |
+| JSON | 4 | 132 | 132 | 0 |
 | CSS | 1 | 24 | 21 | 0 |
 | Markdown | 1 | 44 | 34 | 0 |
 | Plain Text | 2 | 7 | 7 | 0 |
 | TOML | 1 | 3 | 3 | 0 |
-| **Total** | **76** | **6,948** | **6,203** | **460** |
+| **Total** | **77** | **7,024** | **6,282** | **460** |
 
-ULOC: 4,315 · **DRYness: 62%**
+ULOC: 4,369 · **DRYness: 62%**
 
-Delta vs. previous: +0 files, +279 code lines, +8 complexity, DRYness flat (62% → 62%) — expected for a content-only page rewrite with no new files and no new logic.
+Delta vs. previous: +1 file, +358 code lines, +8 complexity, DRYness flat (62% → 62%) — the one new file is `web/src/data/metrics.json` entering scope, not new page logic; the Sreditor page content itself contributed the usual growth with no new files or test surface.
+
+**Correction (logged 2026-07-11, same day):** the snapshot originally logged here read 76 files / 6,948 lines / 6,203 code / 4,315 ULOC — captured before `web/src/data/metrics.json`'s relocation was reflected on disk. Complexity and DRYness % were unaffected and are unchanged from the original log. Caught during a drift audit that independently re-ran `scc` against the same commit; corrected numbers above. See `docs/issues.md` for the full finding.
