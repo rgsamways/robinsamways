@@ -6,6 +6,11 @@ Each entry includes the literal handoff text given to CLI, not just a summary, s
 
 ## Open
 
+- [ ] 2026-07-11 — New OpenSpec change `sreditor-page-content` proposed and validated (not a bug — logged here per the handoff-logging convention). Replaces the `/method/sreditor` placeholder with real content — the first Method-type page to actually use the required PROBLEM → EXISTING_APPROACHES → HYPOTHESIS → METHOD → RESULTS → CONCLUSION structure. Content is a verbatim, voice-adapted brief Robin brought back from building Sreditor for real tonight, in its own separate repository. Full detail in `openspec/changes/sreditor-page-content/`.
+
+  **Handoff given to CLI (2026-07-11):**
+  > Rewrite `web/src/app/method/sreditor/page.tsx` from its placeholder to the six required sections using the verbatim copy in `design.md` — copy is final, not a first draft, flag a genuine typo rather than silently rewording anything substantive (same convention as `farpost-page-content`). Match the existing `SectionHeader`/curly-quote conventions. Add a local `HamburgerMenu` linking to all six sections. Update Method's index entry for Sreditor (new teaser + tags: TypeScript, Node.js, Claude API, OpenSpec). Verify: all six sections render in order, local menu links work, index entry updated, `npm run build` clean, check for JSX whitespace-glue issues proactively. Before archiving, run `scc` and log to both `docs/metrics.md` and `docs/metrics.json`.
+
 - [ ] 2026-07-11 — New OpenSpec change `dev-log-content` proposed and validated (not a bug — logged here per the handoff-logging convention). Replaces the Dev Log placeholder with real content: a growing layman's-terms glossary, a public-facing Testing & Verification writeup (now honestly accurate since `add-automated-test-suites` landed), a real code-metrics dashboard sourced from a new `docs/metrics.json`, and two bug-log entries adapted from real Sreditor entries. Full detail in `openspec/changes/dev-log-content/`.
 
   **Handoff given to CLI (2026-07-11):**
