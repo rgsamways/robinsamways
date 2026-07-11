@@ -6,6 +6,11 @@ Each entry includes the literal handoff text given to CLI, not just a summary, s
 
 ## Open
 
+- [ ] 2026-07-11 — One JSX whitespace-glue regression survived CLI's own fix pass on the `/ops/deploy` sync (commit `6033629`, "Caught and fixed 6 more real JSX whitespace-glue bugs" — this is a 7th, missed). Caught during a drift audit via headless-browser text extraction: Part 8b's step 3 renders "the <code>+asyncpg</code> scheme" as "**+asyncpgscheme**" with no space between the closing `</code>` tag and "scheme" — same recurring SWC/Turbopack quirk this page has hit multiple times before. Confirmed via a full-page glue-pattern sweep (opening and closing sides of `<code>`/`<strong>`/`<em>`/`<a>` tags, and glued em-dashes) that this is the only instance; everything else checked clean. Build, unit tests (18), and e2e tests (9) all independently re-run and pass regardless — this is a rendering-only bug, not a functional break.
+
+  **Handoff given to CLI (2026-07-11):**
+  > In `web/src/app/ops/deploy/page.tsx`'s Part 8b, step 3: find the text "rewritten with the `+asyncpg` scheme" (or wherever `+asyncpg` sits right before the word "scheme" across a line break in the JSX source) and wrap the space between `</code>` and `scheme` in an explicit `{" "}`, matching the fix pattern already used elsewhere on this exact page for the same bug. Re-verify with a full headless-browser text-extraction sweep afterward, not just the one spot — confirm no other instance was introduced or missed. `npm run build` clean.
+
 - [x] 2026-07-10 — New OpenSpec change `add-automated-test-suites` proposed and validated (not a bug — logged here per the handoff-logging convention). No test coverage existed anywhere in this codebase as a persistent, re-runnable suite — confirmed directly (no Playwright config or `.spec.ts` files anywhere in `web/`, no `tests/` directory or `pytest` dependency anywhere in `api/`; only `pieces/farpost-pulse-func/` had anything that survives, and even that wasn't on a real test framework). Established real Vitest + Playwright suites for `web/`, pytest for `api/`, and `node:test` for `pieces/farpost-pulse-func/`, plus the ongoing convention that new feature work includes tests as part of its own change. Full detail in `openspec/changes/archive/2026-07-11-add-automated-test-suites/`.
 
   **Handoff given to CLI (2026-07-10):**
