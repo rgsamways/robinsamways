@@ -88,11 +88,11 @@
     "change": "farpost-atlas-build",
     "label": "after archiving farpost-atlas-build",
     "files": 101,
-    "lines": 8630,
-    "code": 7649,
+    "lines": 8642,
+    "code": 7661,
     "complexity": 524,
-    "uloc": 5307,
-    "drynessPercent": 61,
-    "note": "A whole new Python service (farpost-atlas-geo) plus a real Leaflet map on the frontend — down 1pt DRYness, real new surface area, not duplication."
+    "uloc": 5316,
+    "drynessPercent": 62,
+    "note": "A whole new Python service (farpost-atlas-geo) plus a real Leaflet map on the frontend — real new surface area, not duplication. Corrected during a later drift audit: the originally-logged snapshot (8,630 lines, 61% DRYness) was captured before this same entry's own append to this file was reflected on disk — the same self-referential gap as the sreditor-page-content correction, smaller this time (12 lines, one DRYness point) since it's a within-entry growth, not a missing file."
   }
 ]

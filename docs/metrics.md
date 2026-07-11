@@ -142,13 +142,15 @@ First snapshot to include `pieces/farpost-atlas-geo/` — a whole new Python ser
 | TypeScript | 51 | 5,086 | 4,742 | 312 |
 | Python | 24 | 2,370 | 1,923 | 160 |
 | JavaScript | 12 | 892 | 731 | 52 |
-| JSON | 4 | 132 | 132 | 0 |
+| JSON | 4 | 144 | 144 | 0 |
 | Markdown | 2 | 98 | 72 | 0 |
 | Plain Text | 5 | 21 | 21 | 0 |
 | TOML | 2 | 7 | 7 | 0 |
 | CSS | 1 | 24 | 21 | 0 |
-| **Total** | **101** | **8,630** | **7,649** | **524** |
+| **Total** | **101** | **8,642** | **7,661** | **524** |
 
-ULOC: 5,307 · **DRYness: 61%**
+ULOC: 5,316 · **DRYness: 62%**
 
-Delta vs. previous: +24 files, +1,367 code lines, +64 complexity, DRYness down 1 point (62% → 61%) — well within scc's "healthy" band and nowhere near the 10-point-in-one-step or 55%-floor trip-wires, so no escalation warranted. File count reconciles exactly against what was actually built: +13 Python files (`api/`'s existing 11 unchanged; `farpost-atlas-geo/`'s 7 `app/` modules + 2 `scripts/` + 4 `tests/` = 13, new), +6 TypeScript files, +3 Plain Text (`requirements{,-dev,-ingest}.txt`), +1 each of JSON/Markdown/TOML (the boundary GeoJSON, this piece's `README.md`, its `pyproject.toml`). Real new surface area — a genuinely separate deployable service and a real Leaflet map — not duplication.
+Delta vs. previous: +24 files, +1,379 code lines, +64 complexity, DRYness flat (62% → 62%). File count reconciles exactly against what was actually built: +13 Python files (`api/`'s existing 11 unchanged; `farpost-atlas-geo/`'s 7 `app/` modules + 2 `scripts/` + 4 `tests/` = 13, new), +6 TypeScript files, +3 Plain Text (`requirements{,-dev,-ingest}.txt`), +1 each of JSON/Markdown/TOML (the boundary GeoJSON, this piece's `README.md`, its `pyproject.toml`). Real new surface area — a genuinely separate deployable service and a real Leaflet map — not duplication.
+
+**Correction (logged 2026-07-11, same day):** the snapshot originally logged here read 8,630 lines / 7,649 code / 5,307 ULOC / 61% DRYness — captured before this same entry's own append to `web/src/data/metrics.json` was reflected on disk (the JSON row's line count grew by exactly the 12 lines one new snapshot entry adds). File count and complexity were unaffected. Same underlying self-referential gap as the `sreditor-page-content` correction above, smaller here since it's growth within an existing file rather than a whole missing file — caught the same way, an independent `scc` re-run during drift audit. See `docs/issues.md` for the full finding.
