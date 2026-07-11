@@ -2,8 +2,8 @@
 
 **Slug:** rsw-lb-farpost-atlas
 **Date logged:** 2026-07-10
-**Status:** unscoped — idea captured, not yet spec'd
-**Related:** `rsw-lb-rural-demographics-api.md` (the StatCan data this would consume), `CLAUDE.md`'s "Portfolio piece isolation" convention, `/narrative` (Narrative index — a `Method`-type or `Narrative`-type piece, not yet decided)
+**Status:** scoped — became the `farpost-atlas-build` OpenSpec change on 2026-07-11 (Narrative-type, full `geopandas`/Shapely stack, promoted to `pieces/farpost-atlas-geo/` from day one)
+**Related:** `rsw-lb-rural-demographics-api.md` (the StatCan data this consumes — only the North Hastings boundary/density slice, not the full standalone public API that lightbulb described), `CLAUDE.md`'s "Portfolio piece isolation" convention, `/narrative` (Narrative index)
 
 ## The gap
 
