@@ -1,6 +1,6 @@
 # Farpost Atlas — `farpost-atlas-geo`
 
-A real GIS backend: a point-in-polygon spatial join between seeded tracked-building coordinates and Statistics Canada's 2021 Census Dissemination Area boundary data, scoped to North Hastings, Ontario. Backs the `/narrative/farpost-atlas` map and building-detail pages. Isolated from `api/` under `CLAUDE.md`'s "Portfolio piece isolation" convention — `geopandas`/Shapely are genuine runtime dependencies here, not a one-off local script.
+A real GIS backend: a point-in-polygon spatial join between seeded tracked-building coordinates and Statistics Canada's 2021 Census Dissemination Area boundary data, scoped to North Hastings, Ontario. Backs the `/narrative/farpost-atlas` map and building-detail pages. Isolated from `api/` under `CLAUDE.md`'s "Portfolio piece isolation" convention — Shapely is a genuine runtime dependency here, not a one-off local script; `geopandas` isn't (see below).
 
 ## Boundary data ingestion
 

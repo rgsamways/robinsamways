@@ -29,7 +29,7 @@ const PROJECTS: Project[] = [
     title: "Farpost Atlas",
     teaser:
       "A real geospatial join, not pins on a map — a live point-in-polygon query against real Statistics Canada 2021 Census boundary data, mapping seeded tracked buildings across North Hastings, Ontario and echoing Farpost's own staleness mechanic at a regional scale.",
-    tags: ["FastAPI", "GeoPandas", "Leaflet"],
+    tags: ["FastAPI", "Shapely", "Leaflet"],
   },
 ];
 

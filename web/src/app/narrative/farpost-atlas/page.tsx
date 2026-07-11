@@ -64,9 +64,11 @@ export default function FarpostAtlasPage() {
             The backend, <code>farpost-atlas-geo</code>, is a genuinely
             separate Python/FastAPI service — promoted out of this
             site&rsquo;s shared <code>api/</code> from day one, not prototyped
-            there first. <code>geopandas</code>{" "}
-            and Shapely are real runtime dependencies of a live spatial join, not a one-off local script —
-            exactly the &ldquo;heavy/native dependency&rdquo; case this
+            there first. Shapely{" "}
+            is a real runtime dependency of a live spatial join, not a one-off local script —{" "}
+            <code>geopandas</code>, used only in the one-time ingestion step
+            below, deliberately isn&rsquo;t. That&rsquo;s exactly the
+            &ldquo;heavy/native dependency&rdquo; case this
             site&rsquo;s own portfolio-piece isolation convention was written
             to describe, before this piece existed to actually prove it.
           </p>
