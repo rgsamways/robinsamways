@@ -1,5 +1,3 @@
-import fs from "node:fs";
-import path from "node:path";
 import type { Metadata } from "next";
 import HamburgerMenu from "@/components/HamburgerMenu";
 import SectionHeader from "@/components/SectionHeader";
@@ -7,6 +5,7 @@ import { GLOSSARY_ENTRIES } from "@/components/dev-log/glossary";
 import { BUG_LOG_ENTRIES } from "@/components/dev-log/bugLog";
 import { parseMetricsSnapshots } from "@/components/dev-log/metrics";
 import MetricsDashboard from "@/components/dev-log/MetricsDashboard";
+import rawMetricsData from "@/data/metrics.json";
 
 const SECTION_LINKS = [
   { href: "#glossary", label: "Glossary" },
@@ -19,17 +18,8 @@ export const metadata: Metadata = {
   title: "Dev Log · Robin Samways",
 };
 
-function loadMetricsSnapshots() {
-  // docs/ lives one level up from web/ (this Next.js project's own root), a
-  // sibling directory in the same repo checkout — read at build/render time,
-  // not fetched at runtime, per this section's "static data" design decision.
-  const filePath = path.join(process.cwd(), "..", "docs", "metrics.json");
-  const raw = fs.readFileSync(filePath, "utf-8");
-  return parseMetricsSnapshots(raw);
-}
-
 export default function DevLogPage() {
-  const snapshots = loadMetricsSnapshots();
+  const snapshots = parseMetricsSnapshots(rawMetricsData);
 
   return (
     <main className="py-10">

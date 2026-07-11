@@ -2,7 +2,7 @@
 
 Running `scc` (Sloc Cloc and Code) snapshots, taken right before archiving each OpenSpec change — same checkpoint as the drift audit. Tracks code volume, complexity, and redundancy (DRYness = `ULOC / SLOC`) over time, so duplication growth is visible early and a refactor has an explicit before/after target instead of a vibe. See `CLAUDE.md`'s "Code metrics — scc" section for the convention, `docs/stack.md` for how the binary was obtained.
 
-As of the `dev-log-content` change, every snapshot logged here also gets appended to `docs/metrics.json` — a structured mirror of the same numbers that `/dev-log`'s Metrics section reads at build time. This file (`docs/metrics.md`) stays the authoritative human-readable narrative; the JSON file is a display-only copy, always kept in sync with it.
+As of the `dev-log-content` change, every snapshot logged here also gets appended to `web/src/data/metrics.json` — a structured mirror of the same numbers that `/dev-log`'s Metrics section imports directly at build time (moved there from `docs/metrics.json` by the `sreditor-page-content` change, so the read is a normal bundler-resolved import inside `web/` rather than a filesystem read reaching outside Vercel's configured project root). This file (`docs/metrics.md`) stays the authoritative human-readable narrative; the JSON file is a display-only copy, always kept in sync with it.
 
 Command: `scc --dryness --exclude-dir .git,.hg,.svn,node_modules,.venv web/src api pieces` (run from repo root) — `pieces` covers every promoted portfolio-piece backend as one argument, no per-piece updates needed here as new ones get added. The explicit `--exclude-dir` became necessary as of the `farpost-pulse-build` snapshot: scc's `.gitignore`-based exclusion (its documented default behavior) didn't reliably keep `pieces/<piece>/node_modules` out of the scan when `pieces` was passed as a scan-root argument, even though the repo-root `.gitignore` already covers `node_modules/` — scc's own `--exclude-dir` default list is only `.git,.hg,.svn`, nothing project-specific. Confirmed by running `scc pieces` alone first and seeing ~4,500 files (clearly vendored `@azure/*` package content, not this piece's ~15 source files) before adding the explicit exclusion.
 
@@ -110,3 +110,23 @@ All six new/changed files are TypeScript — `/dev-log` replaced its placeholder
 ULOC: 4,112 · **DRYness: 62%**
 
 Delta vs. previous: +6 files, +435 code lines, +24 complexity, DRYness flat (62% → 62%). All six new TypeScript files live under `web/src/components/dev-log/` (`glossary.ts`, `bugLog.ts`, `metrics.ts`, `MetricsTrendChart.tsx`, `MetricsDashboard.tsx`, and `__tests__/metrics.test.ts`) plus a significantly-grown `web/src/app/dev-log/page.tsx` (an existing file, so it doesn't add to the file count but accounts for real line growth). This is mostly genuine new content (glossary/bug-log prose, dashboard markup) rather than logic, which is consistent with DRYness holding exactly flat rather than moving in either direction — content-heavy pages read as "more code" to `scc` without changing the ratio of unique to duplicated logic underneath.
+
+### 2026-07-11 — after archiving `sreditor-page-content`
+
+No new files — `/method/sreditor` was rewritten in place from its placeholder to real content, and `web/src/app/method/page.tsx`'s Sreditor entry got an updated teaser and tags. All of this snapshot's growth is content (six required sections' worth of verbatim, voice-adapted copy), not new logic — no new test files, matching the fact this change had no pure-logic surface to test.
+
+| Language | Files | Lines | Code | Complexity |
+|---|---|---|---|---|
+| TypeScript | 45 | 4,497 | 4,198 | 283 |
+| JavaScript | 12 | 892 | 731 | 52 |
+| Python | 11 | 1,435 | 1,163 | 125 |
+| JSON | 3 | 46 | 46 | 0 |
+| CSS | 1 | 24 | 21 | 0 |
+| Markdown | 1 | 44 | 34 | 0 |
+| Plain Text | 2 | 7 | 7 | 0 |
+| TOML | 1 | 3 | 3 | 0 |
+| **Total** | **76** | **6,948** | **6,203** | **460** |
+
+ULOC: 4,315 · **DRYness: 62%**
+
+Delta vs. previous: +0 files, +279 code lines, +8 complexity, DRYness flat (62% → 62%) — expected for a content-only page rewrite with no new files and no new logic.

@@ -21,11 +21,11 @@ const REQUIRED_NUMERIC_FIELDS = [
 ] as const;
 
 // Kept deliberately strict (throws rather than silently rendering a broken
-// dashboard) since docs/metrics.json is hand-edited alongside docs/metrics.md
-// at every archive checkpoint — a malformed entry should fail the build, not
-// ship a wrong chart.
-export function parseMetricsSnapshots(raw: string): MetricsSnapshot[] {
-  const data: unknown = JSON.parse(raw);
+// dashboard) since web/src/data/metrics.json is hand-edited alongside
+// docs/metrics.md at every archive checkpoint — a malformed entry should fail
+// the build, not ship a wrong chart. Takes already-parsed data (a bundler
+// JSON import, not raw text) — see web/src/app/dev-log/page.tsx.
+export function parseMetricsSnapshots(data: unknown): MetricsSnapshot[] {
   if (!Array.isArray(data)) {
     throw new Error("metrics.json must contain an array of snapshots");
   }

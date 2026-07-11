@@ -14,7 +14,8 @@ const PROJECTS: Project[] = [
     slug: "sreditor",
     title: "Sreditor",
     teaser:
-      "A contemporaneous log of genuine technical uncertainty resolved through real experimentation — the same discipline Canadian SR&ED tax credits ask of R&D work.",
+      "A CLI tool that judges SR&ED tax-credit eligibility from a project's own OpenSpec change history, in near real time — contemporaneous documentation instead of reconstructing a claim from memory months later.",
+    tags: ["TypeScript", "Node.js", "Claude API", "OpenSpec"],
   },
 ];
 

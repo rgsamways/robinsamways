@@ -70,5 +70,17 @@
     "uloc": 4112,
     "drynessPercent": 62,
     "note": "Flat again — mostly genuine new content (glossary/bug-log prose, dashboard markup), not logic."
+  },
+  {
+    "date": "2026-07-11",
+    "change": "sreditor-page-content",
+    "label": "after archiving sreditor-page-content",
+    "files": 76,
+    "lines": 6948,
+    "code": 6203,
+    "complexity": 460,
+    "uloc": 4315,
+    "drynessPercent": 62,
+    "note": "No new files — a content-only page rewrite in place, no new logic."
   }
 ]
