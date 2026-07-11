@@ -2,7 +2,7 @@
 
 A complete, ordered runbook for taking robinsamways.ca from a local repo to a live, production site — the five core services (GoDaddy, Cloudflare, Vercel, Railway, Resend), plus each promoted portfolio piece's own infrastructure as one gets added (see Part 8). Written so it can be followed start to finish, or handed to someone else to execute.
 
-Last updated: 2026-07-11.
+Last updated: 2026-07-11 (Farpost Atlas deployed live to Railway).
 
 ## Prerequisites
 
@@ -134,22 +134,35 @@ Resources already provisioned by Robin directly in the Azure Portal (not through
 
 ### 8b. Farpost Atlas (Railway)
 
-Not yet provisioned as of 2026-07-11 — `pieces/farpost-atlas-geo/`'s source code is complete and verified locally (see its own `README.md`), but the live Railway service, its Postgres database, and the real seed data are Robin's manual steps, same division of labour as Farpost Pulse's Azure deployment above.
+Live as of 2026-07-11 — deployed as its own Railway project (separate from `/api`'s), Postgres seeded with all 13 real tracked buildings, confirmed working end to end at `https://robinsamways.ca/narrative/farpost-atlas`.
 
-1. Railway → **New Project → Deploy from GitHub repo**, same repo as `/api`, but set **Root Directory** to `pieces/farpost-atlas-geo`.
-2. Add a Postgres database to the same Railway project (**New → Database → PostgreSQL**) — Railway wires `DATABASE_URL` into the service's environment automatically, same pattern as Part 4's `/api` Postgres.
-3. Railway's `DATABASE_URL` uses the `postgresql://` scheme; SQLAlchemy's asyncpg driver needs `postgresql+asyncpg://` explicitly — same gotcha already documented for `/api`'s own Postgres in Part 5, fix the same way (a small env-var rewrite, or set `DATABASE_URL` directly with the `+asyncpg` scheme in Railway's dashboard).
-4. Once the service is live, seed it: locally, with that real `DATABASE_URL` set in the environment (`pip install -r requirements.txt` first, from `pieces/farpost-atlas-geo/`), run `python scripts/seed.py`. This writes the 13 real tracked buildings and their tracked records directly to the live database — there's no seed-triggering endpoint on the deployed service itself, matching Farpost Pulse's own seeding pattern exactly.
+1. Railway → **New Project → Deploy from GitHub repo**, same repo as `/api`, but set **Root Directory** to `pieces/farpost-atlas-geo` (Root Directory is set from that service's **Settings** tab after creation, not always offered on the initial creation screen).
+2. Add a Postgres database to the same Railway project (**New → Database → PostgreSQL**). Railway's Postgres plugin exposes its own connection variables (`DATABASE_URL`, `DATABASE_PUBLIC_URL`, `PGUSER`, `PGPASSWORD`, `PGHOST`, `PGPORT`, `PGDATABASE`) on the **Postgres service itself** — these are *not* automatically injected into other services in the project; the app service needs its own explicit `DATABASE_URL` variable (next step).
+3. On the **app service itself** (not Postgres), add a `DATABASE_URL` variable referencing Postgres's private network values, rewritten with the `+asyncpg` scheme SQLAlchemy's asyncpg driver needs (Railway's own `DATABASE_URL` uses plain `postgresql://` — same gotcha already documented for `/api`'s own Postgres in Part 5):
+   ```
+   DATABASE_URL=postgresql+asyncpg://${{Postgres.PGUSER}}:${{Postgres.PGPASSWORD}}@${{Postgres.PGHOST}}:${{Postgres.PGPORT}}/${{Postgres.PGDATABASE}}
+   ```
+   **Gotcha actually hit:** if you paste a `KEY=value` line into a variable's *value* field (rather than typing it into separate key/value fields), the literal `DATABASE_URL=` prefix ends up inside the value itself — producing `sqlalchemy.exc.ArgumentError: Could not parse SQLAlchemy URL from given URL string` on boot, since the value no longer starts with a valid scheme. Check the value field directly if this happens; the fix is deleting the stray `DATABASE_URL=` text from the front of it.
+4. Once the service is live, seed it — but from your own machine, you need the **public** connection string, not the private one from step 3 (`.railway.internal` addresses aren't reachable outside Railway's network). Copy `DATABASE_PUBLIC_URL` from the Postgres service's Variables tab, rewrite its scheme the same way, then from `pieces/farpost-atlas-geo/`:
+   ```
+   pip install -r requirements.txt
+   $env:DATABASE_URL = "<DATABASE_PUBLIC_URL, with postgresql+asyncpg:// scheme>"
+   python -m scripts.seed
+   ```
+   **Gotcha actually hit:** running `python scripts/seed.py` directly (as a file path) fails with `ModuleNotFoundError: No module named 'app'` — Python only adds the script's own directory to its import path that way, not the package root. Run it as a module (`python -m scripts.seed`) instead, from `pieces/farpost-atlas-geo/`. Should print `Seeded 13 buildings, 36 tracked records.`
 5. Configure CORS: this piece's `app/main.py` already lists `https://robinsamways.ca`, `https://www.robinsamways.ca`, and `http://localhost:3000` in its `CORSMiddleware` — no separate portal configuration step needed here, unlike Azure Functions' CORS (Part 8a step 5), since FastAPI's CORS is set in application code, not platform config.
-6. In Vercel, set `NEXT_PUBLIC_FARPOST_ATLAS_API_URL` to the Railway service's public URL (Project → Settings → Environment Variables). **Trigger a new deploy after adding it** — same env var gotcha as Parts 3 and 8a.
-7. Confirm `https://robinsamways.ca/narrative/farpost-atlas` loads the real seeded buildings and the rural-density overlay, not local/mock data.
+6. Get the app service's public URL: **Settings → Networking → Generate Domain** if one isn't already listed, giving a `*.up.railway.app` address.
+7. In Vercel, set `NEXT_PUBLIC_FARPOST_ATLAS_API_URL` to that Railway URL (Project → Settings → Environment Variables). **Trigger a new deploy after adding it** — same env var gotcha as Parts 3 and 8a.
+8. Confirm `https://robinsamways.ca/narrative/farpost-atlas` loads the real seeded buildings and the rural-density overlay, not local/mock data.
 
-A `SetupGallery` component for this piece (real screenshots of the Railway/Postgres provisioning, per `CLAUDE.md`'s "Setup galleries" convention) is a reasonable follow-up once Robin has actually done the above — not part of this change, same precedent as Farpost Pulse's own still-pending Azure setup gallery.
+A `SetupGallery` component for this piece (real screenshots of the Railway/Postgres provisioning, per `CLAUDE.md`'s "Setup galleries" convention) is a reasonable follow-up now that the above is actually done — not part of this note, same precedent as Farpost Pulse's own still-pending Azure setup gallery.
 
 ## Part 9 — Troubleshooting
 
 - **DNS not resolving after the nameserver change:** can take up to 48h though it's usually much faster. Cloudflare's dashboard shows **Active** once it recognizes the delegation — check there before assuming something's broken.
 - **Vercel/Railway domain stuck on "pending verification":** re-check the exact record type/value the platform is currently asking for (they can differ from what's documented here) and confirm Cloudflare isn't proxying (orange cloud) if the platform expects direct DNS-only resolution.
 - **API fails to boot on Railway with a dialect/driver error:** almost certainly the `DATABASE_URL` scheme mismatch from Part 4 — confirm it starts with `postgresql+asyncpg://`, not `postgresql://`.
+- **API fails to boot on Railway with `sqlalchemy.exc.ArgumentError: Could not parse SQLAlchemy URL from given URL string`:** different from the scheme-mismatch error above — this means the value itself isn't a URL at all. Check the variable's value field directly for a stray `DATABASE_URL=` (or similar) prefix left over from pasting a `KEY=value` line into the value box instead of typing the value alone.
+- **A Python service's own scripts fail with `ModuleNotFoundError` for a local package (e.g. `app`) when run directly (`python scripts/seed.py`):** running a script by file path only adds that script's own directory to Python's import path, not the package root. Run it as a module instead (`python -m scripts.seed`), from the package's own root directory.
 - **Reverting:** nameservers can be pointed back to GoDaddy's defaults at any time from GoDaddy's DNS settings. Vercel/Railway deployments can be deleted without affecting the domain until DNS is repointed away from them.
 - **Test email to the routed address never arrives, no bounce, no spam folder trace, and Cloudflare's Activity Log shows it as "Forwarded" with SPF/DKIM/ARC passing:** this is very likely the self-send loop described in Part 6a, not a Cloudflare problem — Gmail can silently drop mail that appears to loop back to the same account via a third-party relay. Re-test from a different mailbox before assuming anything is broken.
