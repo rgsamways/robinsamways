@@ -68,3 +68,23 @@ Delta vs. previous: +23 files, +1,497 code lines, +104 complexity, DRYness down 
 ULOC: 3,640 · **DRYness: 62%**
 
 Delta vs. previous: essentially flat (+1 file, +25 code lines, complexity unchanged) — exactly what a two-line "Narrative" link added to two existing link arrays should look like. No trip-wire concern.
+
+### 2026-07-11 — after archiving `add-automated-test-suites`
+
+First snapshot to include real test files — new Python (`api/tests/`) and TypeScript (`web/src/**/__tests__/`) rows for the first time. Note: `vitest.config.ts`, `playwright.config.ts`, and everything under `web/e2e/` live outside `web/src`, so per this project's documented `scc` scan root (`web/src`, `api`, `pieces` — a project's own source, not root-level tooling config) they're real, committed files but don't show up in this count at all; only the two `__tests__/*.test.ts` files under `web/src` do.
+
+| Language | Files | Lines | Code | Complexity |
+|---|---|---|---|---|
+| TypeScript | 39 | 3,725 | 3,484 | 251 |
+| JavaScript | 12 | 892 | 731 | 52 |
+| Python | 11 | 1,435 | 1,163 | 125 |
+| JSON | 3 | 46 | 46 | 0 |
+| CSS | 1 | 24 | 21 | 0 |
+| Markdown | 1 | 44 | 34 | 0 |
+| Plain Text | 2 | 7 | 7 | 0 |
+| TOML | 1 | 3 | 3 | 0 |
+| **Total** | **70** | **6,176** | **5,489** | **428** |
+
+ULOC: 3,828 · **DRYness: 62%**
+
+Delta vs. previous: +7 files, +269 code lines, +7 complexity, DRYness flat (62% → 62%) — **a real, expected code-volume increase, not a duplication signal.** Per this change's own tasks.md, this is exactly what should happen: `api/tests/conftest.py` + 2 test files (+3 Python files, matching the file delta exactly), 2 new `__tests__/*.test.ts` files under `web/src`, and `api/pyproject.toml` (new TOML row) and `api/requirements-dev.txt` (new second Plain Text file) for the dev-dependency split. `pieces/farpost-pulse-func/`'s JavaScript row stayed at 12 files (2 ad-hoc `scripts/{checkSeedShape,testHandlers}.js` removed, 2 real `test/*.test.js` files added in their place) with only a small line-count increase — consistent with "closer to a reformat than new work," per design.md. DRYness holding flat despite the volume increase means test files are genuinely new logic (assertions against real code paths), not copy-pasted boilerplate.

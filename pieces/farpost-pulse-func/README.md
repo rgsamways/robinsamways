@@ -18,12 +18,16 @@ npm start                # runs the Function App locally (requires Azure Functio
 
 ## Verifying without a live Cosmos DB connection
 
-Two scripts validate the code without ever touching Azure:
+```bash
+npm test                 # runs the full node:test suite (test/*.test.js)
+```
 
-- `npm run test:seed-shape` — validates the generated seed data's shapes and
+Two suites validate the code without ever touching Azure:
+
+- `test/seedShape.test.js` — validates the generated seed data's shapes and
   intentional patterns (one strong tech, one weak-angle tech, one
   slow-turnaround tech, three improving techs) using pure functions only.
-- `npm run test:handlers` — exercises all four HTTP handlers directly against
+- `test/handlers.test.js` — exercises all four HTTP handlers directly against
   an in-memory fake Cosmos client, including the coaching-tip generator and
   the per-IP rate limiter.
 

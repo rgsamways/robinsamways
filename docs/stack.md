@@ -30,6 +30,7 @@ Exhaustive, running list of every technology, library, and tool used to build an
 - `pieces/farpost-pulse-func/` (2026-07-10) — Node.js 22, Azure Functions v4 programming model (`@azure/functions`), targeting the already-provisioned `farpost-pulse-func` Azure resource (Flex Consumption). Four HTTP-triggered, anonymous-auth endpoints backing `/narrative/farpost-pulse`'s three routes; called directly from the browser (no proxy through this repo's own `/api`) via `NEXT_PUBLIC_FARPOST_PULSE_API_URL`.
 - Azure Cosmos DB (NoSQL API, `@azure/cosmos` SDK) — `farpost-pulse-cosmos` account, three containers (`techs`, `jobs`, `coachingHistory`). Real cloud dependency once deployed; source code is git-tracked in this repo, the Cosmos DB connection string is not (Function App application setting only).
 - Azure OpenAI (Foundry project `rgsamways-0644`) — provisioned but not yet called; `generateCoachingTip()` runs against a mocked/templated function until the model deployment quota clears, isolated so the real call is a one-file swap later.
+- `node:test` (Node's built-in test runner) — formalized 2026-07-10 (`add-automated-test-suites`) as this piece's test framework, replacing the two ad-hoc `scripts/{checkSeedShape,testHandlers}.js` with real `test/*.test.js` files (`npm test`). Zero new dependency — ships with the Node 20+ this piece already requires, deliberately chosen over Vitest to keep this piece minimal-dependency per "Portfolio piece isolation."
 
 **Hosting / infra (planned, not yet live)**
 - Vercel — `/web`
@@ -48,7 +49,9 @@ Exhaustive, running list of every technology, library, and tool used to build an
 ## Testing & verification
 See `docs/testing.md` for the full consolidated picture — what tool covers which layer, and why.
 
-- **Playwright** (with Chromium, occasionally Firefox) — first used 2026-07-07, and the recurring method since for browser-driven UI verification (navigation, interaction, mobile viewports, screenshots). Not a one-off despite where it used to be filed.
+- **Playwright** (`@playwright/test`, Chromium, occasionally Firefox) — first used 2026-07-07 as an ad hoc verification tool, and the recurring method since for browser-driven UI verification (navigation, interaction, mobile viewports, screenshots). Formalized as a real, committed `web/e2e/` suite (`playwright.config.ts`, `npm run test:e2e`) as of the `add-automated-test-suites` change (2026-07-10) — no longer just ad hoc scripts thrown away after one run.
+- **Vitest** (`vitest`, `@vitejs/plugin-react`, `jsdom`, `@testing-library/react`, `@testing-library/dom`, `vite-tsconfig-paths`) — added 2026-07-10 (`add-automated-test-suites`) as `web/`'s unit test runner, per Next.js's own documented Vitest setup guide. `npm run test` (single run) / `npm run test:watch`.
+- **pytest** — added 2026-07-10 (`add-automated-test-suites`) as `api/`'s test runner; installed via a new `api/requirements-dev.txt` (which layers on top of `requirements.txt`) rather than the production `requirements.txt` Railway actually deploys from, so it's dev-only. `api/pyproject.toml` sets `pythonpath = ["."]` so `from app...` imports resolve regardless of how pytest is invoked. Run via `pytest` from `api/`.
 
 ## One-off / ad hoc tools
 Reached for to accomplish a specific task, not part of the running app.

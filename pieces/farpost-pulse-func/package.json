@@ -6,8 +6,7 @@
   "scripts": {
     "start": "func start",
     "seed": "node scripts/seed.js",
-    "test:seed-shape": "node scripts/checkSeedShape.js",
-    "test:handlers": "node scripts/testHandlers.js"
+    "test": "node --test"
   },
   "engines": {
     "node": ">=20"

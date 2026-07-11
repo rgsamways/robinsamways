@@ -23,6 +23,12 @@ Changes are proposed via OpenSpec (`openspec new change <name>`) with proposal.m
 
 `scc` is a trip-wire, not a fix-it tool — it reports an aggregate DRYness percentage, not which files or lines are actually duplicated. If a snapshot's DRYness drops below 55% (scc's own "high repetition" threshold) or falls more than 10 points from the previous snapshot in one step, don't just note it in that snapshot's delta line — log it as a real open item in `docs/issues.md` calling for an actual manual/AI-assisted review pass through whatever grew, since `scc` itself can't localize the duplication for you.
 
+## Testing — tests ship with the feature
+
+An OpenSpec change that adds or modifies application behavior includes representative test coverage for that behavior as part of the same change's `tasks.md`, not deferred to a later retrofit. This applies per-piece using that piece's already-established framework: Vitest for `web/` unit tests, Playwright (`web/e2e/`) for end-to-end flows, pytest for `api/`, `node:test` for `pieces/farpost-pulse-func/` (and whatever framework fits a future promoted piece's own stack, per "Portfolio piece isolation" below). See `docs/testing.md` for what each layer actually covers and why.
+
+Representative, not exhaustive — cover the specific behavior the change actually adds or changes, not a retrofit of everything nearby. There's still no CI; running these suites remains a manual step, so don't claim more automation than actually exists.
+
 ## Resume content changes
 
 The `resume-homepage` spec encodes literal resume content (specific employers, dates, bullets) directly in its requirements — so a substantive content change (new job, changed dates, new skill category, restructured section) is a spec-level change, not just a code edit. Route it through a lightweight OpenSpec change: proposal.md plus a MODIFIED delta on the `resume-homepage` spec is enough, design.md can be skipped. Pure wording/typo fixes that don't change any fact don't need this — a normal commit is fine. No separate changelog file; the OpenSpec change history is the record.
