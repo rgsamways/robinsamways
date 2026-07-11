@@ -21,7 +21,7 @@ The site header SHALL include a menu button (e.g. hamburger icon) that, when act
 - **THEN** the browser navigates to the homepage and the menu closes
 
 ### Requirement: Placeholder routes exist for each menu item
-The site SHALL have a placeholder route for Dev Log (at path `/dev-log`), rendering a minimal placeholder page (e.g. a heading and short "coming soon" style message) rather than a 404 or external redirect. The Method route SHALL render a showcase index of Method-type project pages, as defined by the `method-index` capability. The Narrative route SHALL render a showcase index of Narrative-type project pages, as defined by the `narrative-index` capability. The Farpost route SHALL render Farpost's real content, not a placeholder.
+The Method route SHALL render a showcase index of Method-type project pages, as defined by the `method-index` capability. The Narrative route SHALL render a showcase index of Narrative-type project pages, as defined by the `narrative-index` capability. The Farpost route SHALL render Farpost's real content, not a placeholder. The Dev Log route SHALL render its real content, as defined by the `dev-log-content` capability, not a placeholder.
 
 #### Scenario: Method route renders its showcase index
 - **WHEN** a visitor navigates to the Method route
@@ -35,9 +35,9 @@ The site SHALL have a placeholder route for Dev Log (at path `/dev-log`), render
 - **WHEN** a visitor navigates to the Farpost route
 - **THEN** a page renders with Farpost's real content (not a placeholder), using the site's monospace/terminal styling
 
-#### Scenario: Dev Log route renders a placeholder page
+#### Scenario: Dev Log route renders its real content
 - **WHEN** a visitor navigates to the `/dev-log` route
-- **THEN** a page renders with a heading identifying it as Dev Log and placeholder content, using the site's monospace/terminal styling
+- **THEN** a page renders with Dev Log's real content (not a placeholder), using the site's monospace/terminal styling
 
 ### Requirement: Menu is accessible from every page
 The menu toggle SHALL appear in the header on the homepage and on all placeholder pages, so a visitor can navigate between sections from anywhere on the site.
