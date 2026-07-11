@@ -1,0 +1,74 @@
+[
+  {
+    "date": "2026-07-10",
+    "change": "project-navigation-restructure",
+    "label": "baseline (after archiving project-navigation-restructure)",
+    "files": 37,
+    "lines": 3992,
+    "code": 3616,
+    "complexity": 314,
+    "uloc": 2575,
+    "drynessPercent": 65,
+    "note": "First snapshot — no prior baseline to diff against."
+  },
+  {
+    "date": "2026-07-10",
+    "change": "method-narrative-navigation",
+    "label": "after archiving method-narrative-navigation",
+    "files": 39,
+    "lines": 4082,
+    "code": 3698,
+    "complexity": 317,
+    "uloc": 2599,
+    "drynessPercent": 64,
+    "note": "Essentially flat — a routing/index-page restructure, not new logic."
+  },
+  {
+    "date": "2026-07-10",
+    "change": "farpost-pulse-build",
+    "label": "after archiving farpost-pulse-build",
+    "files": 62,
+    "lines": 5802,
+    "code": 5195,
+    "complexity": 421,
+    "uloc": 3622,
+    "drynessPercent": 62,
+    "note": "First snapshot to include pieces/ — Farpost Pulse's full build landed. Almost entirely new surface area, not duplication."
+  },
+  {
+    "date": "2026-07-10",
+    "change": "project-page-parent-links",
+    "label": "after archiving project-page-parent-links",
+    "files": 63,
+    "lines": 5827,
+    "code": 5220,
+    "complexity": 421,
+    "uloc": 3640,
+    "drynessPercent": 62,
+    "note": "Flat, as expected — a two-line \"Narrative\" link added to two existing menus."
+  },
+  {
+    "date": "2026-07-11",
+    "change": "add-automated-test-suites",
+    "label": "after archiving add-automated-test-suites",
+    "files": 70,
+    "lines": 6176,
+    "code": 5489,
+    "complexity": 428,
+    "uloc": 3828,
+    "drynessPercent": 62,
+    "note": "DRYness held flat despite +269 code lines — real test files, not duplicated boilerplate."
+  },
+  {
+    "date": "2026-07-11",
+    "change": "dev-log-content",
+    "label": "after archiving dev-log-content",
+    "files": 76,
+    "lines": 6662,
+    "code": 5924,
+    "complexity": 452,
+    "uloc": 4112,
+    "drynessPercent": 62,
+    "note": "Flat again — mostly genuine new content (glossary/bug-log prose, dashboard markup), not logic."
+  }
+]

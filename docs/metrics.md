@@ -2,6 +2,8 @@
 
 Running `scc` (Sloc Cloc and Code) snapshots, taken right before archiving each OpenSpec change — same checkpoint as the drift audit. Tracks code volume, complexity, and redundancy (DRYness = `ULOC / SLOC`) over time, so duplication growth is visible early and a refactor has an explicit before/after target instead of a vibe. See `CLAUDE.md`'s "Code metrics — scc" section for the convention, `docs/stack.md` for how the binary was obtained.
 
+As of the `dev-log-content` change, every snapshot logged here also gets appended to `docs/metrics.json` — a structured mirror of the same numbers that `/dev-log`'s Metrics section reads at build time. This file (`docs/metrics.md`) stays the authoritative human-readable narrative; the JSON file is a display-only copy, always kept in sync with it.
+
 Command: `scc --dryness --exclude-dir .git,.hg,.svn,node_modules,.venv web/src api pieces` (run from repo root) — `pieces` covers every promoted portfolio-piece backend as one argument, no per-piece updates needed here as new ones get added. The explicit `--exclude-dir` became necessary as of the `farpost-pulse-build` snapshot: scc's `.gitignore`-based exclusion (its documented default behavior) didn't reliably keep `pieces/<piece>/node_modules` out of the scan when `pieces` was passed as a scan-root argument, even though the repo-root `.gitignore` already covers `node_modules/` — scc's own `--exclude-dir` default list is only `.git,.hg,.svn`, nothing project-specific. Confirmed by running `scc pieces` alone first and seeing ~4,500 files (clearly vendored `@azure/*` package content, not this piece's ~15 source files) before adding the explicit exclusion.
 
 ## Snapshots
@@ -88,3 +90,23 @@ First snapshot to include real test files — new Python (`api/tests/`) and Type
 ULOC: 3,828 · **DRYness: 62%**
 
 Delta vs. previous: +7 files, +269 code lines, +7 complexity, DRYness flat (62% → 62%) — **a real, expected code-volume increase, not a duplication signal.** Per this change's own tasks.md, this is exactly what should happen: `api/tests/conftest.py` + 2 test files (+3 Python files, matching the file delta exactly), 2 new `__tests__/*.test.ts` files under `web/src`, and `api/pyproject.toml` (new TOML row) and `api/requirements-dev.txt` (new second Plain Text file) for the dev-dependency split. `pieces/farpost-pulse-func/`'s JavaScript row stayed at 12 files (2 ad-hoc `scripts/{checkSeedShape,testHandlers}.js` removed, 2 real `test/*.test.js` files added in their place) with only a small line-count increase — consistent with "closer to a reformat than new work," per design.md. DRYness holding flat despite the volume increase means test files are genuinely new logic (assertions against real code paths), not copy-pasted boilerplate.
+
+### 2026-07-11 — after archiving `dev-log-content`
+
+All six new/changed files are TypeScript — `/dev-log` replaced its placeholder with real content (Glossary, Testing & Verification, Metrics dashboard, Bug Log), plus the `parseMetricsSnapshots` unit test this change's own tasks.md called for.
+
+| Language | Files | Lines | Code | Complexity |
+|---|---|---|---|---|
+| TypeScript | 45 | 4,211 | 3,919 | 275 |
+| JavaScript | 12 | 892 | 731 | 52 |
+| Python | 11 | 1,435 | 1,163 | 125 |
+| JSON | 3 | 46 | 46 | 0 |
+| CSS | 1 | 24 | 21 | 0 |
+| Markdown | 1 | 44 | 34 | 0 |
+| Plain Text | 2 | 7 | 7 | 0 |
+| TOML | 1 | 3 | 3 | 0 |
+| **Total** | **76** | **6,662** | **5,924** | **452** |
+
+ULOC: 4,112 · **DRYness: 62%**
+
+Delta vs. previous: +6 files, +435 code lines, +24 complexity, DRYness flat (62% → 62%). All six new TypeScript files live under `web/src/components/dev-log/` (`glossary.ts`, `bugLog.ts`, `metrics.ts`, `MetricsTrendChart.tsx`, `MetricsDashboard.tsx`, and `__tests__/metrics.test.ts`) plus a significantly-grown `web/src/app/dev-log/page.tsx` (an existing file, so it doesn't add to the file count but accounts for real line growth). This is mostly genuine new content (glossary/bug-log prose, dashboard markup) rather than logic, which is consistent with DRYness holding exactly flat rather than moving in either direction — content-heavy pages read as "more code" to `scc` without changing the ratio of unique to duplicated logic underneath.
