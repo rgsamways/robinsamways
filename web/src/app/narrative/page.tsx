@@ -24,6 +24,13 @@ const PROJECTS: Project[] = [
       "A field-tech coaching dashboard, built to get genuine hands-on experience with a stack I wanted to actually know — a real Azure Functions backend and Cosmos DB, called directly from a React frontend, coaching seeded field technicians on job-quality patterns.",
     tags: ["Azure Functions", "Cosmos DB", "React"],
   },
+  {
+    slug: "farpost-atlas",
+    title: "Farpost Atlas",
+    teaser:
+      "A real geospatial join, not pins on a map — a live point-in-polygon query against real Statistics Canada 2021 Census boundary data, mapping seeded tracked buildings across North Hastings, Ontario and echoing Farpost's own staleness mechanic at a regional scale.",
+    tags: ["FastAPI", "GeoPandas", "Leaflet"],
+  },
 ];
 
 export const metadata: Metadata = {

@@ -4,7 +4,7 @@ Running `scc` (Sloc Cloc and Code) snapshots, taken right before archiving each 
 
 As of the `dev-log-content` change, every snapshot logged here also gets appended to `web/src/data/metrics.json` — a structured mirror of the same numbers that `/dev-log`'s Metrics section imports directly at build time (moved there from `docs/metrics.json` by the `sreditor-page-content` change, so the read is a normal bundler-resolved import inside `web/` rather than a filesystem read reaching outside Vercel's configured project root). This file (`docs/metrics.md`) stays the authoritative human-readable narrative; the JSON file is a display-only copy, always kept in sync with it.
 
-Command: `scc --dryness --exclude-dir .git,.hg,.svn,node_modules,.venv web/src api pieces` (run from repo root) — `pieces` covers every promoted portfolio-piece backend as one argument, no per-piece updates needed here as new ones get added. The explicit `--exclude-dir` became necessary as of the `farpost-pulse-build` snapshot: scc's `.gitignore`-based exclusion (its documented default behavior) didn't reliably keep `pieces/<piece>/node_modules` out of the scan when `pieces` was passed as a scan-root argument, even though the repo-root `.gitignore` already covers `node_modules/` — scc's own `--exclude-dir` default list is only `.git,.hg,.svn`, nothing project-specific. Confirmed by running `scc pieces` alone first and seeing ~4,500 files (clearly vendored `@azure/*` package content, not this piece's ~15 source files) before adding the explicit exclusion.
+Command: `scc --dryness --exclude-dir .git,.hg,.svn,node_modules,.venv,raw web/src api pieces` (run from repo root) — `pieces` covers every promoted portfolio-piece backend as one argument, no per-piece updates needed here as new ones get added. The explicit `--exclude-dir` became necessary as of the `farpost-pulse-build` snapshot: scc's `.gitignore`-based exclusion (its documented default behavior) didn't reliably keep `pieces/<piece>/node_modules` out of the scan when `pieces` was passed as a scan-root argument, even though the repo-root `.gitignore` already covers `node_modules/` — scc's own `--exclude-dir` default list is only `.git,.hg,.svn`, nothing project-specific. Confirmed by running `scc pieces` alone first and seeing ~4,500 files (clearly vendored `@azure/*` package content, not this piece's ~15 source files) before adding the explicit exclusion. The same failure mode recurred as of the `farpost-atlas-build` snapshot: `pieces/farpost-atlas-geo/data/raw/` (the ~200MB gitignored StatCan source shapefile/CSV used for one-time boundary ingestion, see that piece's `README.md`) leaked into the scan despite being gitignored, inflating the count by a 63,405-line CSV and an 833-line XML sidecar file — caught by the same "check the file/line count before trusting the number" habit, fixed by adding `raw` to `--exclude-dir`.
 
 ## Snapshots
 
@@ -132,3 +132,23 @@ ULOC: 4,369 · **DRYness: 62%**
 Delta vs. previous: +1 file, +358 code lines, +8 complexity, DRYness flat (62% → 62%) — the one new file is `web/src/data/metrics.json` entering scope, not new page logic; the Sreditor page content itself contributed the usual growth with no new files or test surface.
 
 **Correction (logged 2026-07-11, same day):** the snapshot originally logged here read 76 files / 6,948 lines / 6,203 code / 4,315 ULOC — captured before `web/src/data/metrics.json`'s relocation was reflected on disk. Complexity and DRYness % were unaffected and are unchanged from the original log. Caught during a drift audit that independently re-ran `scc` against the same commit; corrected numbers above. See `docs/issues.md` for the full finding.
+
+### 2026-07-11 — after archiving `farpost-atlas-build`
+
+First snapshot to include `pieces/farpost-atlas-geo/` — a whole new Python service (FastAPI, a real Shapely spatial index) plus its own pytest suite, and six new TypeScript files (the two Farpost Atlas routes, `AtlasMap`/`AtlasMapLoader`/`BuildingDetail` components, `api.ts`). Command's `--exclude-dir` gained `raw` this snapshot — see the note above the Command line.
+
+| Language | Files | Lines | Code | Complexity |
+|---|---|---|---|---|
+| TypeScript | 51 | 5,086 | 4,742 | 312 |
+| Python | 24 | 2,370 | 1,923 | 160 |
+| JavaScript | 12 | 892 | 731 | 52 |
+| JSON | 4 | 132 | 132 | 0 |
+| Markdown | 2 | 98 | 72 | 0 |
+| Plain Text | 5 | 21 | 21 | 0 |
+| TOML | 2 | 7 | 7 | 0 |
+| CSS | 1 | 24 | 21 | 0 |
+| **Total** | **101** | **8,630** | **7,649** | **524** |
+
+ULOC: 5,307 · **DRYness: 61%**
+
+Delta vs. previous: +24 files, +1,367 code lines, +64 complexity, DRYness down 1 point (62% → 61%) — well within scc's "healthy" band and nowhere near the 10-point-in-one-step or 55%-floor trip-wires, so no escalation warranted. File count reconciles exactly against what was actually built: +13 Python files (`api/`'s existing 11 unchanged; `farpost-atlas-geo/`'s 7 `app/` modules + 2 `scripts/` + 4 `tests/` = 13, new), +6 TypeScript files, +3 Plain Text (`requirements{,-dev,-ingest}.txt`), +1 each of JSON/Markdown/TOML (the boundary GeoJSON, this piece's `README.md`, its `pyproject.toml`). Real new surface area — a genuinely separate deployable service and a real Leaflet map — not duplication.

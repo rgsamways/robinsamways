@@ -1,6 +1,6 @@
 # Technology stack
 
-Exhaustive, running list of every technology, library, and tool used to build and ship this site — including one-off dev-time tools that never become a runtime dependency (e.g. something CLI reaches for once to accomplish a task, like extracting an image from a PDF). Update this whenever anything new gets introduced, however small. Last updated: 2026-07-07.
+Exhaustive, running list of every technology, library, and tool used to build and ship this site — including one-off dev-time tools that never become a runtime dependency (e.g. something CLI reaches for once to accomplish a task, like extracting an image from a PDF). Update this whenever anything new gets introduced, however small. Last updated: 2026-07-11.
 
 ## Production stack
 
@@ -25,17 +25,21 @@ Exhaustive, running list of every technology, library, and tool used to build an
 - Tailwind CSS v4
 - `next/font` (self-hosted JetBrains Mono)
 - `next/og` (`ImageResponse`) — used in `web/src/app/icon.tsx` (2026-07-08) to code-generate the site favicon (black circle, accent-color `$`) at build time, replacing the static `favicon.ico`; no image editor involved.
+- `leaflet` / `react-leaflet` / `react-leaflet-cluster` (2026-07-11) — the interactive map on `/narrative/farpost-atlas`, rendering clustered building markers and a GeoJSON rural-density overlay. Chosen over Mapbox/Azure Maps specifically because it needs no API key or vendor account; OpenStreetMap tiles. `AtlasMap.tsx` is dynamically imported with `ssr: false` (via a thin `"use client"` loader wrapper) since Leaflet touches `window` at module-evaluation time.
 
 **Portfolio pieces (`pieces/`)** — see `CLAUDE.md`'s "Portfolio piece isolation" convention for why these live outside `api/`
 - `pieces/farpost-pulse-func/` (2026-07-10) — Node.js 22, Azure Functions v4 programming model (`@azure/functions`), targeting the already-provisioned `farpost-pulse-func` Azure resource (Flex Consumption). Four HTTP-triggered, anonymous-auth endpoints backing `/narrative/farpost-pulse`'s three routes; called directly from the browser (no proxy through this repo's own `/api`) via `NEXT_PUBLIC_FARPOST_PULSE_API_URL`.
 - Azure Cosmos DB (NoSQL API, `@azure/cosmos` SDK) — `farpost-pulse-cosmos` account, three containers (`techs`, `jobs`, `coachingHistory`). Real cloud dependency once deployed; source code is git-tracked in this repo, the Cosmos DB connection string is not (Function App application setting only).
 - Azure OpenAI (Foundry project `rgsamways-0644`) — provisioned but not yet called; `generateCoachingTip()` runs against a mocked/templated function until the model deployment quota clears, isolated so the real call is a one-file swap later.
 - `node:test` (Node's built-in test runner) — formalized 2026-07-10 (`add-automated-test-suites`) as this piece's test framework, replacing the two ad-hoc `scripts/{checkSeedShape,testHandlers}.js` with real `test/*.test.js` files (`npm test`). Zero new dependency — ships with the Node 20+ this piece already requires, deliberately chosen over Vitest to keep this piece minimal-dependency per "Portfolio piece isolation."
+- `pieces/farpost-atlas-geo/` (2026-07-11) — Python, FastAPI, SQLModel, asyncpg (same stack as `api/`, deliberately a separate deployable per "Portfolio piece isolation"'s heavy-dependency trigger). `shapely` (an in-memory `STRtree` spatial index, built once at startup, queried on every `GET /api/buildings/{id}` for a real point-in-polygon rurality lookup) is a genuine runtime dependency, unlike `geopandas` (see One-off tools below, ingestion-only). Backs `/narrative/farpost-atlas`'s two routes; called directly from the browser via `NEXT_PUBLIC_FARPOST_ATLAS_API_URL`.
+- Statistics Canada 2021 Census Dissemination Area cartographic boundary data (`lda_000b21a_e.zip`, ~197 MB, all of Canada) and table 98-10-0015-01 (population/dwelling counts and density by DA) — real government open data, spatially filtered down to North Hastings, Ontario's 37 Dissemination Areas at ingestion time (see `pieces/farpost-atlas-geo/scripts/ingest_boundaries.py`). The processed output (`pieces/farpost-atlas-geo/data/da_boundaries_north_hastings.geojson`, ~130 KB) is what's actually checked in and loaded at runtime.
 
 **Hosting / infra (planned, not yet live)**
 - Vercel — `/web`
 - Railway — `/api` + Postgres
 - Azure — `pieces/farpost-pulse-func/` (Function App) + Cosmos DB, deployed independently of Vercel/Railway
+- Railway — `pieces/farpost-atlas-geo/` (Python service) + its own Postgres database, deployed independently, per "Portfolio piece isolation" (provisioning is Robin's manual step — see `docs/issues.md`)
 - Cloudflare — DNS
 - GoDaddy — domain registration + `.com` → `.ca` forwarding
 
@@ -51,7 +55,7 @@ See `docs/testing.md` for the full consolidated picture — what tool covers whi
 
 - **Playwright** (`@playwright/test`, Chromium, occasionally Firefox) — first used 2026-07-07 as an ad hoc verification tool, and the recurring method since for browser-driven UI verification (navigation, interaction, mobile viewports, screenshots). Formalized as a real, committed `web/e2e/` suite (`playwright.config.ts`, `npm run test:e2e`) as of the `add-automated-test-suites` change (2026-07-10) — no longer just ad hoc scripts thrown away after one run.
 - **Vitest** (`vitest`, `@vitejs/plugin-react`, `jsdom`, `@testing-library/react`, `@testing-library/dom`, `vite-tsconfig-paths`) — added 2026-07-10 (`add-automated-test-suites`) as `web/`'s unit test runner, per Next.js's own documented Vitest setup guide. `npm run test` (single run) / `npm run test:watch`.
-- **pytest** — added 2026-07-10 (`add-automated-test-suites`) as `api/`'s test runner; installed via a new `api/requirements-dev.txt` (which layers on top of `requirements.txt`) rather than the production `requirements.txt` Railway actually deploys from, so it's dev-only. `api/pyproject.toml` sets `pythonpath = ["."]` so `from app...` imports resolve regardless of how pytest is invoked. Run via `pytest` from `api/`.
+- **pytest** — added 2026-07-10 (`add-automated-test-suites`) as `api/`'s test runner; installed via a new `api/requirements-dev.txt` (which layers on top of `requirements.txt`) rather than the production `requirements.txt` Railway actually deploys from, so it's dev-only. `api/pyproject.toml` sets `pythonpath = ["."]` so `from app...` imports resolve regardless of how pytest is invoked. Run via `pytest` from `api/`. `pieces/farpost-atlas-geo/` follows the same pattern (2026-07-11) — its tests run against a real (if lightweight) SQLite database, not a mocked persistence layer, since `TrackedBuilding`/`TrackedRecord` querying is itself the thing worth integration-testing there; `aiosqlite`/`pytest-asyncio` are dev-only too.
 
 ## One-off / ad hoc tools
 Reached for to accomplish a specific task, not part of the running app.
@@ -61,3 +65,5 @@ Reached for to accomplish a specific task, not part of the running app.
 - **Docker** — used 2026-07-07 to run a local Postgres container for verifying the FastAPI + SQLModel + asyncpg wiring end-to-end before cleanup.
 - **psql** — used 2026-07-07 to manually confirm Postgres connectivity during local testing.
 - **.NET `System.Drawing` (via PowerShell)** — used 2026-07-08 to read the actual pixel dimensions of the 6 `SETUP_GALLERY` screenshots (neither PIL nor a JS image library was on hand), so `next/image`'s `width`/`height` props could reflect each image's real aspect ratio rather than an assumed one.
+- **GeoPandas** (`geopandas`, `pyogrio`, `pyproj`) — used 2026-07-11 in `pieces/farpost-atlas-geo/scripts/ingest_boundaries.py` to reproject Statistics Canada's DA boundary file from NAD83/Lambert to WGS84, spatially filter to North Hastings, simplify geometry, and join population-density figures. Deliberately kept out of the deployed service's `requirements.txt` (a separate `requirements-ingest.txt`) — this is a genuine one-time, local-only ingestion step per design.md, not a runtime dependency; only its small GeoJSON output ships.
+- **OpenStreetMap Nominatim API** — used 2026-07-11 (same ingestion script) to fetch real municipal boundary polygons for North Hastings' seven constituent municipalities, used to spatially scope the national StatCan DA file down to North Hastings without needing StatCan's own, much larger Census Subdivision boundary file. A free, keyless public API; results cached to `pieces/farpost-atlas-geo/data/raw/` so re-running the ingestion script doesn't re-hit it unnecessarily.

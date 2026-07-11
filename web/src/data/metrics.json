@@ -82,5 +82,17 @@
     "uloc": 4369,
     "drynessPercent": 62,
     "note": "Content-only page rewrite, no new logic — the one new file counted here is web/src/data/metrics.json itself, which entered the scc scan path for the first time in this same commit when it was relocated out of docs/. Corrected during a later drift audit; the originally-logged snapshot (76 files) was captured before that relocation was reflected on disk."
+  },
+  {
+    "date": "2026-07-11",
+    "change": "farpost-atlas-build",
+    "label": "after archiving farpost-atlas-build",
+    "files": 101,
+    "lines": 8630,
+    "code": 7649,
+    "complexity": 524,
+    "uloc": 5307,
+    "drynessPercent": 61,
+    "note": "A whole new Python service (farpost-atlas-geo) plus a real Leaflet map on the frontend — down 1pt DRYness, real new surface area, not duplication."
   }
 ]

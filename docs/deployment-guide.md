@@ -2,7 +2,7 @@
 
 A complete, ordered runbook for taking robinsamways.ca from a local repo to a live, production site — the five core services (GoDaddy, Cloudflare, Vercel, Railway, Resend), plus each promoted portfolio piece's own infrastructure as one gets added (see Part 8). Written so it can be followed start to finish, or handed to someone else to execute.
 
-Last updated: 2026-07-10.
+Last updated: 2026-07-11.
 
 ## Prerequisites
 
@@ -131,6 +131,20 @@ Resources already provisioned by Robin directly in the Azure Portal (not through
 5. Configure CORS on the Function App (Azure Portal → Function App → CORS) to allow `https://robinsamways.ca` and `http://localhost:3000`.
 6. In Vercel, set `NEXT_PUBLIC_FARPOST_PULSE_API_URL` to the Function App's public base URL (Project → Settings → Environment Variables, same page used for `NEXT_PUBLIC_API_URL` in Part 3). **Trigger a new deploy after adding it** — env var changes don't apply to existing deployments, same gotcha as Part 3.
 7. Confirm `https://robinsamways.ca/narrative/farpost-pulse` loads real data from the live Function App, not local/mock data.
+
+### 8b. Farpost Atlas (Railway)
+
+Not yet provisioned as of 2026-07-11 — `pieces/farpost-atlas-geo/`'s source code is complete and verified locally (see its own `README.md`), but the live Railway service, its Postgres database, and the real seed data are Robin's manual steps, same division of labour as Farpost Pulse's Azure deployment above.
+
+1. Railway → **New Project → Deploy from GitHub repo**, same repo as `/api`, but set **Root Directory** to `pieces/farpost-atlas-geo`.
+2. Add a Postgres database to the same Railway project (**New → Database → PostgreSQL**) — Railway wires `DATABASE_URL` into the service's environment automatically, same pattern as Part 4's `/api` Postgres.
+3. Railway's `DATABASE_URL` uses the `postgresql://` scheme; SQLAlchemy's asyncpg driver needs `postgresql+asyncpg://` explicitly — same gotcha already documented for `/api`'s own Postgres in Part 5, fix the same way (a small env-var rewrite, or set `DATABASE_URL` directly with the `+asyncpg` scheme in Railway's dashboard).
+4. Once the service is live, seed it: locally, with that real `DATABASE_URL` set in the environment (`pip install -r requirements.txt` first, from `pieces/farpost-atlas-geo/`), run `python scripts/seed.py`. This writes the 13 real tracked buildings and their tracked records directly to the live database — there's no seed-triggering endpoint on the deployed service itself, matching Farpost Pulse's own seeding pattern exactly.
+5. Configure CORS: this piece's `app/main.py` already lists `https://robinsamways.ca`, `https://www.robinsamways.ca`, and `http://localhost:3000` in its `CORSMiddleware` — no separate portal configuration step needed here, unlike Azure Functions' CORS (Part 8a step 5), since FastAPI's CORS is set in application code, not platform config.
+6. In Vercel, set `NEXT_PUBLIC_FARPOST_ATLAS_API_URL` to the Railway service's public URL (Project → Settings → Environment Variables). **Trigger a new deploy after adding it** — same env var gotcha as Parts 3 and 8a.
+7. Confirm `https://robinsamways.ca/narrative/farpost-atlas` loads the real seeded buildings and the rural-density overlay, not local/mock data.
+
+A `SetupGallery` component for this piece (real screenshots of the Railway/Postgres provisioning, per `CLAUDE.md`'s "Setup galleries" convention) is a reasonable follow-up once Robin has actually done the above — not part of this change, same precedent as Farpost Pulse's own still-pending Azure setup gallery.
 
 ## Part 9 — Troubleshooting
 

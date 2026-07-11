@@ -28,7 +28,7 @@ export default function DeployRunbookPage() {
         Written so it can be followed start to finish, or handed to someone
         else to execute.
       </p>
-      <p className="mt-1 text-sm text-muted">Last updated: 2026-07-10.</p>
+      <p className="mt-1 text-sm text-muted">Last updated: 2026-07-11.</p>
 
       <section>
         <SectionHeader title="PREREQUISITES" />
@@ -611,6 +611,75 @@ export default function DeployRunbookPage() {
               <code>https://robinsamways.ca/narrative/farpost-pulse</code>{" "}
               loads real data from the live Function App, not local/mock
               data.
+            </>,
+          ]}
+        />
+
+        <h3 className="mt-6 font-bold">8b. Farpost Atlas (Railway)</h3>
+        <p className="mt-1 text-sm leading-relaxed">
+          Not yet provisioned as of 2026-07-11 —{" "}
+          <code>pieces/farpost-atlas-geo/</code>&rsquo;s source code is
+          complete and verified locally (see its own{" "}
+          <code>README.md</code>), but the live Railway service, its
+          Postgres database, and the real seed data are Robin&rsquo;s
+          manual steps, same division of labour as Farpost Pulse&rsquo;s
+          Azure deployment above.
+        </p>
+        <Steps
+          items={[
+            <>
+              Railway → <strong>New Project → Deploy from GitHub repo</strong>
+              , same repo as <code>/api</code>, but set{" "}
+              <strong>Root Directory</strong> to{" "}
+              <code>pieces/farpost-atlas-geo</code>.
+            </>,
+            <>
+              Add a Postgres database to the same Railway project (
+              <strong>New → Database → PostgreSQL</strong>) — Railway wires{" "}
+              <code>DATABASE_URL</code>{" "}
+              into the service&rsquo;s environment
+              automatically, same pattern as Part 4&rsquo;s <code>/api</code>{" "}
+              Postgres.
+            </>,
+            <>
+              Railway&rsquo;s <code>DATABASE_URL</code> uses the{" "}
+              <code>postgresql://</code>{" "}
+              scheme; SQLAlchemy&rsquo;s asyncpg
+              driver needs <code>postgresql+asyncpg://</code> explicitly —
+              same gotcha already documented for <code>/api</code>&rsquo;s
+              own Postgres in Part 5, fix the same way.
+            </>,
+            <>
+              Once the service is live, seed it: locally, with that real{" "}
+              <code>DATABASE_URL</code> set in the environment (
+              <code>pip install -r requirements.txt</code> first, from{" "}
+              <code>pieces/farpost-atlas-geo/</code>), run{" "}
+              <code>python scripts/seed.py</code>. This writes the 13 real
+              tracked buildings directly to the live database — there&rsquo;s
+              no seed-triggering endpoint on the deployed service itself,
+              matching Farpost Pulse&rsquo;s own seeding pattern exactly.
+            </>,
+            <>
+              CORS is already configured in application code (
+              <code>app/main.py</code>&rsquo;s <code>CORSMiddleware</code>{" "}
+              lists <code>https://robinsamways.ca</code> and{" "}
+              <code>http://localhost:3000</code>) — no separate portal
+              configuration step, unlike Azure Functions&rsquo; CORS (8a
+              step 5).
+            </>,
+            <>
+              In Vercel, set{" "}
+              <code>NEXT_PUBLIC_FARPOST_ATLAS_API_URL</code>{" "}
+              to the Railway
+              service&rsquo;s public URL.{" "}
+              <strong>Trigger a new deploy after adding it</strong> — same
+              env var gotcha as Parts 3 and 8a.
+            </>,
+            <>
+              Confirm{" "}
+              <code>https://robinsamways.ca/narrative/farpost-atlas</code>{" "}
+              loads the real seeded buildings and the rural-density overlay,
+              not local/mock data.
             </>,
           ]}
         />

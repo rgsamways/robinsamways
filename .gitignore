@@ -267,3 +267,9 @@ local.settings.json
 
 # Source asset only — resume content is hardcoded in the React homepage, not read at runtime
 /resume.pdf
+
+# Raw StatCan/OSM source files for farpost-atlas-geo's one-time boundary
+# ingestion (a 400MB+ national shapefile among them) — never committed; the
+# small processed output (data/da_boundaries_north_hastings.geojson) is.
+# See pieces/farpost-atlas-geo/README.md for how to re-fetch these.
+pieces/farpost-atlas-geo/data/raw/
