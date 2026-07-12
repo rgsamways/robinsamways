@@ -174,3 +174,23 @@ The Method/Narrative restructure: two new small nav components (`FarpostTabBar`,
 ULOC: 5,466 · **DRYness: 62%**
 
 Delta vs. previous: +4 files, +198 lines, +186 code lines, +7 complexity, DRYness flat (62% → 62%). File count reconciles exactly: +6 new TypeScript files (`FarpostTabBar.tsx`, `techstacks/filterProjects.ts` + its `__tests__` file, `TechStacksBrowser.tsx`, the new `farpost-dispatch/page.tsx`, the new `techstacks/page.tsx`) minus -2 deleted (`web/src/app/method/page.tsx`, `web/src/app/narrative/page.tsx`) = +4. No trip-wire concern — this was mostly a routing/content-relocation change (Atlas, Pulse, Credential Flow, and Sreditor's pages moved wholesale, not copied), plus a small amount of genuinely new nav-component logic, consistent with DRYness holding exactly flat.
+
+### 2026-07-11 — after archiving `page-chrome-simplification`
+
+Removed every local per-page `HamburgerMenu` call site sitewide (Farpost hub, Farpost Atlas, Farpost Pulse, Sreditor, Credential Flow, Tech/Stacks index, Dev Log) and stripped `SectionHeader`'s now-unused `id`/`scroll-mt-4` anchor mechanic everywhere it's used. Added a one-line Farpost intro blurb and made `Header.tsx` sticky at the `lg` breakpoint. No new or deleted files — pure edits to existing pages/components.
+
+| Language | Files | Lines | Code | Complexity |
+|---|---|---|---|---|
+| TypeScript | 55 | 5,191 | 4,842 | 320 |
+| Python | 24 | 2,370 | 1,923 | 160 |
+| JavaScript | 12 | 892 | 731 | 52 |
+| JSON | 4 | 156 | 156 | 0 |
+| Markdown | 2 | 98 | 72 | 0 |
+| Plain Text | 5 | 21 | 21 | 0 |
+| TOML | 2 | 7 | 7 | 0 |
+| CSS | 1 | 24 | 21 | 0 |
+| **Total** | **105** | **8,759** | **7,773** | **532** |
+
+ULOC: 5,438 · **DRYness: 62%**
+
+Delta vs. previous: +0 files, -81 lines, -74 code lines, +1 complexity (noise), DRYness flat (62% → 62%). Expected shape for a chrome-removal change: deleting ~13 local-menu call sites plus their `SECTION_LINKS`/`id` props removed more code than the new Farpost blurb paragraph and Header's sticky className added back, netting a small decrease with zero file-count change. No trip-wire concern.

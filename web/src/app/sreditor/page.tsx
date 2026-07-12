@@ -1,13 +1,5 @@
 import type { Metadata } from "next";
-import HamburgerMenu from "@/components/HamburgerMenu";
 import SectionHeader from "@/components/SectionHeader";
-
-const SECTION_LINKS = [
-  { href: "#origin-story", label: "Origin Story" },
-  { href: "#problems-sreditor-solves", label: "Problems Sreditor Solves" },
-  { href: "#sred-eligibility-example", label: "SR&ED Eligibility Example" },
-  { href: "#process", label: "Process" },
-];
 
 export const metadata: Metadata = {
   title: "Sreditor · Robin Samways",
@@ -16,21 +8,16 @@ export const metadata: Metadata = {
 export default function SreditorPage() {
   return (
     <main className="py-10">
-      <div className="flex items-start gap-3">
-        <HamburgerMenu links={SECTION_LINKS} ariaLabel="page sections menu" />
-        <div>
-          <h1 className="text-xl font-bold">
-            <span className="text-accent">$</span> Sreditor
-          </h1>
-          <p className="mt-2 text-sm text-muted">
-            A CLI tool that judges SR&amp;ED tax-credit eligibility from a
-            project&rsquo;s own OpenSpec change history, in near real time.
-          </p>
-        </div>
-      </div>
+      <h1 className="text-xl font-bold">
+        <span className="text-accent">$</span> Sreditor
+      </h1>
+      <p className="mt-2 text-sm text-muted">
+        A CLI tool that judges SR&amp;ED tax-credit eligibility from a
+        project&rsquo;s own OpenSpec change history, in near real time.
+      </p>
 
       <section>
-        <SectionHeader id="origin-story" title="ORIGIN_STORY" />
+        <SectionHeader title="ORIGIN_STORY" />
         <div className="space-y-4 text-sm leading-relaxed">
           <p>
             I didn&rsquo;t set out to build a tax-credit tool. Early in
@@ -73,7 +60,7 @@ export default function SreditorPage() {
       </section>
 
       <section>
-        <SectionHeader id="problems-sreditor-solves" title="PROBLEMS_SREDITOR_SOLVES" />
+        <SectionHeader title="PROBLEMS_SREDITOR_SOLVES" />
         <div className="space-y-4 text-sm leading-relaxed">
           <p>
             <strong>Manual note-taking gets abandoned.</strong>{" "}
@@ -124,7 +111,7 @@ export default function SreditorPage() {
       </section>
 
       <section>
-        <SectionHeader id="sred-eligibility-example" title="SRED_ELIGIBILITY_EXAMPLE" />
+        <SectionHeader title="SRED_ELIGIBILITY_EXAMPLE" />
         <div className="space-y-4 text-sm leading-relaxed">
           <p>
             Built across one extended session, in seven phases plus a
@@ -204,7 +191,7 @@ export default function SreditorPage() {
       </section>
 
       <section>
-        <SectionHeader id="process" title="PROCESS" />
+        <SectionHeader title="PROCESS" />
         <div className="space-y-4 text-sm leading-relaxed">
           <p>
             Sreditor is a CLI tool, Node.js and TypeScript, that reads a

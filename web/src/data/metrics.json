@@ -106,5 +106,17 @@
     "uloc": 5466,
     "drynessPercent": 62,
     "note": "Method/Narrative restructured into Farpost hub, Sreditor top-level page, and a new Tech/Stacks index. Mostly a routing/content-relocation change (Atlas, Pulse, Credential Flow, Sreditor pages moved wholesale, not copied) plus two small new nav components — DRYness held exactly flat."
+  },
+  {
+    "date": "2026-07-11",
+    "change": "page-chrome-simplification",
+    "label": "after archiving page-chrome-simplification",
+    "files": 105,
+    "lines": 8759,
+    "code": 7773,
+    "complexity": 532,
+    "uloc": 5438,
+    "drynessPercent": 62,
+    "note": "Removed every local per-page HamburgerMenu and SectionHeader's anchor-id mechanic sitewide, added a Farpost intro blurb, made the header sticky at the lg breakpoint. Zero file-count change, a small net line decrease — deletions outweighed the small amount of new copy/className added back."
   }
 ]

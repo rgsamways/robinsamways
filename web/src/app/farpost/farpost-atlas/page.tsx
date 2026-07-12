@@ -1,15 +1,7 @@
 import type { Metadata } from "next";
-import HamburgerMenu from "@/components/HamburgerMenu";
 import SectionHeader from "@/components/SectionHeader";
 import AtlasMapLoader from "@/components/farpost-atlas/AtlasMapLoader";
 import FarpostTabBar from "@/components/farpost/FarpostTabBar";
-
-const SECTION_LINKS = [
-  { href: "#origin-story", label: "Origin Story" },
-  { href: "#architecture", label: "Architecture" },
-  { href: "#tech-stack", label: "Tech Stack" },
-  { href: "#map", label: "Map" },
-];
 
 export const metadata: Metadata = {
   title: "Farpost Atlas · Robin Samways",
@@ -19,21 +11,16 @@ export default function FarpostAtlasPage() {
   return (
     <main className="py-10">
       <FarpostTabBar />
-      <div className="flex items-start gap-3">
-        <HamburgerMenu links={SECTION_LINKS} ariaLabel="page sections menu" />
-        <div>
-          <h1 className="text-xl font-bold">
-            <span className="text-accent">$</span> Farpost Atlas
-          </h1>
-          <p className="mt-2 text-sm text-muted">
-            A real geospatial join against Statistics Canada census boundary
-            data — real GIS work, not pins on a map.
-          </p>
-        </div>
-      </div>
+      <h1 className="text-xl font-bold">
+        <span className="text-accent">$</span> Farpost Atlas
+      </h1>
+      <p className="mt-2 text-sm text-muted">
+        A real geospatial join against Statistics Canada census boundary
+        data — real GIS work, not pins on a map.
+      </p>
 
       <section>
-        <SectionHeader id="origin-story" title="ORIGIN_STORY" />
+        <SectionHeader title="ORIGIN_STORY" />
         <div className="space-y-4 text-sm leading-relaxed">
           <p>
             Every Narrative piece so far proved a skill category the last one
@@ -59,7 +46,7 @@ export default function FarpostAtlasPage() {
       </section>
 
       <section>
-        <SectionHeader id="architecture" title="ARCHITECTURE" />
+        <SectionHeader title="ARCHITECTURE" />
         <div className="space-y-4 text-sm leading-relaxed">
           <p>
             The backend, <code>farpost-atlas-geo</code>, is a genuinely
@@ -109,7 +96,7 @@ export default function FarpostAtlasPage() {
       </section>
 
       <section>
-        <SectionHeader id="tech-stack" title="TECH_STACK" />
+        <SectionHeader title="TECH_STACK" />
         <div className="overflow-x-auto text-sm">
           <table className="w-full border-collapse">
             <thead>
@@ -171,7 +158,7 @@ export default function FarpostAtlasPage() {
       </section>
 
       <section>
-        <SectionHeader id="map" title="MAP" />
+        <SectionHeader title="MAP" />
         <p className="mb-4 text-sm leading-relaxed">
           Seeded tracked buildings across North Hastings, Ontario — clustered
           markers, each linking to that building&rsquo;s own tracked-record

@@ -1,18 +1,10 @@
 import type { Metadata } from "next";
-import HamburgerMenu from "@/components/HamburgerMenu";
 import SectionHeader from "@/components/SectionHeader";
 import { GLOSSARY_ENTRIES } from "@/components/dev-log/glossary";
 import { BUG_LOG_ENTRIES } from "@/components/dev-log/bugLog";
 import { parseMetricsSnapshots } from "@/components/dev-log/metrics";
 import MetricsDashboard from "@/components/dev-log/MetricsDashboard";
 import rawMetricsData from "@/data/metrics.json";
-
-const SECTION_LINKS = [
-  { href: "#glossary", label: "Glossary" },
-  { href: "#testing-verification", label: "Testing & Verification" },
-  { href: "#metrics", label: "Metrics" },
-  { href: "#bug-log", label: "Bug Log" },
-];
 
 export const metadata: Metadata = {
   title: "Dev Log · Robin Samways",
@@ -23,22 +15,17 @@ export default function DevLogPage() {
 
   return (
     <main className="py-10">
-      <div className="flex items-start gap-3">
-        <HamburgerMenu links={SECTION_LINKS} ariaLabel="page sections menu" />
-        <div>
-          <h1 className="text-xl font-bold">
-            <span className="text-accent">$</span> Dev Log
-          </h1>
-          <p className="mt-2 text-sm text-muted">
-            The unpolished, ongoing record — plain-language explanations, how this
-            site actually gets verified, real code-metrics history, and real bugs
-            hit along the way.
-          </p>
-        </div>
-      </div>
+      <h1 className="text-xl font-bold">
+        <span className="text-accent">$</span> Dev Log
+      </h1>
+      <p className="mt-2 text-sm text-muted">
+        The unpolished, ongoing record — plain-language explanations, how this
+        site actually gets verified, real code-metrics history, and real bugs
+        hit along the way.
+      </p>
 
       <section>
-        <SectionHeader id="glossary" title="GLOSSARY" />
+        <SectionHeader title="GLOSSARY" />
         <p className="mb-4 text-sm leading-relaxed">
           A growing "X, in layman's terms" list — plain-language explanations of
           tools and concepts used elsewhere on this site, for a reader who
@@ -57,7 +44,7 @@ export default function DevLogPage() {
       </section>
 
       <section>
-        <SectionHeader id="testing-verification" title="TESTING_AND_VERIFICATION" />
+        <SectionHeader title="TESTING_AND_VERIFICATION" />
         <div className="space-y-4 text-sm leading-relaxed">
           <p>
             Every part of this site now has a real, committed, framework-based
@@ -95,12 +82,12 @@ export default function DevLogPage() {
       </section>
 
       <section>
-        <SectionHeader id="metrics" title="METRICS" />
+        <SectionHeader title="METRICS" />
         <MetricsDashboard snapshots={snapshots} />
       </section>
 
       <section>
-        <SectionHeader id="bug-log" title="BUG_LOG" />
+        <SectionHeader title="BUG_LOG" />
         <p className="mb-4 text-sm leading-relaxed">
           Real bugs actually hit during development, each paired with the
           underlying concept it reveals — the messy, unpolished record, not a

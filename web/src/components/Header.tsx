@@ -5,7 +5,7 @@ import MenuToggle from "./MenuToggle";
 
 export default function Header() {
   return (
-    <header>
+    <header className="z-30 bg-background lg:sticky lg:top-0">
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-start gap-3">
           <MenuToggle />

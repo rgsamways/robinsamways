@@ -1,17 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import HamburgerMenu from "@/components/HamburgerMenu";
 import SectionHeader from "@/components/SectionHeader";
 import TechRoster from "@/components/farpost-pulse/TechRoster";
 import FarpostTabBar from "@/components/farpost/FarpostTabBar";
-
-const SECTION_LINKS = [
-  { href: "#origin-story", label: "Origin Story" },
-  { href: "#architecture", label: "Architecture" },
-  { href: "#tech-stack", label: "Tech Stack" },
-  { href: "#design-notes", label: "Design Notes" },
-  { href: "#tech-roster", label: "Tech Roster" },
-];
 
 export const metadata: Metadata = {
   title: "Farpost Pulse · Robin Samways",
@@ -21,22 +12,17 @@ export default function FarpostPulsePage() {
   return (
     <main className="py-10">
       <FarpostTabBar />
-      <div className="flex items-start gap-3">
-        <HamburgerMenu links={SECTION_LINKS} ariaLabel="page sections menu" />
-        <div>
-          <h1 className="text-xl font-bold">
-            <span className="text-accent">$</span> Farpost Pulse
-          </h1>
-          <p className="mt-2 text-sm text-muted">
-            A field-tech coaching dashboard — real Azure serverless, built to
-            get genuine hands-on time with a stack I wanted to actually know,
-            not just read about.
-          </p>
-        </div>
-      </div>
+      <h1 className="text-xl font-bold">
+        <span className="text-accent">$</span> Farpost Pulse
+      </h1>
+      <p className="mt-2 text-sm text-muted">
+        A field-tech coaching dashboard — real Azure serverless, built to
+        get genuine hands-on time with a stack I wanted to actually know,
+        not just read about.
+      </p>
 
       <section>
-        <SectionHeader id="origin-story" title="ORIGIN_STORY" />
+        <SectionHeader title="ORIGIN_STORY" />
         <div className="space-y-4 text-sm leading-relaxed">
           <p>
             React and Node.js I already know well. Azure serverless and
@@ -58,7 +44,7 @@ export default function FarpostPulsePage() {
       </section>
 
       <section>
-        <SectionHeader id="architecture" title="ARCHITECTURE" />
+        <SectionHeader title="ARCHITECTURE" />
         <div className="space-y-4 text-sm leading-relaxed">
           <p>
             The frontend lives in this same repo, next to every other page on
@@ -96,7 +82,7 @@ export default function FarpostPulsePage() {
       </section>
 
       <section>
-        <SectionHeader id="tech-stack" title="TECH_STACK" />
+        <SectionHeader title="TECH_STACK" />
         <div className="overflow-x-auto text-sm">
           <table className="w-full border-collapse">
             <thead>
@@ -151,7 +137,7 @@ export default function FarpostPulsePage() {
       </section>
 
       <section>
-        <SectionHeader id="design-notes" title="DESIGN_NOTES" />
+        <SectionHeader title="DESIGN_NOTES" />
         <p className="text-sm leading-relaxed">
           Semantic HTML throughout (real <code>table</code>s for tabular job
           data, real <code>button</code>s for actions), keyboard-navigable
@@ -165,7 +151,7 @@ export default function FarpostPulsePage() {
       </section>
 
       <section>
-        <SectionHeader id="tech-roster" title="TECH_ROSTER" />
+        <SectionHeader title="TECH_ROSTER" />
         <p className="mb-4 text-sm leading-relaxed">
           Six seeded field technicians. Each card shows one snapshot stat —
           select a technician to see their full job history, generate a

@@ -1,12 +1,6 @@
-export default function SectionHeader({
-  id,
-  title,
-}: {
-  id?: string;
-  title: string;
-}) {
+export default function SectionHeader({ title }: { title: string }) {
   return (
-    <div id={id} className="mb-4 mt-10 flex items-center gap-3 scroll-mt-4">
+    <div className="mb-4 mt-10 flex items-center gap-3">
       <h2 className="whitespace-nowrap text-sm font-bold tracking-wide">
         <span className="text-accent">##</span> {title}
       </h2>

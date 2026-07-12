@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Farpost from "@/components/Farpost";
-import HamburgerMenu from "@/components/HamburgerMenu";
 import InfoTooltip from "@/components/InfoTooltip";
 import SectionHeader from "@/components/SectionHeader";
 import PortfolioDemos from "@/components/portfolio/PortfolioDemos";
@@ -9,17 +8,6 @@ import SetupGallery from "@/components/portfolio/SetupGallery";
 const PROFESSIONAL_REPUTATION_GRAPH_EXPLANATION =
   "Farpost's professional-reputation graph: not a score or star rating — a computed timeline. Every action a professional takes (inspections, claims, relationships with buildings) is an event; reputation is assembled fresh from those events on each request, surfacing activity history and breadth of engagement rather than a single number. Professionals whose roles haven't yet earned trust are excluded entirely — no score, no timeline, nothing to game. It's the same underlying entities-connected-by-records shape as a Salesforce Account/Contact view, just applied to a professional network instead of a household.";
 
-const SECTION_LINKS = [
-  { href: "/techstacks", label: "Tech/Stacks" },
-  { href: "#overview", label: "Overview" },
-  { href: "#why-client-credentials-flow", label: "Why Client Credentials Flow" },
-  { href: "#licensing-limitations", label: "Licensing Limitations" },
-  { href: "#farpost-parallel", label: "Farpost Parallel" },
-  { href: "#live-demo", label: "Live Demo" },
-  { href: "#relationship-view", label: "Relationship View" },
-  { href: "#setup-gallery", label: "Setup Gallery" },
-];
-
 export const metadata: Metadata = {
   title: "Credential Flow · Robin Samways",
 };
@@ -27,21 +15,16 @@ export const metadata: Metadata = {
 export default function CredentialFlowPage() {
   return (
     <main className="py-10">
-      <div className="flex items-start gap-3">
-        <HamburgerMenu links={SECTION_LINKS} ariaLabel="page sections menu" />
-        <div>
-          <h1 className="text-xl font-bold">
-            <span className="text-accent">$</span> Credential Flow
-          </h1>
-          <p className="mt-2 text-sm text-muted">
-            Salesforce loan-application integration — a live case study, not a
-            mockup.
-          </p>
-        </div>
-      </div>
+      <h1 className="text-xl font-bold">
+        <span className="text-accent">$</span> Credential Flow
+      </h1>
+      <p className="mt-2 text-sm text-muted">
+        Salesforce loan-application integration — a live case study, not a
+        mockup.
+      </p>
 
       <section>
-        <SectionHeader id="overview" title="OVERVIEW" />
+        <SectionHeader title="OVERVIEW" />
         <p className="text-sm leading-relaxed">
           A live Salesforce integration built for this portfolio: a custom{" "}
           <code>Loan_Application__c</code>{" "}
@@ -55,7 +38,7 @@ export default function CredentialFlowPage() {
       </section>
 
       <section>
-        <SectionHeader id="why-client-credentials-flow" title="WHY_CLIENT_CREDENTIALS_FLOW" />
+        <SectionHeader title="WHY_CLIENT_CREDENTIALS_FLOW" />
         <p className="text-sm leading-relaxed">
           The API talks to Salesforce using raw <code>httpx</code>{" "}
           rather than the <code>simple-salesforce</code>{" "}
@@ -75,7 +58,7 @@ export default function CredentialFlowPage() {
       </section>
 
       <section>
-        <SectionHeader id="licensing-limitations" title="LICENSING_LIMITATIONS" />
+        <SectionHeader title="LICENSING_LIMITATIONS" />
         <p className="text-sm leading-relaxed">
           This integration deliberately does <strong>not</strong>{" "}
           use Salesforce Financial Services Cloud or Agentforce — both
@@ -91,7 +74,7 @@ export default function CredentialFlowPage() {
       </section>
 
       <section>
-        <SectionHeader id="farpost-parallel" title="FARPOST_PARALLEL" />
+        <SectionHeader title="FARPOST_PARALLEL" />
         <p className="text-sm leading-relaxed">
           The Applicant → Loan Application → Account relationship model
           here is structurally the same shape as <Farpost />

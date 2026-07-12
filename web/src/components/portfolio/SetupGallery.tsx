@@ -80,7 +80,7 @@ export default function SetupGallery() {
 
   return (
     <section>
-      <SectionHeader id="setup-gallery" title="SETUP_GALLERY" />
+      <SectionHeader title="SETUP_GALLERY" />
       <p className="mb-4 text-sm leading-relaxed">
         The Setup work and live data behind this case study, for anyone who
         wants to dig deeper than the interactive demos above.
