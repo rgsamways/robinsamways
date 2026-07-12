@@ -631,7 +631,7 @@ export default function DeployRunbookPage() {
             </>,
             <>
               Confirm{" "}
-              <code>https://robinsamways.ca/narrative/farpost-pulse</code>{" "}
+              <code>https://robinsamways.ca/farpost/farpost-pulse</code>{" "}
               loads real data from the live Function App, not local/mock
               data.
             </>,
@@ -643,7 +643,9 @@ export default function DeployRunbookPage() {
           Live as of 2026-07-11 — deployed as its own Railway project
           (separate from <code>/api</code>&rsquo;s), Postgres seeded with
           all 13 real tracked buildings, confirmed working end to end at{" "}
-          <code>https://robinsamways.ca/narrative/farpost-atlas</code>.
+          <code>https://robinsamways.ca/farpost/farpost-atlas</code>{" "}
+          (moved from <code>/narrative/farpost-atlas</code> by the{" "}
+          <code>farpost-hub-nav-restructure</code> change).
         </p>
         <Steps
           items={[
@@ -766,7 +768,7 @@ export default function DeployRunbookPage() {
             </>,
             <>
               Confirm{" "}
-              <code>https://robinsamways.ca/narrative/farpost-atlas</code>{" "}
+              <code>https://robinsamways.ca/farpost/farpost-atlas</code>{" "}
               loads the real seeded buildings and the rural-density overlay,
               not local/mock data.
             </>,

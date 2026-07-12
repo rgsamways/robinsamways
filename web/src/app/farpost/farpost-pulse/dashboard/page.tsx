@@ -10,7 +10,7 @@ export default function DashboardPage() {
   return (
     <main className="py-10">
       <p className="text-xs">
-        <Link href="/narrative/farpost-pulse" className="text-accent hover:underline">
+        <Link href="/farpost/farpost-pulse" className="text-accent hover:underline">
           ← Farpost Pulse
         </Link>
       </p>

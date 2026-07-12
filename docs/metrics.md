@@ -154,3 +154,23 @@ ULOC: 5,316 · **DRYness: 62%**
 Delta vs. previous: +24 files, +1,379 code lines, +64 complexity, DRYness flat (62% → 62%). File count reconciles exactly against what was actually built: +13 Python files (`api/`'s existing 11 unchanged; `farpost-atlas-geo/`'s 7 `app/` modules + 2 `scripts/` + 4 `tests/` = 13, new), +6 TypeScript files, +3 Plain Text (`requirements{,-dev,-ingest}.txt`), +1 each of JSON/Markdown/TOML (the boundary GeoJSON, this piece's `README.md`, its `pyproject.toml`). Real new surface area — a genuinely separate deployable service and a real Leaflet map — not duplication.
 
 **Correction (logged 2026-07-11, same day):** the snapshot originally logged here read 8,630 lines / 7,649 code / 5,307 ULOC / 61% DRYness — captured before this same entry's own append to `web/src/data/metrics.json` was reflected on disk (the JSON row's line count grew by exactly the 12 lines one new snapshot entry adds). File count and complexity were unaffected. Same underlying self-referential gap as the `sreditor-page-content` correction above, smaller here since it's growth within an existing file rather than a whole missing file — caught the same way, an independent `scc` re-run during drift audit. See `docs/issues.md` for the full finding.
+
+### 2026-07-11 — after archiving `farpost-hub-nav-restructure`
+
+The Method/Narrative restructure: two new small nav components (`FarpostTabBar`, `TechStacksBrowser` + its pure `filterProjects` helper and unit tests), a new Dispatch placeholder page, a new `/techstacks` index page — plus `web/src/app/method/page.tsx` and `web/src/app/narrative/page.tsx` deleted outright. Atlas, Pulse, Credential Flow, and Sreditor's own pages moved (not duplicated) to their new routes.
+
+| Language | Files | Lines | Code | Complexity |
+|---|---|---|---|---|
+| TypeScript | 55 | 5,284 | 4,928 | 319 |
+| Python | 24 | 2,370 | 1,923 | 160 |
+| JavaScript | 12 | 892 | 731 | 52 |
+| JSON | 4 | 144 | 144 | 0 |
+| Markdown | 2 | 98 | 72 | 0 |
+| Plain Text | 5 | 21 | 21 | 0 |
+| TOML | 2 | 7 | 7 | 0 |
+| CSS | 1 | 24 | 21 | 0 |
+| **Total** | **105** | **8,840** | **7,847** | **531** |
+
+ULOC: 5,466 · **DRYness: 62%**
+
+Delta vs. previous: +4 files, +198 lines, +186 code lines, +7 complexity, DRYness flat (62% → 62%). File count reconciles exactly: +6 new TypeScript files (`FarpostTabBar.tsx`, `techstacks/filterProjects.ts` + its `__tests__` file, `TechStacksBrowser.tsx`, the new `farpost-dispatch/page.tsx`, the new `techstacks/page.tsx`) minus -2 deleted (`web/src/app/method/page.tsx`, `web/src/app/narrative/page.tsx`) = +4. No trip-wire concern — this was mostly a routing/content-relocation change (Atlas, Pulse, Credential Flow, and Sreditor's pages moved wholesale, not copied), plus a small amount of genuinely new nav-component logic, consistent with DRYness holding exactly flat.

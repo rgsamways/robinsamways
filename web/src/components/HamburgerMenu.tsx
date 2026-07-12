@@ -26,7 +26,10 @@ export default function HamburgerMenu({
         {open ? "✕" : "☰"}
       </button>
       {open && (
-        <nav className="absolute left-0 top-full z-10 mt-2 w-56 border border-foreground/20 bg-background shadow-md">
+        <nav
+          aria-label={ariaLabel}
+          className="absolute left-0 top-full z-10 mt-2 w-56 border border-foreground/20 bg-background shadow-md"
+        >
           <ul>
             {links.map((link) => (
               <li key={link.href}>

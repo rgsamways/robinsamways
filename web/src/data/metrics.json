@@ -94,5 +94,17 @@
     "uloc": 5316,
     "drynessPercent": 62,
     "note": "A whole new Python service (farpost-atlas-geo) plus a real Leaflet map on the frontend — real new surface area, not duplication. Corrected during a later drift audit: the originally-logged snapshot (8,630 lines, 61% DRYness) was captured before this same entry's own append to this file was reflected on disk — the same self-referential gap as the sreditor-page-content correction, smaller this time (12 lines, one DRYness point) since it's a within-entry growth, not a missing file."
+  },
+  {
+    "date": "2026-07-11",
+    "change": "farpost-hub-nav-restructure",
+    "label": "after archiving farpost-hub-nav-restructure",
+    "files": 105,
+    "lines": 8840,
+    "code": 7847,
+    "complexity": 531,
+    "uloc": 5466,
+    "drynessPercent": 62,
+    "note": "Method/Narrative restructured into Farpost hub, Sreditor top-level page, and a new Tech/Stacks index. Mostly a routing/content-relocation change (Atlas, Pulse, Credential Flow, Sreditor pages moved wholesale, not copied) plus two small new nav components — DRYness held exactly flat."
   }
 ]

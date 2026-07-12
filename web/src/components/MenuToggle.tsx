@@ -4,9 +4,9 @@ import HamburgerMenu from "./HamburgerMenu";
 
 const links = [
   { href: "/", label: "Home" },
-  { href: "/method", label: "Method" },
-  { href: "/narrative", label: "Narrative" },
   { href: "/farpost", label: "Farpost" },
+  { href: "/sreditor", label: "Sreditor" },
+  { href: "/techstacks", label: "Tech/Stacks" },
   { href: "/dev-log", label: "Dev Log" },
 ];
 

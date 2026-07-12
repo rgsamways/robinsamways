@@ -3,9 +3,9 @@ import Link from "next/link";
 import HamburgerMenu from "@/components/HamburgerMenu";
 import SectionHeader from "@/components/SectionHeader";
 import TechRoster from "@/components/farpost-pulse/TechRoster";
+import FarpostTabBar from "@/components/farpost/FarpostTabBar";
 
 const SECTION_LINKS = [
-  { href: "/narrative", label: "Narrative" },
   { href: "#origin-story", label: "Origin Story" },
   { href: "#architecture", label: "Architecture" },
   { href: "#tech-stack", label: "Tech Stack" },
@@ -20,6 +20,7 @@ export const metadata: Metadata = {
 export default function FarpostPulsePage() {
   return (
     <main className="py-10">
+      <FarpostTabBar />
       <div className="flex items-start gap-3">
         <HamburgerMenu links={SECTION_LINKS} ariaLabel="page sections menu" />
         <div>
@@ -172,7 +173,7 @@ export default function FarpostPulsePage() {
         </p>
         <TechRoster />
         <Link
-          href="/narrative/farpost-pulse/dashboard"
+          href="/farpost/farpost-pulse/dashboard"
           className="mt-6 inline-block border border-accent px-4 py-2 text-sm font-semibold text-accent transition hover:bg-accent hover:text-background"
         >
           View team dashboard →

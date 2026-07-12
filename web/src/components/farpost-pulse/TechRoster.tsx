@@ -43,7 +43,7 @@ export default function TechRoster() {
       {techs.map((tech) => (
         <Link
           key={tech.id}
-          href={`/narrative/farpost-pulse/${tech.id}`}
+          href={`/farpost/farpost-pulse/${tech.id}`}
           className="block border border-foreground/20 p-4 transition hover:border-accent"
         >
           <h3 className="text-sm font-bold text-accent">{tech.name}</h3>

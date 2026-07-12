@@ -40,7 +40,7 @@ export default function BuildingDetail({ buildingId }: { buildingId: number }) {
     return (
       <main className="py-10">
         <p className="text-sm">No tracked building found with that id.</p>
-        <Link href="/narrative/farpost-atlas" className="mt-2 inline-block text-sm text-accent hover:underline">
+        <Link href="/farpost/farpost-atlas" className="mt-2 inline-block text-sm text-accent hover:underline">
           ← Back to the map
         </Link>
       </main>
@@ -59,7 +59,7 @@ export default function BuildingDetail({ buildingId }: { buildingId: number }) {
   return (
     <main className="py-10">
       <p className="text-xs">
-        <Link href="/narrative/farpost-atlas" className="text-accent hover:underline">
+        <Link href="/farpost/farpost-atlas" className="text-accent hover:underline">
           ← Back to the map
         </Link>
       </p>

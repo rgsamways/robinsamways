@@ -130,11 +130,11 @@ Resources already provisioned by Robin directly in the Azure Portal (not through
 4. On the Function App, set application settings (Azure Portal → Function App → Configuration) for `COSMOS_CONNECTION_STRING` and `COSMOS_DATABASE_NAME` (same values as `local.settings.json`) and, once wired in, the Azure OpenAI key — never commit any of these to this repo, never expose them to the browser.
 5. Configure CORS on the Function App (Azure Portal → Function App → CORS) to allow `https://robinsamways.ca` and `http://localhost:3000`.
 6. In Vercel, set `NEXT_PUBLIC_FARPOST_PULSE_API_URL` to the Function App's public base URL (Project → Settings → Environment Variables, same page used for `NEXT_PUBLIC_API_URL` in Part 3). **Trigger a new deploy after adding it** — env var changes don't apply to existing deployments, same gotcha as Part 3.
-7. Confirm `https://robinsamways.ca/narrative/farpost-pulse` loads real data from the live Function App, not local/mock data.
+7. Confirm `https://robinsamways.ca/farpost/farpost-pulse` loads real data from the live Function App, not local/mock data.
 
 ### 8b. Farpost Atlas (Railway)
 
-Live as of 2026-07-11 — deployed as its own Railway project (separate from `/api`'s), Postgres seeded with all 13 real tracked buildings, confirmed working end to end at `https://robinsamways.ca/narrative/farpost-atlas`.
+Live as of 2026-07-11 — deployed as its own Railway project (separate from `/api`'s), Postgres seeded with all 13 real tracked buildings, confirmed working end to end at `https://robinsamways.ca/farpost/farpost-atlas` (moved from `/narrative/farpost-atlas` by the `farpost-hub-nav-restructure` change).
 
 1. Railway → **New Project → Deploy from GitHub repo**, same repo as `/api`, but set **Root Directory** to `pieces/farpost-atlas-geo` (Root Directory is set from that service's **Settings** tab after creation, not always offered on the initial creation screen).
 2. Add a Postgres database to the same Railway project (**New → Database → PostgreSQL**). Railway's Postgres plugin exposes its own connection variables (`DATABASE_URL`, `DATABASE_PUBLIC_URL`, `PGUSER`, `PGPASSWORD`, `PGHOST`, `PGPORT`, `PGDATABASE`) on the **Postgres service itself** — these are *not* automatically injected into other services in the project; the app service needs its own explicit `DATABASE_URL` variable (next step).
@@ -153,7 +153,7 @@ Live as of 2026-07-11 — deployed as its own Railway project (separate from `/a
 5. Configure CORS: this piece's `app/main.py` already lists `https://robinsamways.ca`, `https://www.robinsamways.ca`, and `http://localhost:3000` in its `CORSMiddleware` — no separate portal configuration step needed here, unlike Azure Functions' CORS (Part 8a step 5), since FastAPI's CORS is set in application code, not platform config.
 6. Get the app service's public URL: **Settings → Networking → Generate Domain** if one isn't already listed, giving a `*.up.railway.app` address.
 7. In Vercel, set `NEXT_PUBLIC_FARPOST_ATLAS_API_URL` to that Railway URL (Project → Settings → Environment Variables). **Trigger a new deploy after adding it** — same env var gotcha as Parts 3 and 8a.
-8. Confirm `https://robinsamways.ca/narrative/farpost-atlas` loads the real seeded buildings and the rural-density overlay, not local/mock data.
+8. Confirm `https://robinsamways.ca/farpost/farpost-atlas` loads the real seeded buildings and the rural-density overlay, not local/mock data.
 
 A `SetupGallery` component for this piece (real screenshots of the Railway/Postgres provisioning, per `CLAUDE.md`'s "Setup galleries" convention) is a reasonable follow-up now that the above is actually done — not part of this note, same precedent as Farpost Pulse's own still-pending Azure setup gallery.
 

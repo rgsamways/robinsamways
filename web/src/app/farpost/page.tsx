@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Farpost from "@/components/Farpost";
 import HamburgerMenu from "@/components/HamburgerMenu";
 import SectionHeader from "@/components/SectionHeader";
+import FarpostTabBar from "@/components/farpost/FarpostTabBar";
 
 const SECTION_LINKS = [
   { href: "#origin-story", label: "Origin Story" },
@@ -48,6 +49,7 @@ const LIFECYCLE_ENTRIES: { date: string; text: string }[] = [
 export default function FarpostPage() {
   return (
     <main className="py-10">
+      <FarpostTabBar />
       <div className="flex items-start gap-3">
         <HamburgerMenu links={SECTION_LINKS} ariaLabel="page sections menu" />
         <h1 className="text-xl font-bold">

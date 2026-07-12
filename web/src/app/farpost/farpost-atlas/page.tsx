@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import HamburgerMenu from "@/components/HamburgerMenu";
 import SectionHeader from "@/components/SectionHeader";
 import AtlasMapLoader from "@/components/farpost-atlas/AtlasMapLoader";
+import FarpostTabBar from "@/components/farpost/FarpostTabBar";
 
 const SECTION_LINKS = [
-  { href: "/narrative", label: "Narrative" },
   { href: "#origin-story", label: "Origin Story" },
   { href: "#architecture", label: "Architecture" },
   { href: "#tech-stack", label: "Tech Stack" },
@@ -18,6 +18,7 @@ export const metadata: Metadata = {
 export default function FarpostAtlasPage() {
   return (
     <main className="py-10">
+      <FarpostTabBar />
       <div className="flex items-start gap-3">
         <HamburgerMenu links={SECTION_LINKS} ariaLabel="page sections menu" />
         <div>
@@ -98,7 +99,7 @@ export default function FarpostAtlasPage() {
           <p>
             The frontend calls <code>farpost-atlas-geo</code> directly from
             the browser, the same relationship{" "}
-            <a href="/narrative/farpost-pulse" className="text-accent underline">Farpost Pulse</a>
+            <a href="/farpost/farpost-pulse" className="text-accent underline">Farpost Pulse</a>
             {" "}has with its own backend — nothing sensitive is at stake
             here (every building is seeded and fictional), so a server-side
             proxy through this site&rsquo;s own <code>api/</code> would add
