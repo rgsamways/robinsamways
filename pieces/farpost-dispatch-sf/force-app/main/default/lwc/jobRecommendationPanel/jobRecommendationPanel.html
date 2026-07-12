@@ -1,0 +1,42 @@
+<template>
+    <lightning-card title="AI-Ranked Candidates" icon-name="standard:recommendation">
+        <div class="slds-p-horizontal_medium">
+            <lightning-button
+                label="Get Recommendations"
+                onclick={handleGetRecommendations}
+                disabled={isLoading}
+                variant="brand"
+            ></lightning-button>
+
+            <template if:true={isLoading}>
+                <p class="slds-m-top_small">Ranking eligible professionals&hellip;</p>
+            </template>
+
+            <template if:true={errorMessage}>
+                <p class="slds-m-top_small slds-text-color_error">{errorMessage}</p>
+            </template>
+
+            <template if:true={showEmptyState}>
+                <p class="slds-m-top_small">
+                    No eligible professionals match this job's region, certification, and availability.
+                </p>
+            </template>
+
+            <template if:true={hasCandidates}>
+                <ul class="slds-m-top_small">
+                    <template for:each={candidates} for:item="candidate">
+                        <li key={candidate.contactId} class="slds-box slds-m-bottom_x-small">
+                            <p class="slds-text-heading_small">
+                                {candidate.name}
+                                <template if:true={candidate.rating}>
+                                    &mdash; {candidate.rating}&#9733;
+                                </template>
+                            </p>
+                            <p>{candidate.reasoning}</p>
+                        </li>
+                    </template>
+                </ul>
+            </template>
+        </div>
+    </lightning-card>
+</template>

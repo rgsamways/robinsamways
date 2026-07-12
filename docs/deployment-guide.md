@@ -107,7 +107,7 @@ For anything the site or API needs to *send* programmatically — the homepage c
 - [ ] `https://www.robinsamways.ca` loads correctly
 - [ ] `https://robinsamways.com` 301-redirects to `https://robinsamways.ca`
 - [ ] `https://api.robinsamways.ca/health` returns 200 with `database: ok` against **production** Postgres
-- [ ] Menu navigation works in production (Home / Method / Narrative / Farpost / Dev Log)
+- [ ] Menu navigation works in production (Home / Farpost / Sreditor / Tech/Stacks / Dev Log)
 - [ ] Once a portfolio piece is deployed per Part 8, its page on `robinsamways.ca` loads real data from its own live infrastructure, not local/mock data
 - [ ] A test email to `robin@robinsamways.ca`, sent from an account other than `rgsamways@gmail.com`, arrives in Gmail (see the self-send caveat in Part 6a)
 - [ ] Resend shows the sending domain as **Verified**
@@ -156,6 +156,34 @@ Live as of 2026-07-11 — deployed as its own Railway project (separate from `/a
 8. Confirm `https://robinsamways.ca/farpost/farpost-atlas` loads the real seeded buildings and the rural-density overlay, not local/mock data.
 
 A `SetupGallery` component for this piece (real screenshots of the Railway/Postgres provisioning, per `CLAUDE.md`'s "Setup galleries" convention) is a reasonable follow-up now that the above is actually done — not part of this note, same precedent as Farpost Pulse's own still-pending Azure setup gallery.
+
+### 8c. Farpost Dispatch (Salesforce)
+
+Genuinely different from 8a/8b: no cloud console to click through — this is a Salesforce DX project (`pieces/farpost-dispatch-sf/`) deployed to Robin's existing Developer Edition org via the Salesforce CLI, and no local Salesforce runtime exists in the environment this piece was built in, so none of the Apex/metadata below has been deployed or test-run yet. Every step here is Robin's own, not something already confirmed working.
+
+1. Install the Salesforce CLI (`sf`) — `npm install --global @salesforce/cli`, or the platform installer at [developer.salesforce.com/tools/salesforcecli](https://developer.salesforce.com/tools/salesforcecli). Confirm with `sf --version`.
+2. Authenticate to the Developer Edition org: `sf org login web --alias farpost-dispatch --set-default` (opens a browser login flow; use the same org already confirmed to have real, unused Partner Community licenses).
+3. From `pieces/farpost-dispatch-sf/`, deploy the DX project's source:
+   ```
+   sf project deploy start --source-dir force-app --target-org farpost-dispatch
+   ```
+   This creates the `Job__c` object, the four Contact custom fields, the `Anthropic_API` Named Credential (Password authentication, no real key committed — see next step), the `Farpost_Dispatch_Partner` permission set, both Apex service classes and their test classes, and both LWC bundles.
+4. Enter the real Anthropic API key: Setup → **Named Credentials** → `Anthropic API` → enter the real key as the **Password** field (the `username` value, `apikey`, is just a placeholder Anthropic doesn't check). Salesforce stores this masked and never returns it on retrieve, unlike a custom header's value — the `x-api-key` custom header itself is already set to the merge field `{!$Credential.Password}` in the deployed metadata, so the real key gets substituted in at request time without ever sitting in metadata as plaintext. Never commit the real value back to this repo.
+5. Run the seed script to create fictional Professionals and Jobs:
+   ```
+   sf apex run --file scripts/apex/seed.apex --target-org farpost-dispatch
+   ```
+6. Run the Apex test classes and confirm they actually pass — this is the first real execution of any of this piece's Apex, not a formality:
+   ```
+   sf apex run test --target-org farpost-dispatch --code-coverage --result-format human
+   ```
+7. Create the Experience Cloud site via the Setup wizard (Setup → **Digital Experiences** → **New**), using a Partner Community template. Assign Partner Community licenses to a handful of the seeded Contacts (Setup → the Experience site → **Administration → Members**, or directly via **Users → New User** with License = Partner Community, tying each portal user to one of the seeded Professional Contacts).
+8. Place `jobRecommendationPanel` on the `Job__c` Lightning record page (Setup → Object Manager → Job → Lightning Record Pages → edit → drag the component on) and `openJobsBoard` onto the Experience Builder portal's home page.
+9. Confirm end to end: an internal user opens a Job record, clicks **Get Recommendations**, and sees a ranked, reasoned candidate list; a Partner Community-licensed test user logs into the portal, sees their own matching open jobs, and successfully claims one (with a second claim attempt on the same job correctly rejected).
+
+No `NEXT_PUBLIC_FARPOST_DISPATCH_API_URL` env var — unlike Farpost Pulse and Farpost Atlas, `web/` has no live API dependency on this piece at all. `/farpost/farpost-dispatch` is a static case-study page with no live demo widget, deliberately, since a free-tier org's Partner Community login exposed publicly risks abuse and governor-limit exhaustion.
+
+A `SetupGallery` for this piece (real screenshots of the Experience Cloud site, the Partner Community job board, and the ops-side recommendation panel) is a deferred, non-blocking follow-up once the above is actually done — same precedent as Farpost Atlas's and Farpost Pulse's own still-pending galleries. See `docs/issues.md` for the logged handoff.
 
 ## Part 9 — Troubleshooting
 

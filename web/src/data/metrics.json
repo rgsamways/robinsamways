@@ -118,5 +118,17 @@
     "uloc": 5438,
     "drynessPercent": 62,
     "note": "Removed every local per-page HamburgerMenu and SectionHeader's anchor-id mechanic sitewide, added a Farpost intro blurb, made the header sticky at the lg breakpoint. Zero file-count change, a small net line decrease — deletions outweighed the small amount of new copy/className added back."
+  },
+  {
+    "date": "2026-07-12",
+    "change": "farpost-dispatch-build",
+    "label": "after archiving farpost-dispatch-build",
+    "files": 139,
+    "lines": 10634,
+    "code": 9459,
+    "complexity": 598,
+    "uloc": 6477,
+    "drynessPercent": 61,
+    "note": "First snapshot with real Apex — pieces/farpost-dispatch-sf/, a Salesforce DX project (object/field metadata, three Apex services with test classes, a Named Credential, a permission set, two LWCs) plus the rewritten /farpost/farpost-dispatch case-study page. DRYness dipped 1 point (metadata-heavy new piece, not duplication) — still well inside the healthy band. None of this Apex has been deployed or run; that's Robin's own next step."
   }
 ]

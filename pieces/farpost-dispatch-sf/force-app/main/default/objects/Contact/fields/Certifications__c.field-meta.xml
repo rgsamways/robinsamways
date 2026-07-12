@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Certifications__c</fullName>
+    <externalId>false</externalId>
+    <label>Certifications</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>MultiselectPicklist</type>
+    <visibleLines>5</visibleLines>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Septic/Well</fullName>
+                <default>false</default>
+                <label>Septic/Well</label>
+            </value>
+            <value>
+                <fullName>Electrical</fullName>
+                <default>false</default>
+                <label>Electrical</label>
+            </value>
+            <value>
+                <fullName>Foundation/Structural</fullName>
+                <default>false</default>
+                <label>Foundation/Structural</label>
+            </value>
+            <value>
+                <fullName>Roofing</fullName>
+                <default>false</default>
+                <label>Roofing</label>
+            </value>
+            <value>
+                <fullName>General Inspection</fullName>
+                <default>false</default>
+                <label>General Inspection</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

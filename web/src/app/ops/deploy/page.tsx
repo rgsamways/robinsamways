@@ -29,7 +29,8 @@ export default function DeployRunbookPage() {
         else to execute.
       </p>
       <p className="mt-1 text-sm text-muted">
-        Last updated: 2026-07-11 (Farpost Atlas deployed live to Railway).
+        Last updated: 2026-07-12 (Farpost Dispatch/Salesforce deployment
+        steps added, Part 8c).
       </p>
 
       <section>
@@ -503,8 +504,8 @@ export default function DeployRunbookPage() {
             <li className="flex gap-2">
               <span aria-hidden>☐</span>
               <span>
-                Menu navigation works in production (Home / Method /
-                Narrative / Farpost / Dev Log)
+                Menu navigation works in production (Home / Farpost /
+                Sreditor / Tech/Stacks / Dev Log)
               </span>
             </li>
             <li className="flex gap-2">
@@ -781,6 +782,134 @@ export default function DeployRunbookPage() {
           convention) is a reasonable follow-up now that the above is
           actually done — not part of this note, same precedent as Farpost
           Pulse&rsquo;s own still-pending Azure setup gallery.
+        </Callout>
+
+        <h3 className="mt-6 font-bold">8c. Farpost Dispatch (Salesforce)</h3>
+        <p className="mt-1 text-sm leading-relaxed">
+          Genuinely different from 8a/8b: no cloud console to click through
+          &mdash; this is a Salesforce DX project ({" "}
+          <code>pieces/farpost-dispatch-sf/</code>) deployed to
+          Robin&rsquo;s existing Developer Edition org via the Salesforce
+          CLI, and no local Salesforce runtime existed in the environment
+          this piece was built in, so none of the Apex/metadata below has
+          been deployed or test-run yet. Every step here is Robin&rsquo;s
+          own, not something already confirmed working.
+        </p>
+        <Steps
+          items={[
+            <>
+              Install the Salesforce CLI (<code>sf</code>) &mdash;{" "}
+              <code>npm install --global @salesforce/cli</code>, or the
+              platform installer at{" "}
+              <a
+                href="https://developer.salesforce.com/tools/salesforcecli"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-accent underline"
+              >
+                developer.salesforce.com/tools/salesforcecli
+              </a>
+              . Confirm with <code>sf --version</code>.
+            </>,
+            <>
+              Authenticate to the Developer Edition org:{" "}
+              <code>sf org login web --alias farpost-dispatch --set-default</code>{" "}
+              (opens a browser login flow; use the same org already confirmed
+              to have real, unused Partner Community licenses).
+            </>,
+            <>
+              From <code>pieces/farpost-dispatch-sf/</code>, deploy the DX
+              project&rsquo;s source (creates the <code>Job__c</code>{" "}
+              object, the four Contact custom fields, the{" "}
+              <code>Anthropic_API</code> Named Credential with a literal
+              placeholder value, the <code>Farpost_Dispatch_Partner</code>{" "}
+              permission set, both Apex service classes and their test
+              classes, and both LWC bundles):
+            </>,
+          ]}
+        />
+        <CodeBlock>
+          {"sf project deploy start --source-dir force-app --target-org farpost-dispatch"}
+        </CodeBlock>
+        <Steps
+          items={[
+            <>
+              Enter the real Anthropic API key: Setup →{" "}
+              <strong>Named Credentials</strong> → <code>Anthropic API</code>{" "}
+              → enter the real key as the <strong>Password</strong>{" "}
+              field (the <code>username</code> value, <code>apikey</code>,
+              is just a placeholder Anthropic doesn&rsquo;t check).
+              Salesforce stores this masked and never returns it on
+              retrieve, unlike a custom header&rsquo;s value &mdash; the{" "}
+              <code>x-api-key</code> custom header itself is already set to
+              the merge field <code>{"{!$Credential.Password}"}</code> in
+              the deployed metadata, so the real key gets substituted in at
+              request time without ever sitting in metadata as plaintext.
+              Never commit the real value back to this repo.
+            </>,
+            <>Run the seed script to create fictional Professionals and Jobs:</>,
+          ]}
+        />
+        <CodeBlock>
+          {"sf apex run --file scripts/apex/seed.apex --target-org farpost-dispatch"}
+        </CodeBlock>
+        <Steps
+          items={[
+            <>
+              Run the Apex test classes and confirm they actually pass
+              &mdash; this is the first real execution of any of this
+              piece&rsquo;s Apex, not a formality:
+            </>,
+          ]}
+        />
+        <CodeBlock>
+          {"sf apex run test --target-org farpost-dispatch --code-coverage --result-format human"}
+        </CodeBlock>
+        <Steps
+          items={[
+            <>
+              Create the Experience Cloud site via the Setup wizard (Setup →{" "}
+              <strong>Digital Experiences</strong> → <strong>New</strong>),
+              using a Partner Community template. Assign Partner Community
+              licenses to a handful of the seeded Contacts (Setup → the
+              Experience site → <strong>Administration → Members</strong>,
+              or directly via <strong>Users → New User</strong> with License
+              = Partner Community, tying each portal user to one of the
+              seeded Professional Contacts).
+            </>,
+            <>
+              Place <code>jobRecommendationPanel</code> on the{" "}
+              <code>Job__c</code> Lightning record page (Setup → Object
+              Manager → Job → Lightning Record Pages → edit → drag the
+              component on) and <code>openJobsBoard</code>{" "}
+              onto the
+              Experience Builder portal&rsquo;s home page.
+            </>,
+            <>
+              Confirm end to end: an internal user opens a Job record,
+              clicks <strong>Get Recommendations</strong>, and sees a
+              ranked, reasoned candidate list; a Partner Community-licensed
+              test user logs into the portal, sees their own matching open
+              jobs, and successfully claims one (with a second claim
+              attempt on the same job correctly rejected).
+            </>,
+          ]}
+        />
+        <Callout>
+          No <code>NEXT_PUBLIC_FARPOST_DISPATCH_API_URL</code> env var
+          &mdash; unlike Farpost Pulse and Farpost Atlas,{" "}
+          <code>web/</code> has no live API dependency on this piece at
+          all. <code>/farpost/farpost-dispatch</code> is a static
+          case-study page with no live demo widget, deliberately, since a
+          free-tier org&rsquo;s Partner Community login exposed publicly
+          risks abuse and governor-limit exhaustion. A{" "}
+          <code>SetupGallery</code>{" "}
+          for this piece (real screenshots of the
+          Experience Cloud site, the Partner Community job board, and the
+          ops-side recommendation panel) is a deferred, non-blocking
+          follow-up once the above is actually done &mdash; same precedent
+          as Farpost Atlas&rsquo;s and Farpost Pulse&rsquo;s own
+          still-pending galleries.
         </Callout>
       </section>
 

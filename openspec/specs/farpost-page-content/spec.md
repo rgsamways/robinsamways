@@ -48,11 +48,11 @@ The `/farpost` page SHALL include a `PROCESS` section describing the spec-first,
 - **THEN** the copy does not name or promote "Sreditor" as a product, since that idea is scoped to stand on its own separately from the Farpost page
 
 ### Requirement: Farpost renders as a hub with a pill-tab bar to its sub-pieces
-The `/farpost` route and all of its sub-pages SHALL display a horizontal pill-tab bar with four tabs — Origins, Atlas, Dispatch, Pulse — each a real navigation link (not a filter) to that piece's own page: `/farpost` (Origins, the default view), `/farpost/farpost-atlas`, `/farpost/farpost-dispatch`, `/farpost/farpost-pulse`. The tab bar SHALL indicate which tab corresponds to the current page. On `/farpost` itself, the tab bar SHALL render below the page's heading and intro blurb, not above them.
+The `/farpost` route and all of its sub-pages SHALL display a horizontal pill-tab bar with four tabs — Origins, Atlas, Dispatch, Pulse — each a real navigation link (not a filter) to that piece's own page: `/farpost` (Origins, the default view), `/farpost/farpost-atlas`, `/farpost/farpost-dispatch`, `/farpost/farpost-pulse`. The tab bar SHALL indicate which tab corresponds to the current page. On `/farpost` itself, the tab bar SHALL render above the page's heading and intro blurb, matching every other Farpost sub-page's tab-bar placement.
 
 #### Scenario: Visitor sees the pill-tab bar on the hub
 - **WHEN** a visitor loads `/farpost`
-- **THEN** the page shows the "$ Farpost" heading and intro blurb first, followed by the pill-tab bar with Origins, Atlas, Dispatch, and Pulse, with Origins indicated as active
+- **THEN** the page shows the pill-tab bar first, with Origins, Atlas, Dispatch, and Pulse and Origins indicated as active, followed by the "$ Farpost" heading and intro blurb
 
 #### Scenario: Visitor navigates between Farpost pieces via the pill bar
 - **WHEN** a visitor on `/farpost` activates the "Atlas" pill
@@ -69,17 +69,17 @@ The Origin Story, Problems Farpost Solves, Building Lifecycle Example, and Proce
 - **WHEN** a visitor loads `/farpost`
 - **THEN** the page shows the Origin Story, Problems Farpost Solves, Building Lifecycle Example, and Process sections directly, with no intermediate hub-only landing view
 
-### Requirement: Dispatch renders as a placeholder page
-The `/farpost/farpost-dispatch` route SHALL render a minimal placeholder page — a heading and a short description of what Farpost Dispatch will be (a Salesforce Experience Cloud partner portal matching field professionals to jobs across rural coverage areas) — clearly marked as not yet built, rather than a 404 or a broken pill.
+### Requirement: Dispatch renders as a real case-study page
+The `/farpost/farpost-dispatch` route SHALL render the real Farpost Dispatch case-study page (its required sections and content are specified by the `farpost-dispatch` capability), replacing the earlier placeholder entirely.
 
-#### Scenario: Visitor sees the Dispatch placeholder
+#### Scenario: Visitor sees real content, not a placeholder
 - **WHEN** a visitor loads `/farpost/farpost-dispatch`
-- **THEN** the page shows a heading identifying it as Dispatch and placeholder content describing what it will be, using the site's monospace/terminal styling
+- **THEN** the page shows the real case-study content — not "coming soon" placeholder text — while still rendering the shared Farpost pill-tab bar with Dispatch indicated as active
 
 ### Requirement: Farpost hub has an intro blurb beneath its heading
 The `/farpost` page's "$ Farpost" heading SHALL be followed by a short intro blurb (one to two sentences), matching the pattern already used on the Sreditor and Tech/Stacks pages' own headings.
 
 #### Scenario: Visitor sees the intro blurb under the heading
 - **WHEN** a visitor loads `/farpost`
-- **THEN** the page shows a short intro blurb directly beneath the "$ Farpost" heading, before the pill-tab bar
+- **THEN** the page shows a short intro blurb directly beneath the "$ Farpost" heading, after the pill-tab bar
 

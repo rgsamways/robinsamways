@@ -41,6 +41,7 @@ const LIFECYCLE_ENTRIES: { date: string; text: string }[] = [
 export default function FarpostPage() {
   return (
     <main className="py-10">
+      <FarpostTabBar />
       <h1 className="text-xl font-bold">
         <span className="text-accent">$</span> <Farpost />
       </h1>
@@ -49,7 +50,6 @@ export default function FarpostPage() {
         outlive any single owner, insurer, or contractor, born from a rural
         dispatch gap nobody else was solving.
       </p>
-      <FarpostTabBar />
 
       <section>
         <SectionHeader title="ORIGIN_STORY" />

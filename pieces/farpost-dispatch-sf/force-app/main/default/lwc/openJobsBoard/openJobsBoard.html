@@ -1,0 +1,42 @@
+<template>
+    <lightning-card title="Open Jobs Matching You" icon-name="standard:work_order">
+        <div class="slds-p-horizontal_medium">
+            <template if:true={errorMessage}>
+                <p class="slds-text-color_error">{errorMessage}</p>
+            </template>
+
+            <template if:true={showEmptyState}>
+                <p>No open jobs currently match your Service Region and Certifications.</p>
+            </template>
+
+            <template if:true={hasJobs}>
+                <ul>
+                    <template for:each={jobs} for:item="job">
+                        <li key={job.jobId} class="slds-box slds-m-bottom_x-small">
+                            <p class="slds-text-heading_small">
+                                {job.jobType} &mdash; {job.region}
+                                <template if:true={job.aiRecommended}>
+                                    <lightning-badge label="AI-Recommended"></lightning-badge>
+                                </template>
+                            </p>
+                            <p>Urgency: {job.urgency}</p>
+                            <p>{job.description}</p>
+
+                            <template if:false={job.alreadyClaimed}>
+                                <lightning-button
+                                    label="Claim"
+                                    variant="brand"
+                                    data-job-id={job.jobId}
+                                    onclick={handleClaim}
+                                ></lightning-button>
+                            </template>
+                            <template if:true={job.alreadyClaimed}>
+                                <p class="slds-text-color_weak">{job.claimMessage}</p>
+                            </template>
+                        </li>
+                    </template>
+                </ul>
+            </template>
+        </div>
+    </lightning-card>
+</template>

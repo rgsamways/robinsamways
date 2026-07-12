@@ -4,7 +4,7 @@ Running `scc` (Sloc Cloc and Code) snapshots, taken right before archiving each 
 
 As of the `dev-log-content` change, every snapshot logged here also gets appended to `web/src/data/metrics.json` — a structured mirror of the same numbers that `/dev-log`'s Metrics section imports directly at build time (moved there from `docs/metrics.json` by the `sreditor-page-content` change, so the read is a normal bundler-resolved import inside `web/` rather than a filesystem read reaching outside Vercel's configured project root). This file (`docs/metrics.md`) stays the authoritative human-readable narrative; the JSON file is a display-only copy, always kept in sync with it.
 
-Command: `scc --dryness --exclude-dir .git,.hg,.svn,node_modules,.venv,raw web/src api pieces` (run from repo root) — `pieces` covers every promoted portfolio-piece backend as one argument, no per-piece updates needed here as new ones get added. The explicit `--exclude-dir` became necessary as of the `farpost-pulse-build` snapshot: scc's `.gitignore`-based exclusion (its documented default behavior) didn't reliably keep `pieces/<piece>/node_modules` out of the scan when `pieces` was passed as a scan-root argument, even though the repo-root `.gitignore` already covers `node_modules/` — scc's own `--exclude-dir` default list is only `.git,.hg,.svn`, nothing project-specific. Confirmed by running `scc pieces` alone first and seeing ~4,500 files (clearly vendored `@azure/*` package content, not this piece's ~15 source files) before adding the explicit exclusion. The same failure mode recurred as of the `farpost-atlas-build` snapshot: `pieces/farpost-atlas-geo/data/raw/` (the ~200MB gitignored StatCan source shapefile/CSV used for one-time boundary ingestion, see that piece's `README.md`) leaked into the scan despite being gitignored, inflating the count by a 63,405-line CSV and an 833-line XML sidecar file — caught by the same "check the file/line count before trusting the number" habit, fixed by adding `raw` to `--exclude-dir`.
+Command: `scc --dryness --exclude-dir .git,.hg,.svn,node_modules,.venv,raw --count-as cls:Apex web/src api pieces` (run from repo root) — `pieces` covers every promoted portfolio-piece backend as one argument, no per-piece updates needed here as new ones get added. The explicit `--exclude-dir` became necessary as of the `farpost-pulse-build` snapshot: scc's `.gitignore`-based exclusion (its documented default behavior) didn't reliably keep `pieces/<piece>/node_modules` out of the scan when `pieces` was passed as a scan-root argument, even though the repo-root `.gitignore` already covers `node_modules/` — scc's own `--exclude-dir` default list is only `.git,.hg,.svn`, nothing project-specific. Confirmed by running `scc pieces` alone first and seeing ~4,500 files (clearly vendored `@azure/*` package content, not this piece's ~15 source files) before adding the explicit exclusion. The same failure mode recurred as of the `farpost-atlas-build` snapshot: `pieces/farpost-atlas-geo/data/raw/` (the ~200MB gitignored StatCan source shapefile/CSV used for one-time boundary ingestion, see that piece's `README.md`) leaked into the scan despite being gitignored, inflating the count by a 63,405-line CSV and an 833-line XML sidecar file — caught by the same "check the file/line count before trusting the number" habit, fixed by adding `raw` to `--exclude-dir`. `--count-as cls:Apex` became necessary as of the `farpost-dispatch-build` snapshot, the first to contain real Apex: scc's default extension mapping treats `.cls` as legacy Visual Basic for Applications, not Apex (its own recognized Apex extensions are only `.apex`/`.trigger`) — without the override, 5 of 6 `.cls` files silently miscounted as VBA. Confirmed by running without the flag first and noticing a "Visual Basic for Applications" language row that has no business appearing in this codebase at all.
 
 ## Snapshots
 
@@ -194,3 +194,28 @@ Removed every local per-page `HamburgerMenu` call site sitewide (Farpost hub, Fa
 ULOC: 5,438 · **DRYness: 62%**
 
 Delta vs. previous: +0 files, -81 lines, -74 code lines, +1 complexity (noise), DRYness flat (62% → 62%). Expected shape for a chrome-removal change: deleting ~13 local-menu call sites plus their `SECTION_LINKS`/`id` props removed more code than the new Farpost blurb paragraph and Header's sticky className added back, netting a small decrease with zero file-count change. No trip-wire concern.
+
+### 2026-07-12 — after archiving `farpost-dispatch-build`
+
+First snapshot to include real Apex — `pieces/farpost-dispatch-sf/`, a Salesforce DX project (custom object/field metadata, three Apex service classes with their test classes, a Named Credential, a permission set, two Lightning Web Components) plus a rewritten `/farpost/farpost-dispatch` case-study page and a new Playwright spec for it. `--count-as cls:Apex` added to the standing command this snapshot — see the note above the Command line.
+
+| Language | Files | Lines | Code | Complexity |
+|---|---|---|---|---|
+| TypeScript | 55 | 5,551 | 5,194 | 329 |
+| Python | 24 | 2,370 | 1,923 | 160 |
+| XML | 21 | 457 | 457 | 0 |
+| JavaScript | 14 | 984 | 808 | 72 |
+| Apex | 7 | 780 | 634 | 37 |
+| JSON | 5 | 180 | 180 | 0 |
+| Plain Text | 5 | 21 | 21 | 0 |
+| Markdown | 3 | 176 | 137 | 0 |
+| HTML | 2 | 84 | 77 | 0 |
+| TOML | 2 | 7 | 7 | 0 |
+| CSS | 1 | 24 | 21 | 0 |
+| **Total** | **139** | **10,634** | **9,459** | **598** |
+
+ULOC: 6,477 · **DRYness: 61%**
+
+Delta vs. previous: +34 files, +1,875 lines, +1,686 code lines, +66 complexity, DRYness down slightly (62% → 61%, still well within scc's "healthy" band — not a trip-wire, neither the <55% threshold nor a >10-point single-step drop). File count reconciles exactly: +21 XML (4 Contact field + 7 Job__c object/field + 6 Apex class `-meta.xml` sidecars + 1 Named Credential + 1 permission set + 2 LWC `js-meta.xml`), +7 Apex (6 `.cls` + `scripts/apex/seed.apex`), +2 JavaScript (the two LWC `.js` files), +2 HTML (the two LWC templates), +1 JSON (`sfdx-project.json`), +1 Markdown (`pieces/farpost-dispatch-sf/README.md`) = +34. TypeScript's file count holds flat at 55 despite the case-study page rewrite and new e2e spec, since both are edits to/within an existing file and `web/e2e/` sits outside this scan's documented root, respectively — only line growth, no new TS files. Real new surface area (a genuinely separate Salesforce runtime, the fourth "Portfolio piece isolation" instance), not duplication; the 1-point DRYness dip is consistent with a first-of-its-kind metadata-heavy piece (XML/permission-set boilerplate reads as less "unique" than prose or application logic) rather than any copy-pasted logic.
+
+**Verification note distinct from every prior snapshot:** none of this piece's Apex has been deployed or executed — there is no local Salesforce CLI/runtime in this build environment. The Apex/metadata contributing to the numbers above was reviewed for internal consistency (field references, picklist values, class/method signatures) but not run; `sf apex run test` against a real org is Robin's own next step (see `docs/deployment-guide.md` Part 8c).

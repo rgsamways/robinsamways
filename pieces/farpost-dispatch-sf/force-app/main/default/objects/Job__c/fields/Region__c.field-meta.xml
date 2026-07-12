@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Region__c</fullName>
+    <externalId>false</externalId>
+    <label>Region</label>
+    <required>true</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Bancroft</fullName>
+                <default>false</default>
+                <label>Bancroft</label>
+            </value>
+            <value>
+                <fullName>Faraday</fullName>
+                <default>false</default>
+                <label>Faraday</label>
+            </value>
+            <value>
+                <fullName>Carlow/Mayo</fullName>
+                <default>false</default>
+                <label>Carlow/Mayo</label>
+            </value>
+            <value>
+                <fullName>Hastings Highlands</fullName>
+                <default>false</default>
+                <label>Hastings Highlands</label>
+            </value>
+            <value>
+                <fullName>Limerick</fullName>
+                <default>false</default>
+                <label>Limerick</label>
+            </value>
+            <value>
+                <fullName>Tudor and Cashel</fullName>
+                <default>false</default>
+                <label>Tudor and Cashel</label>
+            </value>
+            <value>
+                <fullName>Wollaston</fullName>
+                <default>false</default>
+                <label>Wollaston</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>
