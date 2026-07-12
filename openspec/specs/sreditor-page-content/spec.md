@@ -15,13 +15,9 @@ The page's content SHALL describe Sreditor's actual built state — specific, ch
 - **THEN** the section states that result as a specific, checkable fact (e.g. how many changes were judged, how many claims surfaced, and whether a claim was found through a single change or through rollup synthesizing multiple changes) rather than describing calibration as untested against external work
 
 ### Requirement: Sreditor page presents real content in a structure that mirrors Farpost's own page
-The `/sreditor` route SHALL render real content — not a placeholder — structured into four sections, in order: ORIGIN_STORY, PROBLEMS_SREDITOR_SOLVES, SRED_ELIGIBILITY_EXAMPLE, and PROCESS — the same four-section shape `farpost-page-content` requires of the Farpost hub's Origins tab, since Sreditor and Farpost are now nav siblings. A local navigation menu beside the page heading SHALL link to each section. Sreditor SHALL NOT have a parent-index link in its local menu, matching Farpost's own exemption in `project-page-navigation` — it sits at the top nav tier itself.
+The `/sreditor` route SHALL render real content — not a placeholder — structured into four sections, in order: ORIGIN_STORY, PROBLEMS_SREDITOR_SOLVES, SRED_ELIGIBILITY_EXAMPLE, and PROCESS — the same four-section shape `farpost-page-content` requires of the Farpost hub's Origins tab, since Sreditor and Farpost are now nav siblings.
 
 #### Scenario: Visitor sees all four sections in order
 - **WHEN** a visitor loads `/sreditor`
 - **THEN** the page shows ORIGIN_STORY, PROBLEMS_SREDITOR_SOLVES, SRED_ELIGIBILITY_EXAMPLE, and PROCESS sections, in that order, with real content in each
-
-#### Scenario: Local menu links to each section, with no parent-index link
-- **WHEN** a visitor opens the local menu beside the Sreditor page's heading
-- **THEN** the menu includes links to all four sections and no link back to a parent index
 
