@@ -1,3 +1,7 @@
+## RENAMED Requirements
+- FROM: `### Requirement: Sreditor page presents real content in the required Method-type structure`
+- TO: `### Requirement: Sreditor page presents real content in a structure that mirrors Farpost's own page`
+
 ## MODIFIED Requirements
 
 ### Requirement: Sreditor page presents real content in a structure that mirrors Farpost's own page
