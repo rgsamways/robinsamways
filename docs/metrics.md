@@ -219,3 +219,28 @@ ULOC: 6,477 · **DRYness: 61%**
 Delta vs. previous: +34 files, +1,875 lines, +1,686 code lines, +66 complexity, DRYness down slightly (62% → 61%, still well within scc's "healthy" band — not a trip-wire, neither the <55% threshold nor a >10-point single-step drop). File count reconciles exactly: +21 XML (4 Contact field + 7 Job__c object/field + 6 Apex class `-meta.xml` sidecars + 1 Named Credential + 1 permission set + 2 LWC `js-meta.xml`), +7 Apex (6 `.cls` + `scripts/apex/seed.apex`), +2 JavaScript (the two LWC `.js` files), +2 HTML (the two LWC templates), +1 JSON (`sfdx-project.json`), +1 Markdown (`pieces/farpost-dispatch-sf/README.md`) = +34. TypeScript's file count holds flat at 55 despite the case-study page rewrite and new e2e spec, since both are edits to/within an existing file and `web/e2e/` sits outside this scan's documented root, respectively — only line growth, no new TS files. Real new surface area (a genuinely separate Salesforce runtime, the fourth "Portfolio piece isolation" instance), not duplication; the 1-point DRYness dip is consistent with a first-of-its-kind metadata-heavy piece (XML/permission-set boilerplate reads as less "unique" than prose or application logic) rather than any copy-pasted logic.
 
 **Verification note distinct from every prior snapshot:** none of this piece's Apex has been deployed or executed — there is no local Salesforce CLI/runtime in this build environment. The Apex/metadata contributing to the numbers above was reviewed for internal consistency (field references, picklist values, class/method signatures) but not run; `sf apex run test` against a real org is Robin's own next step (see `docs/deployment-guide.md` Part 8c).
+
+### 2026-07-15 — after archiving `dev-log-code-showcase`
+
+Added the Code Showcase section to `/dev-log` (10 real, verified Farpost code entries written from `docs/farpost-devlog-handoff-robinsamways.md`), a five-pill section-filter bar (`filterSections.ts` + its Vitest suite, `DevLogSectionFilter.tsx`), and relocated the shared `CodeBlock` component out of `components/ops/` into `web/src/components/`, updating `/ops/deploy`'s import. This snapshot was taken after appending its own entry to `web/src/data/metrics.json`, so — unlike the `sreditor-page-content` and `farpost-atlas-build` snapshots above — the numbers already account for that self-referential growth; no later correction should be needed.
+
+| Language | Files | Lines | Code | Complexity |
+|---|---|---|---|---|
+| TypeScript | 60 | 6,241 | 5,862 | 332 |
+| Python | 24 | 2,370 | 1,923 | 160 |
+| XML | 21 | 458 | 458 | 0 |
+| JavaScript | 14 | 984 | 808 | 72 |
+| Apex | 7 | 780 | 634 | 37 |
+| JSON | 5 | 204 | 204 | 0 |
+| Plain Text | 5 | 21 | 21 | 0 |
+| Markdown | 3 | 185 | 146 | 0 |
+| HTML | 2 | 84 | 77 | 0 |
+| TOML | 2 | 7 | 7 | 0 |
+| CSS | 1 | 24 | 21 | 0 |
+| **Total** | **144** | **11,358** | **10,161** | **601** |
+
+ULOC: 6,904 · **DRYness: 61%**
+
+Delta vs. previous: +5 files, +724 lines, +702 code lines, +3 complexity, DRYness flat (61% → 61%). File count reconciles exactly: +5 new TypeScript files under `web/src/components/dev-log/` (`codeShowcase.ts`, `CodeShowcaseSection.tsx`, `filterSections.ts` + its `__tests__/filterSections.test.ts`, `DevLogSectionFilter.tsx`). The `CodeBlock` relocation is a pure move — `components/ops/CodeBlock.tsx` deleted, `components/CodeBlock.tsx` added — netting zero file-count change. The new `web/e2e/dev-log-section-filter.spec.ts` doesn't show up here, same as every prior e2e spec, since `web/e2e/` sits outside this scan's documented root. DRYness holding exactly flat despite a real content-and-logic increase (ten genuinely distinct Python code excerpts and their own framing prose, plus a small new pure-function/component pair mirroring an existing pattern) is consistent with this being real new material, not duplicated boilerplate.
+
+Naming note worth recording here since it came up during this change: `CodeShowcase.tsx` (task 3.1's suggested component name) collides with `codeShowcase.ts` (task 2.2's data module) on a case-insensitive filesystem (Windows, default macOS) — the build's type checker resolved the import to the wrong file. Renamed the component to `CodeShowcaseSection.tsx` to avoid the same-name-different-case collision, mirroring the existing `metrics.ts` / `MetricsDashboard.tsx` naming split rather than `bugLog.ts`'s inline-in-page pattern.

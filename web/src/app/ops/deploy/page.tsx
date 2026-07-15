@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import SectionHeader from "@/components/SectionHeader";
 import Callout from "@/components/ops/Callout";
-import CodeBlock from "@/components/ops/CodeBlock";
+import CodeBlock from "@/components/CodeBlock";
 import Steps from "@/components/ops/Steps";
 import DnsTable from "@/components/ops/DnsTable";
 

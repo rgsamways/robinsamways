@@ -1,35 +1,8 @@
-# dev-log-content Specification
+## RENAMED Requirements
+- FROM: `### Requirement: Dev Log renders real content with a local section menu`
+- TO: `### Requirement: Dev Log renders real content organized into five filterable sections`
 
-## Purpose
-TBD - created by archiving change dev-log-content. Update Purpose after archive.
-## Requirements
-### Requirement: Glossary section explains technical terms in plain language
-The Glossary section SHALL present a growing list of "X, in layman's terms" entries, launching with at least 5 terms actually used elsewhere on this site (Twilio, OAuth 2.0 Client Credentials Flow, SOQL, Field History Tracking, NFC/RFID), each explained without assuming prior technical background.
-
-#### Scenario: Visitor reads a glossary entry
-- **WHEN** a visitor reads a Glossary entry
-- **THEN** the term is explained in plain language, without assuming the reader already knows related jargon
-
-### Requirement: Testing & Verification section describes real practice honestly
-The Testing & Verification section SHALL describe this project's actual testing practice — real committed suites, what each covers, and that there is still no CI pipeline — adapted from `docs/testing.md` for a public reader, without overclaiming automation that doesn't exist.
-
-#### Scenario: Visitor reads an accurate account of testing practice
-- **WHEN** a visitor reads the Testing & Verification section
-- **THEN** the copy accurately reflects what test suites exist and explicitly states that running them remains a manual step, not CI-automated
-
-### Requirement: Metrics section shows real code-metrics history
-The Metrics section SHALL render a chart or tally of this project's real `scc` snapshot history (code volume, complexity, DRYness over time), sourced from structured data kept in sync with `docs/metrics.md`'s snapshot log.
-
-#### Scenario: Visitor views the metrics history
-- **WHEN** a visitor loads the Metrics section
-- **THEN** it displays real historical data points matching `docs/metrics.md`'s logged snapshots, not placeholder or illustrative data
-
-### Requirement: Bug-log entries pair a real bug with the concept it reveals
-The bug-log entries section SHALL present dated writeups, each pairing a real bug encountered during development with the underlying technical concept it reveals, launching with at least 2 entries adapted from existing `docs/sreditor/` source material.
-
-#### Scenario: Visitor reads a bug-log entry
-- **WHEN** a visitor reads a bug-log entry
-- **THEN** it describes a real bug actually encountered on this project and explains the underlying concept, written for a developer reader rather than as an internal audit note
+## MODIFIED Requirements
 
 ### Requirement: Dev Log renders real content organized into five filterable sections
 The `/dev-log` route SHALL render real content organized into five sections, in this order: Glossary, Testing & Verification, Metrics, Bug Log, and Code Showcase. A pill-style filter bar above the sections (per the "A pill bar filters Dev Log sections by visibility" requirement) SHALL let a visitor show only a chosen subset of these sections.
@@ -37,6 +10,8 @@ The `/dev-log` route SHALL render real content organized into five sections, in 
 #### Scenario: Visitor sees all five sections
 - **WHEN** a visitor loads `/dev-log` with no pills active
 - **THEN** the page shows the Glossary, Testing & Verification, Metrics, Bug Log, and Code Showcase sections, in that order
+
+## ADDED Requirements
 
 ### Requirement: A pill bar filters Dev Log sections by visibility
 The `/dev-log` route SHALL display a horizontal row of pills above its sections, one per section (Glossary, Testing & Verification, Metrics, Bug Log, Code Showcase). Activating a pill toggles it on or off; when one or more pills are active, only the corresponding sections are shown. With no pills active, all sections are shown.
@@ -63,4 +38,3 @@ The Code Showcase section SHALL present at least 10 entries, each showcasing one
 #### Scenario: Code Showcase entries visually match the rest of the Dev Log page
 - **WHEN** a visitor views a Code Showcase entry alongside a Bug Log entry on the same page
 - **THEN** both use the same code-block and labeled-subsection styling, rather than two different visual systems
-

@@ -130,5 +130,17 @@
     "uloc": 6477,
     "drynessPercent": 61,
     "note": "First snapshot with real Apex — pieces/farpost-dispatch-sf/, a Salesforce DX project (object/field metadata, three Apex services with test classes, a Named Credential, a permission set, two LWCs) plus the rewritten /farpost/farpost-dispatch case-study page. DRYness dipped 1 point (metadata-heavy new piece, not duplication) — still well inside the healthy band. None of this Apex has been deployed or run; that's Robin's own next step."
+  },
+  {
+    "date": "2026-07-15",
+    "change": "dev-log-code-showcase",
+    "label": "after archiving dev-log-code-showcase",
+    "files": 144,
+    "lines": 11358,
+    "code": 10161,
+    "complexity": 601,
+    "uloc": 6904,
+    "drynessPercent": 61,
+    "note": "Added the Code Showcase section (10 real Farpost code entries) plus a five-pill section-filter bar to /dev-log, and relocated the shared CodeBlock component out of components/ops/. DRYness held flat (61% -> 61%) despite the content growth. Numbers already reflect this entry's own append, avoiding the self-referential correction prior snapshots needed."
   }
 ]
