@@ -5,6 +5,7 @@ const GLOBAL_MENU_LINKS: { label: string; path: string }[] = [
   { label: "Sreditor", path: "/sreditor" },
   { label: "Tech/Stacks", path: "/techstacks" },
   { label: "Dev Log", path: "/dev-log" },
+  { label: "Services", path: "/services" },
 ];
 
 test.describe("global navigation menu", () => {

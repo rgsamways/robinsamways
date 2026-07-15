@@ -313,3 +313,26 @@ Extracted `contact.py`'s private rate-limiter and Resend-sending logic into shar
 ULOC: 7,233 · **DRYness: 60%**
 
 Delta vs. previous: +7 files, +435 lines, +371 code lines, +33 complexity, DRYness down 1 point (61% → 60%) — still well inside scc's "healthy" band, not a trip-wire (neither below 55% nor a >10-point single-step drop). File count reconciles exactly: +3 TypeScript (`feedback.ts`, `feedback.test.ts`, `FeedbackWidget.tsx`) and +4 Python (`rate_limit.py`, `notify.py`, `feedback.py`, `tests/test_feedback.py`) = +7; `contact.py`/`models.py`/`main.py`/`layout.tsx` were edited in place, not added. The new `web/e2e/feedback-widget.spec.ts` doesn't show up here, same as every prior e2e spec. The 1-point dip is consistent with this change's own shape: `feedback.py` and `contact.py` now share near-identical request-handling scaffolding (honeypot/fill-time check, rate-limit call, persist-then-notify) by necessity — mirroring the same pattern, not literally duplicating it — which reads as slightly less "unique" to `scc` than the net-new logic in prior snapshots.
+
+### 2026-07-15 — after archiving `services-page`
+
+Added a new `/services` route — six sections (Web Sites, Web Applications, Native Applications, Platform, Hourly, Field Documentation) behind the exact `SectionFilterBar`/`PillBar`/`filterSections` stack already built for `/dev-log` and `/farpost`, no new filter infrastructure — plus a "Services" entry in the hamburger menu. This snapshot was taken after appending its own entry to `web/src/data/metrics.json`, same self-referential-growth handling as every snapshot since `dev-log-code-showcase`.
+
+| Language | Files | Lines | Code | Complexity |
+|---|---|---|---|---|
+| TypeScript | 68 | 6,767 | 6,352 | 362 |
+| Python | 28 | 2,635 | 2,144 | 173 |
+| XML | 21 | 458 | 458 | 0 |
+| JavaScript | 14 | 984 | 808 | 72 |
+| Apex | 7 | 780 | 634 | 37 |
+| JSON | 5 | 252 | 252 | 0 |
+| Plain Text | 5 | 21 | 21 | 0 |
+| Markdown | 3 | 185 | 146 | 0 |
+| HTML | 2 | 84 | 77 | 0 |
+| TOML | 2 | 7 | 7 | 0 |
+| CSS | 1 | 32 | 28 | 0 |
+| **Total** | **156** | **12,205** | **10,927** | **644** |
+
+ULOC: 7,334 · **DRYness: 60%**
+
+Delta vs. previous: +1 file, +233 lines, +229 code lines, +3 complexity, DRYness flat (60% → 60%). File count reconciles exactly: `web/src/app/services/page.tsx` is the only new file — `MenuToggle.tsx` was edited in place, not added, and the two e2e specs (`services-section-filter.spec.ts`, plus the one-line addition to `global-navigation.spec.ts`) don't show up here, same as every prior e2e spec. This is almost entirely new prose content wrapped in already-tested, reused infrastructure — no new logic — consistent with DRYness holding exactly flat.

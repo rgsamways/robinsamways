@@ -1,8 +1,5 @@
-# site-navigation Specification
+## MODIFIED Requirements
 
-## Purpose
-TBD - created by archiving change initial-site-scaffold. Update Purpose after archive.
-## Requirements
 ### Requirement: Header exposes a menu toggle
 The site header SHALL include a menu button (e.g. hamburger icon) that, when activated, opens a navigation menu listing links to Home, Farpost, Sreditor, Tech/Stacks, Dev Log, and Services, in that order. The menu SHALL be closable by activating the toggle again or by selecting a link.
 
@@ -42,18 +39,3 @@ The Farpost route SHALL render Farpost's real content (as a hub, per the `farpos
 #### Scenario: Services route renders its real content
 - **WHEN** a visitor navigates to the `/services` route
 - **THEN** a page renders with Services' real content (not a placeholder), using the site's monospace/terminal styling
-
-### Requirement: Menu is accessible from every page
-The menu toggle SHALL appear in the header on every page of the site, so a visitor can navigate between sections from anywhere.
-
-#### Scenario: Menu available on any page
-- **WHEN** a visitor is on any page of the site (e.g. the Sreditor page)
-- **THEN** the header menu toggle is present and opens the same navigation menu as on the homepage
-
-### Requirement: Header title links to the homepage
-The "$ Robin Samways" header text SHALL be a link to the homepage (`/`), available on every page of the site.
-
-#### Scenario: Clicking the header title navigates home
-- **WHEN** a visitor on any page clicks the "$ Robin Samways" header text
-- **THEN** the browser navigates to the homepage
-

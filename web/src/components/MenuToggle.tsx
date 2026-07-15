@@ -8,6 +8,7 @@ const links = [
   { href: "/sreditor", label: "Sreditor" },
   { href: "/techstacks", label: "Tech/Stacks" },
   { href: "/dev-log", label: "Dev Log" },
+  { href: "/services", label: "Services" },
 ];
 
 export default function MenuToggle() {

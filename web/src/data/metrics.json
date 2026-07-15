@@ -178,5 +178,17 @@
     "uloc": 7233,
     "drynessPercent": 60,
     "note": "Extracted contact.py's rate-limiter and Resend-sending logic into shared rate_limit.py/notify.py (contact.py now calls both, behavior unchanged), then added a site-wide feedback widget: a new FeedbackSubmission table, POST /feedback endpoint, FeedbackWidget.tsx (rendered from layout.tsx after {children}, self-excluding on /) backed by a pure feedback.ts + its Vitest suite. DRYness dipped 1 point (61% -> 60%), still well inside the healthy band. Numbers already reflect this entry's own append."
+  },
+  {
+    "date": "2026-07-15",
+    "change": "services-page",
+    "label": "after archiving services-page",
+    "files": 156,
+    "lines": 12205,
+    "code": 10927,
+    "complexity": 644,
+    "uloc": 7334,
+    "drynessPercent": 60,
+    "note": "Added a new /services route (six sections -- Web Sites, Web Applications, Native Applications, Platform, Hourly, Field Documentation -- behind the existing SectionFilterBar/PillBar/filterSections stack, no new filter infrastructure) plus a Services entry in the hamburger menu. DRYness held flat (60% -> 60%). Numbers already reflect this entry's own append."
   }
 ]
