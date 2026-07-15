@@ -290,3 +290,26 @@ Added a site-wide light/dark theme toggle: a new `.dark` CSS override block in `
 ULOC: 7,012 · **DRYness: 61%**
 
 Delta vs. previous: +3 files, +121 lines, +107 code lines, +7 complexity, DRYness flat (61% → 61%). File count reconciles exactly: `theme.ts`, `theme.test.ts`, and `ThemeToggle.tsx` are the three new TypeScript files — `globals.css` and `Header.tsx`/`layout.tsx` were edited in place, not added, and `lucide-react` itself is a `node_modules` dependency, not source this scan counts. The new `web/e2e/theme-toggle.spec.ts` doesn't show up here, same as every prior e2e spec. DRYness holding exactly flat is consistent with this change's own shape — a handful of small, genuinely new files (a pure resolver function, its test, one client component) plus a five-line CSS block, no duplicated logic.
+
+### 2026-07-15 — after archiving `page-feedback`
+
+Extracted `contact.py`'s private rate-limiter and Resend-sending logic into shared `rate_limit.py`/`notify.py` (`contact.py` now calls both instead of its own copies, behavior unchanged — confirmed via the full `pytest` suite), then added a site-wide feedback widget: a new `FeedbackSubmission` table, `POST /feedback` (its own separate rate-limit bucket), and `FeedbackWidget.tsx` rendered once from `layout.tsx` after `{children}`, self-excluding on `/`, backed by a pure `feedback.ts` helper + its Vitest suite. This snapshot was taken after appending its own entry to `web/src/data/metrics.json`, same self-referential-growth handling as every snapshot since `dev-log-code-showcase`.
+
+| Language | Files | Lines | Code | Complexity |
+|---|---|---|---|---|
+| TypeScript | 67 | 6,546 | 6,135 | 359 |
+| Python | 28 | 2,635 | 2,144 | 173 |
+| XML | 21 | 458 | 458 | 0 |
+| JavaScript | 14 | 984 | 808 | 72 |
+| Apex | 7 | 780 | 634 | 37 |
+| JSON | 5 | 240 | 240 | 0 |
+| Plain Text | 5 | 21 | 21 | 0 |
+| Markdown | 3 | 185 | 146 | 0 |
+| HTML | 2 | 84 | 77 | 0 |
+| TOML | 2 | 7 | 7 | 0 |
+| CSS | 1 | 32 | 28 | 0 |
+| **Total** | **155** | **11,972** | **10,698** | **641** |
+
+ULOC: 7,233 · **DRYness: 60%**
+
+Delta vs. previous: +7 files, +435 lines, +371 code lines, +33 complexity, DRYness down 1 point (61% → 60%) — still well inside scc's "healthy" band, not a trip-wire (neither below 55% nor a >10-point single-step drop). File count reconciles exactly: +3 TypeScript (`feedback.ts`, `feedback.test.ts`, `FeedbackWidget.tsx`) and +4 Python (`rate_limit.py`, `notify.py`, `feedback.py`, `tests/test_feedback.py`) = +7; `contact.py`/`models.py`/`main.py`/`layout.tsx` were edited in place, not added. The new `web/e2e/feedback-widget.spec.ts` doesn't show up here, same as every prior e2e spec. The 1-point dip is consistent with this change's own shape: `feedback.py` and `contact.py` now share near-identical request-handling scaffolding (honeypot/fill-time check, rate-limit call, persist-then-notify) by necessity — mirroring the same pattern, not literally duplicating it — which reads as slightly less "unique" to `scc` than the net-new logic in prior snapshots.

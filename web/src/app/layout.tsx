@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono } from "next/font/google";
 import Script from "next/script";
+import FeedbackWidget from "@/components/FeedbackWidget";
 import Header from "@/components/Header";
 import { THEME_STORAGE_KEY } from "@/components/theme";
 import "./globals.css";
@@ -50,6 +51,7 @@ export default function RootLayout({
         <div className="mx-auto max-w-3xl px-6 py-10">
           <Header />
           {children}
+          <FeedbackWidget />
         </div>
       </body>
     </html>

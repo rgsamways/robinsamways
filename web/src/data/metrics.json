@@ -166,5 +166,17 @@
     "uloc": 7012,
     "drynessPercent": 61,
     "note": "Added a site-wide light/dark theme toggle: a new .dark CSS override block in globals.css, a blocking FOUC-avoidance script in layout.tsx, and a new ThemeToggle.tsx (lucide-react's Lightbulb, this site's first icon-library dependency) rendered below MenuToggle in Header.tsx, backed by a pure theme.ts + its Vitest suite. DRYness held flat (61% -> 61%). Numbers already reflect this entry's own append."
+  },
+  {
+    "date": "2026-07-15",
+    "change": "page-feedback",
+    "label": "after archiving page-feedback",
+    "files": 155,
+    "lines": 11972,
+    "code": 10698,
+    "complexity": 641,
+    "uloc": 7233,
+    "drynessPercent": 60,
+    "note": "Extracted contact.py's rate-limiter and Resend-sending logic into shared rate_limit.py/notify.py (contact.py now calls both, behavior unchanged), then added a site-wide feedback widget: a new FeedbackSubmission table, POST /feedback endpoint, FeedbackWidget.tsx (rendered from layout.tsx after {children}, self-excluding on /) backed by a pure feedback.ts + its Vitest suite. DRYness dipped 1 point (61% -> 60%), still well inside the healthy band. Numbers already reflect this entry's own append."
   }
 ]

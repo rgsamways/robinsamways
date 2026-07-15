@@ -1,28 +1,20 @@
-import logging
-import os
 import re
 import time
-from collections import defaultdict
 
-import httpx
 from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel
 
 from app.db import async_session
 from app.models import ContactSubmission
+from app.notify import send_email
+from app.rate_limit import RateLimiter, _client_ip
 
 router = APIRouter()
 
 EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 MIN_FILL_SECONDS = 2.0
-RATE_LIMIT_WINDOW_SECONDS = 60.0
-RATE_LIMIT_MAX_REQUESTS = 5
 
-RESEND_API_URL = "https://api.resend.com/emails"
-CONTACT_FROM_EMAIL = "Robin Samways Site <contact@mail.robinsamways.ca>"
-CONTACT_TO_EMAIL = "rgsamways@gmail.com"
-
-_rate_limit_hits: dict[str, list[float]] = defaultdict(list)
+_rate_limiter = RateLimiter(window_seconds=60.0, max_requests=5)
 
 
 class ContactRequest(BaseModel):
@@ -37,53 +29,11 @@ class ContactResponse(BaseModel):
     status: str
 
 
-def _client_ip(request: Request) -> str:
-    forwarded = request.headers.get("x-forwarded-for")
-    if forwarded:
-        return forwarded.split(",")[0].strip()
-    return request.client.host if request.client else "unknown"
-
-
-def _is_rate_limited(ip: str) -> bool:
-    now = time.monotonic()
-    hits = _rate_limit_hits[ip]
-    cutoff = now - RATE_LIMIT_WINDOW_SECONDS
-    while hits and hits[0] < cutoff:
-        hits.pop(0)
-    if len(hits) >= RATE_LIMIT_MAX_REQUESTS:
-        return True
-    hits.append(now)
-    return False
-
-
-async def _send_notification_email(name: str, email: str, message: str) -> None:
-    api_key = os.environ.get("RESEND_API_KEY")
-    if not api_key:
-        logging.warning("RESEND_API_KEY not set; skipping contact notification email")
-        return
-    try:
-        async with httpx.AsyncClient(timeout=10.0) as client:
-            response = await client.post(
-                RESEND_API_URL,
-                headers={"Authorization": f"Bearer {api_key}"},
-                json={
-                    "from": CONTACT_FROM_EMAIL,
-                    "to": [CONTACT_TO_EMAIL],
-                    "reply_to": email,
-                    "subject": f"New contact form submission from {name}",
-                    "text": f"Name: {name}\nEmail: {email}\n\n{message}",
-                },
-            )
-            response.raise_for_status()
-    except Exception:
-        logging.exception("Failed to send contact notification email via Resend")
-
-
 @router.post("/contact", response_model=ContactResponse, status_code=201)
 async def submit_contact(payload: ContactRequest, request: Request) -> ContactResponse:
     ip = _client_ip(request)
 
-    if _is_rate_limited(ip):
+    if _rate_limiter.is_rate_limited(ip):
         raise HTTPException(status_code=429, detail="Too many requests")
 
     elapsed = time.time() - payload.rendered_at
@@ -102,6 +52,10 @@ async def submit_contact(payload: ContactRequest, request: Request) -> ContactRe
         session.add(submission)
         await session.commit()
 
-    await _send_notification_email(name, email, message)
+    await send_email(
+        subject=f"New contact form submission from {name}",
+        text=f"Name: {name}\nEmail: {email}\n\n{message}",
+        reply_to=email,
+    )
 
     return ContactResponse(status="ok")

@@ -7,6 +7,7 @@ from sqlalchemy import text
 from app import models  # noqa: F401  (registers SQLModel metadata)
 from app.contact import router as contact_router
 from app.db import engine, init_db
+from app.feedback import router as feedback_router
 from app.salesforce import router as salesforce_router
 
 
@@ -30,6 +31,7 @@ app.add_middleware(
 )
 
 app.include_router(contact_router)
+app.include_router(feedback_router)
 app.include_router(salesforce_router)
 
 
