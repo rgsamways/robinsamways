@@ -5,7 +5,7 @@ import { BUG_LOG_ENTRIES } from "@/components/dev-log/bugLog";
 import { parseMetricsSnapshots } from "@/components/dev-log/metrics";
 import MetricsDashboard from "@/components/dev-log/MetricsDashboard";
 import CodeShowcaseSection from "@/components/dev-log/CodeShowcaseSection";
-import DevLogSectionFilter from "@/components/dev-log/DevLogSectionFilter";
+import SectionFilterBar from "@/components/SectionFilterBar";
 import rawMetricsData from "@/data/metrics.json";
 
 export const metadata: Metadata = {
@@ -165,7 +165,7 @@ export default function DevLogPage() {
         hit along the way.
       </p>
 
-      <DevLogSectionFilter sections={sections} />
+      <SectionFilterBar sections={sections} ariaLabel="filter dev log sections" />
     </main>
   );
 }

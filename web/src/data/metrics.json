@@ -142,5 +142,29 @@
     "uloc": 6904,
     "drynessPercent": 61,
     "note": "Added the Code Showcase section (10 real Farpost code entries) plus a five-pill section-filter bar to /dev-log, and relocated the shared CodeBlock component out of components/ops/. DRYness held flat (61% -> 61%) despite the content growth. Numbers already reflect this entry's own append, avoiding the self-referential correction prior snapshots needed."
+  },
+  {
+    "date": "2026-07-15",
+    "change": "farpost-section-filter",
+    "label": "after archiving farpost-section-filter",
+    "files": 145,
+    "lines": 11416,
+    "code": 10220,
+    "complexity": 601,
+    "uloc": 6932,
+    "drynessPercent": 61,
+    "note": "Relocated filterSections.ts + SectionFilterBar.tsx (renamed from DevLogSectionFilter.tsx) out of components/dev-log/ into a shared path, added /farpost's own section-filter bar, and extracted a shared PillBar presentational component now used by TechStacksBrowser, SectionFilterBar, and /farpost. DRYness held flat (61% -> 61%). Numbers already reflect this entry's own append."
+  },
+  {
+    "date": "2026-07-15",
+    "change": "site-theme-toggle",
+    "label": "after archiving site-theme-toggle",
+    "files": 148,
+    "lines": 11537,
+    "code": 10327,
+    "complexity": 608,
+    "uloc": 7012,
+    "drynessPercent": 61,
+    "note": "Added a site-wide light/dark theme toggle: a new .dark CSS override block in globals.css, a blocking FOUC-avoidance script in layout.tsx, and a new ThemeToggle.tsx (lucide-react's Lightbulb, this site's first icon-library dependency) rendered below MenuToggle in Header.tsx, backed by a pure theme.ts + its Vitest suite. DRYness held flat (61% -> 61%). Numbers already reflect this entry's own append."
   }
 ]

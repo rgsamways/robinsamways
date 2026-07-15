@@ -1,6 +1,6 @@
 # Technology stack
 
-Exhaustive, running list of every technology, library, and tool used to build and ship this site — including one-off dev-time tools that never become a runtime dependency (e.g. something CLI reaches for once to accomplish a task, like extracting an image from a PDF). Update this whenever anything new gets introduced, however small. Last updated: 2026-07-12.
+Exhaustive, running list of every technology, library, and tool used to build and ship this site — including one-off dev-time tools that never become a runtime dependency (e.g. something CLI reaches for once to accomplish a task, like extracting an image from a PDF). Update this whenever anything new gets introduced, however small. Last updated: 2026-07-15.
 
 ## Production stack
 
@@ -26,6 +26,7 @@ Exhaustive, running list of every technology, library, and tool used to build an
 - `next/font` (self-hosted JetBrains Mono)
 - `next/og` (`ImageResponse`) — used in `web/src/app/icon.tsx` (2026-07-08) to code-generate the site favicon (black circle, accent-color `$`) at build time, replacing the static `favicon.ico`; no image editor involved.
 - `leaflet` / `react-leaflet` / `react-leaflet-cluster` (2026-07-11) — the interactive map on `/narrative/farpost-atlas`, rendering clustered building markers and a GeoJSON rural-density overlay. Chosen over Mapbox/Azure Maps specifically because it needs no API key or vendor account; OpenStreetMap tiles. `AtlasMap.tsx` is dynamically imported with `ssr: false` (via a thin `"use client"` loader wrapper) since Leaflet touches `window` at module-evaluation time.
+- `lucide-react` (2026-07-15, `site-theme-toggle`) — this site's first icon-library dependency, a single tree-shaken `Lightbulb` import for the new light/dark theme toggle in `Header.tsx`. Chosen over an emoji glyph (Robin's own ask was "a simple icon") for consistent cross-browser/OS rendering and a stroke color that cleanly reflects lit/dimmed state.
 
 **Portfolio pieces (`pieces/`)** — see `CLAUDE.md`'s "Portfolio piece isolation" convention for why these live outside `api/`
 - `pieces/farpost-pulse-func/` (2026-07-10) — Node.js 22, Azure Functions v4 programming model (`@azure/functions`), targeting the already-provisioned `farpost-pulse-func` Azure resource (Flex Consumption). Four HTTP-triggered, anonymous-auth endpoints backing `/narrative/farpost-pulse`'s three routes; called directly from the browser (no proxy through this repo's own `/api`) via `NEXT_PUBLIC_FARPOST_PULSE_API_URL`.

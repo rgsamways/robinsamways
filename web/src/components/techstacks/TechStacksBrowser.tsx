@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import PillBar from "@/components/PillBar";
 import { filterProjectsByTags } from "./filterProjects";
 
 type Project = {
@@ -27,29 +28,16 @@ export default function TechStacksBrowser({
   }
 
   const visibleProjects = filterProjectsByTags(projects, activeTags);
+  const pills = tags.map((tag) => ({ id: tag, label: tag }));
 
   return (
     <>
-      <div role="group" aria-label="filter by tag" className="mt-8 flex flex-wrap gap-2">
-        {tags.map((tag) => {
-          const isActive = activeTags.includes(tag);
-          return (
-            <button
-              key={tag}
-              type="button"
-              aria-pressed={isActive}
-              onClick={() => toggleTag(tag)}
-              className={
-                isActive
-                  ? "rounded-full border border-accent bg-accent px-4 py-1 text-xs font-semibold text-background"
-                  : "rounded-full border border-foreground/20 px-4 py-1 text-xs font-semibold text-muted transition hover:border-accent hover:text-accent"
-              }
-            >
-              {tag}
-            </button>
-          );
-        })}
-      </div>
+      <PillBar
+        pills={pills}
+        activeIds={activeTags}
+        onToggle={toggleTag}
+        ariaLabel="filter by tag"
+      />
 
       <div className="mt-8 space-y-6">
         {visibleProjects.map((project) => (

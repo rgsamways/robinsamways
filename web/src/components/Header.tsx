@@ -2,13 +2,17 @@ import Image from "next/image";
 import Link from "next/link";
 import Farpost from "./Farpost";
 import MenuToggle from "./MenuToggle";
+import ThemeToggle from "./ThemeToggle";
 
 export default function Header() {
   return (
     <header className="z-30 bg-background lg:sticky lg:top-0">
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-start gap-3">
-          <MenuToggle />
+          <div className="flex flex-col items-center gap-2">
+            <MenuToggle />
+            <ThemeToggle />
+          </div>
           <div>
             <h1 className="text-2xl font-bold">
               <Link href="/">

@@ -244,3 +244,49 @@ ULOC: 6,904 · **DRYness: 61%**
 Delta vs. previous: +5 files, +724 lines, +702 code lines, +3 complexity, DRYness flat (61% → 61%). File count reconciles exactly: +5 new TypeScript files under `web/src/components/dev-log/` (`codeShowcase.ts`, `CodeShowcaseSection.tsx`, `filterSections.ts` + its `__tests__/filterSections.test.ts`, `DevLogSectionFilter.tsx`). The `CodeBlock` relocation is a pure move — `components/ops/CodeBlock.tsx` deleted, `components/CodeBlock.tsx` added — netting zero file-count change. The new `web/e2e/dev-log-section-filter.spec.ts` doesn't show up here, same as every prior e2e spec, since `web/e2e/` sits outside this scan's documented root. DRYness holding exactly flat despite a real content-and-logic increase (ten genuinely distinct Python code excerpts and their own framing prose, plus a small new pure-function/component pair mirroring an existing pattern) is consistent with this being real new material, not duplicated boilerplate.
 
 Naming note worth recording here since it came up during this change: `CodeShowcase.tsx` (task 3.1's suggested component name) collides with `codeShowcase.ts` (task 2.2's data module) on a case-insensitive filesystem (Windows, default macOS) — the build's type checker resolved the import to the wrong file. Renamed the component to `CodeShowcaseSection.tsx` to avoid the same-name-different-case collision, mirroring the existing `metrics.ts` / `MetricsDashboard.tsx` naming split rather than `bugLog.ts`'s inline-in-page pattern.
+
+### 2026-07-15 — after archiving `farpost-section-filter`
+
+Relocated `filterSections.ts` and renamed/relocated `DevLogSectionFilter.tsx` to `SectionFilterBar.tsx` (with a new `ariaLabel` prop) out of `components/dev-log/` into a shared `web/src/components/` path, added `/farpost`'s own section-filter bar (four sections: Origin Story, Problems It Solves, Lifecycle Example, Process), and extracted a shared presentational `PillBar.tsx` now rendered by both `TechStacksBrowser.tsx` and `SectionFilterBar.tsx`. Also added `/techstacks`' first-ever e2e spec. This snapshot was taken after appending its own entry to `web/src/data/metrics.json`, same self-referential-growth handling as the prior snapshot.
+
+| Language | Files | Lines | Code | Complexity |
+|---|---|---|---|---|
+| TypeScript | 61 | 6,287 | 5,909 | 332 |
+| Python | 24 | 2,370 | 1,923 | 160 |
+| XML | 21 | 458 | 458 | 0 |
+| JavaScript | 14 | 984 | 808 | 72 |
+| Apex | 7 | 780 | 634 | 37 |
+| JSON | 5 | 216 | 216 | 0 |
+| Plain Text | 5 | 21 | 21 | 0 |
+| Markdown | 3 | 185 | 146 | 0 |
+| HTML | 2 | 84 | 77 | 0 |
+| TOML | 2 | 7 | 7 | 0 |
+| CSS | 1 | 24 | 21 | 0 |
+| **Total** | **145** | **11,416** | **10,220** | **601** |
+
+ULOC: 6,932 · **DRYness: 61%**
+
+Delta vs. previous: +1 file, +58 lines, +59 code lines, +0 complexity, DRYness flat (61% → 61%). File count reconciles exactly: `PillBar.tsx` is the only genuinely new file (+1) — `filterSections.ts`/`filterSections.test.ts` moved (not duplicated), `DevLogSectionFilter.tsx` was renamed in place to `SectionFilterBar.tsx`, and `TechStacksBrowser.tsx`/`farpost/page.tsx` were edited, not added. The two new e2e specs (`farpost-section-filter.spec.ts`, `techstacks-pill-filter.spec.ts`) don't show up here, same as every prior e2e spec, since `web/e2e/` sits outside this scan's documented root. DRYness holding exactly flat is the expected signal for this change specifically — its whole point was *removing* duplication (the byte-for-byte-identical pill row markup between `TechStacksBrowser` and the dev-log filter component) while adding a small, genuinely new amount of content (Farpost's own filter bar wiring); the two roughly offset.
+
+### 2026-07-15 — after archiving `site-theme-toggle`
+
+Added a site-wide light/dark theme toggle: a new `.dark` CSS override block in `globals.css` (the first change to that file since its five color tokens were established), a blocking FOUC-avoidance script in `layout.tsx`, and a new `ThemeToggle.tsx` (`lucide-react`'s `Lightbulb`, this site's first icon-library dependency) rendered below `MenuToggle` in `Header.tsx`, backed by a pure `theme.ts` + its own Vitest suite. This snapshot was taken after appending its own entry to `web/src/data/metrics.json`, same self-referential-growth handling as every snapshot since `dev-log-code-showcase`.
+
+| Language | Files | Lines | Code | Complexity |
+|---|---|---|---|---|
+| TypeScript | 64 | 6,388 | 5,997 | 339 |
+| Python | 24 | 2,370 | 1,923 | 160 |
+| XML | 21 | 458 | 458 | 0 |
+| JavaScript | 14 | 984 | 808 | 72 |
+| Apex | 7 | 780 | 634 | 37 |
+| JSON | 5 | 228 | 228 | 0 |
+| Plain Text | 5 | 21 | 21 | 0 |
+| Markdown | 3 | 185 | 146 | 0 |
+| HTML | 2 | 84 | 77 | 0 |
+| TOML | 2 | 7 | 7 | 0 |
+| CSS | 1 | 32 | 28 | 0 |
+| **Total** | **148** | **11,537** | **10,327** | **608** |
+
+ULOC: 7,012 · **DRYness: 61%**
+
+Delta vs. previous: +3 files, +121 lines, +107 code lines, +7 complexity, DRYness flat (61% → 61%). File count reconciles exactly: `theme.ts`, `theme.test.ts`, and `ThemeToggle.tsx` are the three new TypeScript files — `globals.css` and `Header.tsx`/`layout.tsx` were edited in place, not added, and `lucide-react` itself is a `node_modules` dependency, not source this scan counts. The new `web/e2e/theme-toggle.spec.ts` doesn't show up here, same as every prior e2e spec. DRYness holding exactly flat is consistent with this change's own shape — a handful of small, genuinely new files (a pure resolver function, its test, one client component) plus a five-line CSS block, no duplicated logic.
