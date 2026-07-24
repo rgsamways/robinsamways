@@ -16,7 +16,7 @@ Exhaustive, running list of every technology, library, and tool used to build an
 - Salesforce Field History Tracking — live data dependency as of the `salesforce-relationship-view` change; enabled on `Loan_Application__c.Status__c`, queried via the auto-generated `Loan_Application__History` object to back the real status-change timeline on `/portfolio` (not a derived/fabricated timeline from the two date fields).
 - Anthropic API (Claude Haiku 4.5, `claude-haiku-4-5`) — live runtime dependency as of the `salesforce-relationship-view` change; `api/app/ai.py` calls `POST https://api.anthropic.com/v1/messages` directly to generate a short "recommended next action" suggestion per Loan Application, generated fresh per request (not cached/stored), rate-limited per-IP via the same sliding-window limiter used elsewhere.
 - LDNOOBW word list — public-domain/CC0 profanity blocklist (2026-07-08), embedded verbatim in `api/app/moderation.py`; no external moderation API, no new pip dependency, checked server-side against `applicant_name`/`account_name` at Loan Application creation.
-- Postgres (Railway managed addon — planned, not yet deployed)
+- Postgres (Railway managed addon — status unconfirmed as of 2026-07-24; the API service itself is confirmed live, but its database connection wasn't directly verified. See the "Hosting / infra" note below.)
 
 **Frontend (`/web`)**
 - TypeScript
@@ -40,13 +40,13 @@ Exhaustive, running list of every technology, library, and tool used to build an
 - Experience Cloud, Partner Community licenses — the external-user portal a Professional (a real Partner Community-licensed Contact) logs into to see and claim their own matching Jobs. Confirmed real, free, unused licenses directly in the Developer Edition org (Setup → Company Information → User Licenses) before scoping this piece — no Guest User fallback needed.
 - Named Credentials (`Anthropic_API`) — the Apex-side callout to Anthropic's Messages API, the same endpoint `api/app/ai.py` calls from Python, now called from the opposite direction (Apex calling out, not an external service calling into Salesforce). Uses the classic single-object `NamedCredential` metadata type (`customHeaders` for `x-api-key`/`anthropic-version`) rather than the newer split `ExternalCredential`/`NamedCredential` model, a deliberate choice made without deploy access to verify the newer model's schema — see `pieces/farpost-dispatch-sf/README.md`.
 
-**Hosting / infra (planned, not yet live)**
-- Vercel — `/web`
-- Railway — `/api` + Postgres
-- Azure — `pieces/farpost-pulse-func/` (Function App) + Cosmos DB, deployed independently of Vercel/Railway
-- Railway — `pieces/farpost-atlas-geo/` (Python service) + its own Postgres database, deployed independently, per "Portfolio piece isolation" (provisioning is Robin's manual step — see `docs/issues.md`)
-- Cloudflare — DNS
-- GoDaddy — domain registration + `.com` → `.ca` forwarding
+**Hosting / infra**
+- Vercel — `/web`, live. Confirmed 2026-07-24: `robinsamways.ca` resolves with a real Vercel-served response, and a push to `main` deploys automatically — this doc had been claiming "planned, not yet deployed" for a stretch after that stopped being true. Treat any future "not yet deployed" claim in this doc skeptically; verify against the real URL before trusting it.
+- Railway — `/api`, live. Confirmed 2026-07-24: `api.robinsamways.ca` resolves to a real Railway-served response. The Postgres addon's own connection wasn't independently re-verified in that same pass — see the note above.
+- Cloudflare — DNS, live (the custom domain's HTTPS cert and resolution depend on this being correctly configured, and it demonstrably is).
+- GoDaddy — domain registration + `.com` → `.ca` forwarding, live (same evidence as above).
+- Azure — `pieces/farpost-pulse-func/` (Function App) + Cosmos DB — status not re-checked in this pass, unconfirmed either way.
+- Railway — `pieces/farpost-atlas-geo/` (Python service) + its own Postgres database — status not re-checked in this pass, unconfirmed either way.
 
 ## Dev & build tooling
 - npm / `create-next-app`
