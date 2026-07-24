@@ -1,14 +1,11 @@
 import Image from "next/image";
-import Farpost from "./Farpost";
 
 export default function Header() {
   return (
     <header className="sticky top-16 z-20 bg-background lg:top-10">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-sm text-muted">
-            Senior Application Developer · Founder, <Farpost />
-          </p>
+          <p className="text-sm text-muted">Senior Application Developer</p>
           <div className="mt-1 flex flex-col gap-1 text-sm">
             <span>
               <span className="text-accent">loc:</span> Maynooth, ON K0L 2S0
