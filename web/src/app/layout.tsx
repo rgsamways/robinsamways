@@ -53,11 +53,11 @@ export default function RootLayout({
         />
         <div
           aria-hidden="true"
-          className="fixed inset-x-0 top-0 z-20 h-16 bg-background lg:hidden"
+          className="fixed inset-x-0 top-0 z-20 h-16 bg-background xl:hidden"
         />
         <div
           aria-hidden="true"
-          className="fixed left-1/2 top-4 z-30 -translate-x-1/2 lg:hidden"
+          className="fixed left-1/2 top-4 z-30 -translate-x-1/2 xl:hidden"
         >
           <Link
             href="/"
@@ -69,7 +69,7 @@ export default function RootLayout({
         </div>
         <div className="mx-auto flex max-w-6xl">
           <DrawerNav />
-          <div className="min-w-0 flex-1 px-6 pb-10 pt-16 lg:px-10 lg:pt-10">
+          <div className="min-w-0 flex-1 px-6 pb-10 pt-16 xl:px-10 xl:pt-10">
             <div className="max-w-3xl">
               <Header />
               {children}

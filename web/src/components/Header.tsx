@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function Header() {
   return (
-    <header className="sticky top-16 z-20 bg-background lg:top-10">
+    <header className="sticky top-16 z-20 bg-background xl:top-10">
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className="text-sm text-muted">Senior Application Developer</p>

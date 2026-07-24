@@ -53,14 +53,14 @@ export default function DrawerNav() {
         onClick={() => setOpen(true)}
         aria-label="Open navigation"
         aria-expanded={open}
-        className="fixed left-4 top-4 z-30 flex h-9 w-9 items-center justify-center rounded-md border border-foreground/20 bg-background text-lg lg:hidden"
+        className="fixed left-4 top-4 z-30 flex h-9 w-9 items-center justify-center rounded-md border border-foreground/20 bg-background text-lg xl:hidden"
       >
         ☰
       </button>
 
       {open && (
         <div
-          className="fixed inset-0 z-40 bg-black/40 lg:hidden"
+          className="fixed inset-0 z-40 bg-black/40 xl:hidden"
           onClick={() => setOpen(false)}
           aria-hidden="true"
         />
@@ -70,7 +70,7 @@ export default function DrawerNav() {
         aria-label="Site"
         className={`fixed inset-y-0 left-0 z-50 w-72 overflow-y-auto border-r border-foreground/20 bg-background px-5 py-6 transition-transform duration-200 ease-out ${
           open ? "translate-x-0" : "-translate-x-full"
-        } lg:sticky lg:top-0 lg:z-auto lg:h-screen lg:w-64 lg:translate-x-0 lg:shrink-0`}
+        } xl:sticky xl:top-0 xl:z-auto xl:h-screen xl:w-64 xl:translate-x-0 xl:shrink-0`}
       >
         <div className="mb-6 flex items-center justify-between">
           <Link href="/" className="text-lg font-bold" onClick={() => setOpen(false)}>
@@ -80,7 +80,7 @@ export default function DrawerNav() {
             type="button"
             onClick={() => setOpen(false)}
             aria-label="Close navigation"
-            className="text-lg lg:hidden"
+            className="text-lg xl:hidden"
           >
             ✕
           </button>

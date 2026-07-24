@@ -44,14 +44,14 @@ export default function RightRail() {
         onClick={() => setOpen(true)}
         aria-label="Open display options"
         aria-expanded={open}
-        className="fixed right-4 top-4 z-30 flex h-9 w-9 items-center justify-center rounded-md border border-foreground/20 bg-background lg:hidden"
+        className="fixed right-4 top-4 z-30 flex h-9 w-9 items-center justify-center rounded-md border border-foreground/20 bg-background xl:hidden"
       >
         <Settings className="h-5 w-5" />
       </button>
 
       {open && (
         <div
-          className="fixed inset-0 z-40 bg-black/40 lg:hidden"
+          className="fixed inset-0 z-40 bg-black/40 xl:hidden"
           onClick={() => setOpen(false)}
           aria-hidden="true"
         />
@@ -60,7 +60,7 @@ export default function RightRail() {
       <div
         className={`fixed inset-y-0 right-0 z-50 flex w-16 flex-col items-center gap-2 border-l border-foreground/20 bg-background py-6 transition-transform duration-200 ease-out ${
           open ? "translate-x-0" : "translate-x-full"
-        } lg:sticky lg:top-0 lg:z-auto lg:h-screen lg:w-16 lg:translate-x-0 lg:shrink-0`}
+        } xl:sticky xl:top-0 xl:z-auto xl:h-screen xl:w-16 xl:translate-x-0 xl:shrink-0`}
       >
         <button
           type="button"
