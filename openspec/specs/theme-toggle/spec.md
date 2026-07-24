@@ -4,11 +4,11 @@
 TBD - created by archiving change site-theme-toggle. Update Purpose after archive.
 ## Requirements
 ### Requirement: A lightbulb toggle switches the whole site between light and dark
-The site header SHALL include a lightbulb-icon toggle button, rendered directly below the hamburger menu toggle, present on every page. Activating it SHALL switch the entire site between a light and a dark color scheme instantly, without a page reload, by re-theming the site's existing color tokens rather than any single page or section.
+The site SHALL include a lightbulb-icon toggle button, rendered in the right-hand display-settings rail, present on every page. Activating it SHALL switch the entire site between a light and a dark color scheme instantly, without a page reload, by re-theming the site's existing color tokens rather than any single page or section.
 
-#### Scenario: Toggle is present in the header on every page
+#### Scenario: Toggle is present in the right rail on every page
 - **WHEN** a visitor loads any page of the site
-- **THEN** the header shows the lightbulb toggle directly below the hamburger menu toggle
+- **THEN** the right-hand display-settings rail shows the lightbulb toggle
 
 #### Scenario: Activating the toggle switches the whole page's theme
 - **WHEN** a visitor in light mode activates the toggle

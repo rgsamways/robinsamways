@@ -1,36 +1,24 @@
 import Image from "next/image";
-import Link from "next/link";
 import Farpost from "./Farpost";
-import MenuToggle from "./MenuToggle";
-import ThemeToggle from "./ThemeToggle";
 
 export default function Header() {
   return (
-    <header className="z-30 bg-background lg:sticky lg:top-0">
+    <header className="sticky top-16 z-20 bg-background lg:top-10">
       <div className="flex items-start justify-between gap-4">
-        <div className="flex items-start gap-3">
-          <div className="flex flex-col items-center gap-2">
-            <MenuToggle />
-            <ThemeToggle />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold">
-              <Link href="/">
-                <span className="text-accent">$</span> Robin Samways
-              </Link>
-            </h1>
-            <p className="mt-1 text-sm text-muted">
-              Senior Application Developer · Founder, <Farpost />
-            </p>
-            <div className="mt-1 flex flex-wrap gap-x-6 gap-y-1 text-sm">
-              <span>
-                <span className="text-accent">tel:</span> 613-553-0960
-              </span>
-              <span>
-                <span className="text-accent">email:</span> rgsamways@gmail.com
-              </span>
-              <span>loc: Maynooth, ON K0L 2S0</span>
-            </div>
+        <div>
+          <p className="text-sm text-muted">
+            Senior Application Developer · Founder, <Farpost />
+          </p>
+          <div className="mt-1 flex flex-col gap-1 text-sm">
+            <span>
+              <span className="text-accent">loc:</span> Maynooth, ON K0L 2S0
+            </span>
+            <span>
+              <span className="text-accent">tel:</span> 613-553-0960
+            </span>
+            <span>
+              <span className="text-accent">email:</span> rgsamways@gmail.com
+            </span>
           </div>
         </div>
         <Image

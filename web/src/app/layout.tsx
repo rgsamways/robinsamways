@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono } from "next/font/google";
+import Link from "next/link";
 import Script from "next/script";
+import DrawerNav from "@/components/DrawerNav";
 import FeedbackWidget from "@/components/FeedbackWidget";
 import Header from "@/components/Header";
+import RightRail from "@/components/RightRail";
 import { THEME_STORAGE_KEY } from "@/components/theme";
 import "./globals.css";
 
@@ -48,10 +51,32 @@ export default function RootLayout({
             `,
           }}
         />
-        <div className="mx-auto max-w-3xl px-6 py-10">
-          <Header />
-          {children}
-          <FeedbackWidget />
+        <div
+          aria-hidden="true"
+          className="fixed inset-x-0 top-0 z-20 h-16 bg-background lg:hidden"
+        />
+        <div
+          aria-hidden="true"
+          className="fixed left-1/2 top-4 z-30 -translate-x-1/2 lg:hidden"
+        >
+          <Link
+            href="/"
+            tabIndex={-1}
+            className="flex h-9 items-center rounded-md border border-foreground/20 bg-background px-3 text-sm font-bold"
+          >
+            <span className="text-accent">$</span>&nbsp;Robin Samways
+          </Link>
+        </div>
+        <div className="mx-auto flex max-w-6xl">
+          <DrawerNav />
+          <div className="min-w-0 flex-1 px-6 pb-10 pt-16 lg:px-10 lg:pt-10">
+            <div className="max-w-3xl">
+              <Header />
+              {children}
+              <FeedbackWidget />
+            </div>
+          </div>
+          <RightRail />
         </div>
       </body>
     </html>

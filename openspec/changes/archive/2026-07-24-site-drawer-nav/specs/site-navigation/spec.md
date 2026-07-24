@@ -1,8 +1,5 @@
-# site-navigation Specification
+## MODIFIED Requirements
 
-## Purpose
-TBD - created by archiving change initial-site-scaffold. Update Purpose after archive.
-## Requirements
 ### Requirement: Header exposes a menu toggle
 On a laptop/desktop viewport, the site SHALL show a persistent left navigation drawer at all times, grouped into sections — **Site** (Home, Services), **Work** (Farpost, Tech/Stacks), **Writing** (Dev Log, Sreditor), and **Ops** (Deploy Runbook) — with no toggle needed to reveal it. On a mobile viewport, the same drawer SHALL be hidden by default behind a menu button that, when activated, slides it into view with a dismissible backdrop; activating the button again, selecting a link, or clicking the backdrop SHALL close it.
 
@@ -24,29 +21,6 @@ On a laptop/desktop viewport, the site SHALL show a persistent left navigation d
 - **WHEN** a visitor on any page selects "Home" in the drawer
 - **THEN** the browser navigates to the homepage
 
-### Requirement: Placeholder routes exist for each menu item
-The Farpost route SHALL render Farpost's real content (as a hub, per the `farpost-page-content` capability), not a placeholder. The Sreditor route SHALL render Sreditor's real content, as defined by the `sreditor-page-content` capability, not a placeholder. The Tech/Stacks route SHALL render a showcase index of Tech/Stacks-type project pages, as defined by the `tech-stacks-index` capability. The Dev Log route SHALL render its real content, as defined by the `dev-log-content` capability, not a placeholder. The Services route SHALL render its real content, as defined by the `services-page-content` capability, not a placeholder.
-
-#### Scenario: Farpost route renders its hub content
-- **WHEN** a visitor navigates to the Farpost route
-- **THEN** a page renders with Farpost's real content (not a placeholder), using the site's monospace/terminal styling
-
-#### Scenario: Sreditor route renders its real content
-- **WHEN** a visitor navigates to the Sreditor route
-- **THEN** a page renders with Sreditor's real content (not a placeholder), using the site's monospace/terminal styling
-
-#### Scenario: Tech/Stacks route renders its showcase index
-- **WHEN** a visitor navigates to the Tech/Stacks route
-- **THEN** a page renders showing the Tech/Stacks showcase index, with at least one entry linking to the Credential Flow project page, using the site's monospace/terminal styling
-
-#### Scenario: Dev Log route renders its real content
-- **WHEN** a visitor navigates to the `/dev-log` route
-- **THEN** a page renders with Dev Log's real content (not a placeholder), using the site's monospace/terminal styling
-
-#### Scenario: Services route renders its real content
-- **WHEN** a visitor navigates to the `/services` route
-- **THEN** a page renders with Services' real content (not a placeholder), using the site's monospace/terminal styling
-
 ### Requirement: Menu is accessible from every page
 The navigation drawer (persistent on desktop, toggle-revealed on mobile) SHALL be present on every page of the site, so a visitor can navigate between sections from anywhere.
 
@@ -60,4 +34,3 @@ The "$ Robin Samways" title SHALL appear at the top of the navigation drawer and
 #### Scenario: Clicking the title navigates home
 - **WHEN** a visitor on any page clicks the "$ Robin Samways" title at the top of the drawer
 - **THEN** the browser navigates to the homepage
-

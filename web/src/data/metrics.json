@@ -190,5 +190,17 @@
     "uloc": 7334,
     "drynessPercent": 60,
     "note": "Added a new /services route (six sections -- Web Sites, Web Applications, Native Applications, Platform, Hourly, Field Documentation -- behind the existing SectionFilterBar/PillBar/filterSections stack, no new filter infrastructure) plus a Services entry in the hamburger menu. DRYness held flat (60% -> 60%). Numbers already reflect this entry's own append."
+  },
+  {
+    "date": "2026-07-24",
+    "change": "site-drawer-nav",
+    "label": "after archiving site-drawer-nav",
+    "files": 171,
+    "lines": 13374,
+    "code": 11922,
+    "complexity": 688,
+    "uloc": 7945,
+    "drynessPercent": 59,
+    "note": "Replaced the hamburger dropdown and stacked light/dark toggle with a real, site-wide DrawerNav/RightRail (sticky on desktop, sliding drawer on mobile), grouped nav surfacing /ops/deploy for the first time, and a simplified Header re-pinned at its own scroll offset. Unlike prior snapshots, this count also includes same-session uncommitted exploratory work (the isolated /prototype/homepage-drawer mock) that scc can't distinguish from the shipped change -- the delta isn't attributable to site-drawer-nav alone. DRYness dipped 1 point (60% -> 59%), still well inside the healthy band."
   }
 ]

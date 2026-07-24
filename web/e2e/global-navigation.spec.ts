@@ -1,45 +1,38 @@
 import { test, expect } from "@playwright/test";
 
-const GLOBAL_MENU_LINKS: { label: string; path: string }[] = [
+const NAV_LINKS: { label: string; path: string }[] = [
   { label: "Farpost", path: "/farpost" },
-  { label: "Sreditor", path: "/sreditor" },
   { label: "Tech/Stacks", path: "/techstacks" },
   { label: "Dev Log", path: "/dev-log" },
+  { label: "Sreditor", path: "/sreditor" },
   { label: "Services", path: "/services" },
 ];
 
-test.describe("global navigation menu", () => {
-  test("opens, lists every top-level destination, and closes without navigating", async ({ page }) => {
+test.describe("global navigation drawer", () => {
+  test("shows every top-level destination without needing a toggle on desktop", async ({ page }) => {
     await page.goto("/");
-    const toggle = page.getByRole("button", { name: "Open menu" });
-    await toggle.click();
 
-    const nav = page.getByRole("navigation", { name: "menu" });
+    const nav = page.getByRole("navigation", { name: "Site" });
     await expect(nav.getByRole("link", { name: "Home" })).toBeVisible();
-    for (const { label } of GLOBAL_MENU_LINKS) {
+    for (const { label } of NAV_LINKS) {
       await expect(nav.getByRole("link", { name: label })).toBeVisible();
     }
 
-    await page.getByRole("button", { name: "Close menu" }).click();
-    await expect(nav).toBeHidden();
-    await expect(page).toHaveURL("/");
+    await expect(page.getByRole("button", { name: "Open navigation" })).toBeHidden();
   });
 
-  for (const { label, path } of GLOBAL_MENU_LINKS) {
-    test(`navigates to ${label} and closes the menu`, async ({ page }) => {
+  for (const { label, path } of NAV_LINKS) {
+    test(`navigates to ${label}`, async ({ page }) => {
       await page.goto("/");
-      await page.getByRole("button", { name: "Open menu" }).click();
-      await page.getByRole("navigation", { name: "menu" }).getByRole("link", { name: label }).click();
+      await page.getByRole("navigation", { name: "Site" }).getByRole("link", { name: label }).click();
 
       await expect(page).toHaveURL(path);
-      await expect(page.getByRole("navigation", { name: "menu" })).toBeHidden();
     });
   }
 
   test("navigating away and back to Home works", async ({ page }) => {
     await page.goto("/farpost");
-    await page.getByRole("button", { name: "Open menu" }).click();
-    await page.getByRole("navigation", { name: "menu" }).getByRole("link", { name: "Home" }).click();
+    await page.getByRole("navigation", { name: "Site" }).getByRole("link", { name: "Home" }).click();
 
     await expect(page).toHaveURL("/");
   });

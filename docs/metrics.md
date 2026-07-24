@@ -336,3 +336,28 @@ Added a new `/services` route — six sections (Web Sites, Web Applications, Nat
 ULOC: 7,334 · **DRYness: 60%**
 
 Delta vs. previous: +1 file, +233 lines, +229 code lines, +3 complexity, DRYness flat (60% → 60%). File count reconciles exactly: `web/src/app/services/page.tsx` is the only new file — `MenuToggle.tsx` was edited in place, not added, and the two e2e specs (`services-section-filter.spec.ts`, plus the one-line addition to `global-navigation.spec.ts`) don't show up here, same as every prior e2e spec. This is almost entirely new prose content wrapped in already-tested, reused infrastructure — no new logic — consistent with DRYness holding exactly flat.
+
+### 2026-07-24 — after archiving `site-drawer-nav`
+
+Replaced the header's hamburger dropdown and stacked light/dark toggle with a real, site-wide `DrawerNav`/`RightRail` (sticky rail on desktop, sliding drawer with backdrop on mobile), grouped nav (Site/Work/Writing/Ops, surfacing `/ops/deploy` for the first time), and `Header.tsx` simplified and re-pinned at its own natural scroll offset. `HamburgerMenu.tsx`/`MenuToggle.tsx`/old `ThemeToggle.tsx` retired.
+
+**Honest scope note on this snapshot, unlike prior ones:** `scc` scans the filesystem, not git status, so this count also includes same-session exploratory work still sitting uncommitted alongside the shipped change — most notably the isolated `/prototype/homepage-drawer` mock (`web/src/components/prototype/*`, five theme sketches, the component-museum demo section) that the real `site-drawer-nav` implementation was designed from but doesn't depend on or share code with. The delta below is not attributable to `site-drawer-nav` alone.
+
+| Language | Files | Lines | Code | Complexity |
+|---|---|---|---|---|
+| TypeScript | 82 | 7,908 | 7,328 | 406 |
+| Python | 28 | 2,635 | 2,144 | 173 |
+| XML | 21 | 458 | 458 | 0 |
+| JavaScript | 14 | 984 | 808 | 72 |
+| Apex | 7 | 780 | 634 | 37 |
+| JSON | 5 | 252 | 252 | 0 |
+| Plain Text | 5 | 21 | 21 | 0 |
+| Markdown | 3 | 185 | 146 | 0 |
+| CSS | 2 | 60 | 47 | 0 |
+| HTML | 2 | 84 | 77 | 0 |
+| TOML | 2 | 7 | 7 | 0 |
+| **Total** | **171** | **13,374** | **11,922** | **688** |
+
+ULOC: 7,945 · **DRYness: 59%**
+
+Delta vs. previous: +15 files, +1,169 lines, +995 code lines, +44 complexity, DRYness dipped 1 point (60% → 59%) — still comfortably inside the healthy band, no `docs/issues.md` entry warranted. The dip and most of the file/line growth trace to the mock (five parallel theme-token tables, several small never-reused-elsewhere components) rather than the real shipped nav, which mostly replaced existing components 1:1.
