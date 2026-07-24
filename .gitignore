@@ -273,3 +273,15 @@ local.settings.json
 # small processed output (data/da_boundaries_north_hastings.geojson) is.
 # See pieces/farpost-atlas-geo/README.md for how to re-fetch these.
 pieces/farpost-atlas-geo/data/raw/
+
+# Each siloes/<project>/ is its own independent git repo with its own GitHub
+# remote (see CLAUDE.md's "Silo isolation") — nested here purely for local
+# workspace convenience, never tracked by this repo. Without this, `git add`
+# here would try to register it as a broken embedded-repo gitlink the moment
+# a real .git/ shows up inside one.
+/siloes/*/
+!/siloes/README.md
+
+# Local state for the globally-installed sreditor CLI (anchor.md, judgments.jsonl)
+# when run against this repo — machine-local tool output, not project source.
+/.sreditor/

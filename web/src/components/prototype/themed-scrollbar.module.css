@@ -1,0 +1,28 @@
+/*
+ * Reads the same --accent/--skills-bg custom properties ThemeToggleShell
+ * already sets, so scrollbar styling follows the active theme/mode without
+ * needing its own per-theme token table.
+ */
+.themedScroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent) var(--skills-bg);
+}
+
+.themedScroll::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.themedScroll::-webkit-scrollbar-track {
+  background: var(--skills-bg);
+}
+
+.themedScroll::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 8px;
+  border: 2px solid var(--skills-bg);
+}
+
+.themedScroll::-webkit-scrollbar-thumb:hover {
+  background: var(--foreground);
+}
