@@ -1,25 +1,17 @@
 "use client";
 
-import { Lightbulb, LogIn, Settings, User } from "lucide-react";
+import { LogIn, Settings, User } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import PageOutline from "./PageOutline";
-import { resolveInitialTheme, THEME_STORAGE_KEY, type Theme } from "./theme";
 
 // Mirrors DrawerNav.tsx's responsive drawer mechanism on the opposite edge.
-// Ships with one control (the light/dark toggle, ported from the retired
-// ThemeToggle.tsx without behavior changes) but uses the full drawer shell
-// rather than a single floating button, so a second control fits later
-// without restructuring this component.
+// Nav icons only — the theme toggle relocated to /settings, and settings
+// bootstrapping (applying every persisted preference on mount) lives in
+// SettingsBootstrap, mounted separately in the root layout. See D2/D7 in
+// site-settings-page/design.md.
 export default function RightRail() {
-  const [theme, setTheme] = useState<Theme>("light");
   const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    const stored = localStorage.getItem(THEME_STORAGE_KEY);
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    setTheme(resolveInitialTheme(stored, prefersDark));
-  }, []);
 
   useEffect(() => {
     if (!open) return;
@@ -29,15 +21,6 @@ export default function RightRail() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
-
-  function toggleTheme() {
-    const next: Theme = theme === "dark" ? "light" : "dark";
-    setTheme(next);
-    localStorage.setItem(THEME_STORAGE_KEY, next);
-    document.documentElement.classList.toggle("dark", next === "dark");
-  }
-
-  const isLight = theme === "light";
 
   return (
     <>
@@ -67,7 +50,14 @@ export default function RightRail() {
       )}
 
       <div
-        className={`fixed inset-y-0 right-0 z-50 flex w-16 flex-col items-center gap-2 border-l border-foreground/20 bg-background py-6 transition-transform duration-200 ease-out ${
+        data-testid="nav-rail"
+        // `motion-safe-transition` is the reduced-motion CSS hook (D4,
+        // globals.css's `.reduce-motion` rule) — surgically scoped to this
+        // one element rather than a blanket `*` override, since reduced
+        // motion is only meant to gate this slide transition and
+        // PageOutline's scroll, not incidental hover-color transitions
+        // elsewhere on the site.
+        className={`motion-safe-transition fixed inset-y-0 right-0 z-50 flex w-16 flex-col items-center gap-2 border-l border-foreground/20 bg-background py-6 transition-transform duration-200 ease-out ${
           open ? "translate-x-0" : "translate-x-full"
         } xl:sticky xl:top-0 xl:z-auto xl:h-screen xl:w-16 xl:translate-x-0 xl:shrink-0`}
       >
@@ -92,15 +82,6 @@ export default function RightRail() {
         >
           <LogIn className="h-5 w-5" />
         </Link>
-        <button
-          type="button"
-          aria-label={isLight ? "Switch to dark mode" : "Switch to light mode"}
-          aria-pressed={isLight}
-          onClick={toggleTheme}
-          className="flex h-10 w-10 items-center justify-center rounded-md hover:bg-skills-bg"
-        >
-          <Lightbulb className={isLight ? "h-5 w-5 text-accent" : "h-5 w-5 text-muted opacity-50"} />
-        </button>
         <PageOutline />
       </div>
     </>

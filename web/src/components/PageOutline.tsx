@@ -4,6 +4,11 @@ import { List } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import {
+  REDUCED_MOTION_STORAGE_KEY,
+  resolveInitialReducedMotionPref,
+  shouldReduceMotion,
+} from "./reducedMotion";
 
 type Section = { id: string; title: string };
 
@@ -143,7 +148,21 @@ export default function PageOutline() {
     // there.
     suppressTimeoutRef.current = window.setTimeout(clearSuppression, 1000);
 
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    // Read fresh at the moment of the click rather than caching it in state
+    // — this is the one animated behavior on the site that a plain CSS
+    // class can't gate (an explicit `behavior` option here always overrides
+    // CSS `scroll-behavior`), and a fresh read means a preference changed
+    // on /settings takes effect on the very next click, with no separate
+    // signaling needed between the two components.
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reducedMotionPref = resolveInitialReducedMotionPref(
+      localStorage.getItem(REDUCED_MOTION_STORAGE_KEY)
+    );
+    const reduceMotion = shouldReduceMotion(reducedMotionPref, prefersReducedMotion);
+
+    document
+      .getElementById(id)
+      ?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
   }
 
   return (

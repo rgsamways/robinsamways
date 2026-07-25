@@ -238,5 +238,29 @@
     "uloc": 9864,
     "drynessPercent": 58,
     "note": "Added an 'on this page' outline flyout (PageOutline.tsx -- client-side DOM scan of main h2[id], IntersectionObserver active-section tracking, Escape/backdrop/close-button dismissal matching SetupGallery's modal convention), a slugify/resolveUniqueSlug utility giving every SectionHeader a stable, collision-safe anchor id, a reorganized RightRail (mobile top bar down to just the cog; the shared rail gained Account and the outline trigger, final order Account -> Sign In -> theme toggle -> outline trigger), and a minimal /account stub page. DRYness held flat (58% -> 58%). Numbers already reflect this entry's own append."
+  },
+  {
+    "date": "2026-07-25",
+    "change": "page-outline-nav-correction",
+    "label": "correction: the page-outline-nav snapshot above undercounted by 1 file",
+    "files": 228,
+    "lines": 17173,
+    "code": 15128,
+    "complexity": 906,
+    "uloc": 10030,
+    "drynessPercent": 58,
+    "note": "Caught independently while preparing the next snapshot (site-settings-page): re-ran scc against the exact pre-change commit and got 228 files / 17,173 lines / 15,128 code / 906 complexity / 10,030 ULOC, not the 227 / 17,077 / 15,068 / 898 / 9,864 logged above. DRYness percentage happened to round to the same 58% either way, and file/line/code/complexity/ULOC are all consistently off by a small, uniform amount -- consistent with one missed file, not a scan-scope error. Root cause not tracked down (the page-outline-nav session's own working tree no longer exists to diff against); logged as a correction rather than editing the prior entry in place, per this project's existing convention for this exact class of mistake (see docs/issues.md's sreditor-page-content and farpost-atlas-build corrections). The site-settings-page entry below uses this corrected number as its own 'previous' baseline."
+  },
+  {
+    "date": "2026-07-25",
+    "change": "site-settings-page",
+    "label": "after archiving site-settings-page",
+    "files": 236,
+    "lines": 17554,
+    "code": 15417,
+    "complexity": 927,
+    "uloc": 10263,
+    "drynessPercent": 58,
+    "note": "Built a real /settings page (Theme, Font Size, Reduced Motion sections) replacing its stub, moving the theme toggle out of RightRail.tsx entirely. New fontScale.ts/reducedMotion.ts utilities mirror theme.ts's exact storage-key + pure-resolve-function shape; a new SettingsBootstrap.tsx (mounted once in the root layout) applies all three persisted settings on every page load, replacing RightRail's own theme-only bootstrap effect. Reduced motion actually gates the site's two real animated elements: RightRail's slide transition (a scoped CSS rule keyed off a `.reduce-motion` class, not a JS-conditional className) and PageOutline's scrollIntoView (behavior read fresh at each click, since an explicit JS behavior option can't be overridden by CSS). theme-toggle.spec.ts's scenarios moved into a new settings.spec.ts (old file deleted) targeting /settings instead of the now-removed rail button. DRYness held flat (58% -> 58%). File count reconciles exactly against the corrected baseline above: +9 new files, -1 deleted (theme-toggle.spec.ts) = +8. Numbers already reflect this entry's own append."
   }
 ]

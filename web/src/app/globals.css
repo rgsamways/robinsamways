@@ -6,6 +6,7 @@
   --muted: #525252;
   --accent: #d97706;
   --skills-bg: #f5f5f4;
+  --font-scale: 1;
 }
 
 .dark {
@@ -25,10 +26,30 @@
   --font-mono: var(--font-jetbrains-mono);
 }
 
+/* D3: a single multiplier on the root element — every existing rem-based
+   size scales proportionally for free, no per-component overrides needed.
+   `1rem` here resolves against the browser's initial font-size (rem is
+   never self-referential on the root element itself), so this is always a
+   clean multiple of the real default, not a compounding one. */
+html {
+  font-size: calc(1rem * var(--font-scale));
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-mono), ui-monospace, monospace;
+}
+
+/* D4: reduced motion's CSS half — scoped to the one element that actually
+   needs it (RightRail's slide transition, via its `motion-safe-transition`
+   marker class) rather than a blanket `*` override, so incidental hover
+   transitions elsewhere aren't affected. PageOutline's smooth scroll is a
+   separate, JS-level decision (`scrollIntoView`'s explicit `behavior`
+   option overrides CSS `scroll-behavior` entirely, so it can't be handled
+   here) — see PageOutline.tsx's own reduced-motion check. */
+.reduce-motion .motion-safe-transition {
+  transition: none !important;
 }
 
 /* A thin scrollbar close to the background color site-wide, so a scrolling

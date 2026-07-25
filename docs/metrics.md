@@ -430,3 +430,30 @@ Added the "on this page" outline flyout: `PageOutline.tsx` (client-side DOM scan
 ULOC: 9,864 · **DRYness: 58%**
 
 Delta vs. previous: +5 files, +261 lines, +196 code lines, +19 complexity, DRYness flat (58% → 58%). File count reconciles exactly: `PageOutline.tsx`, `slugify.ts`, `slugify.test.ts`, `page-outline.spec.ts`, and `app/account/page.tsx` — 5 new files, nothing else added or removed. `SectionHeader.tsx`'s own edit (the new `id` + `cache()` registry) was in-place, not a new file. DRYness holding exactly flat matches a small, genuinely new, non-duplicative feature — no copy-pasted logic. Numbers already reflect this entry's own append to `web/src/data/metrics.json`.
+
+### Correction — the `page-outline-nav` snapshot above undercounted by 1 file
+
+Caught independently while preparing the next snapshot (`site-settings-page`), the same way the `sreditor-page-content` and `farpost-atlas-build` corrections earlier in this log were: re-ran `scc --dryness --exclude-dir .git,.hg,.svn,node_modules,.venv,raw --count-as cls:Apex web/src api pieces` against the exact commit the `page-outline-nav` snapshot above was supposed to reflect (via a clean `git stash -u`, not a guess) and got **228 files / 17,173 lines / 15,128 code / 906 complexity / 10,030 ULOC**, not the 227 / 17,077 / 15,068 / 898 / 9,864 logged above. DRYness happened to round to the same 58% either way; every other figure is off by a small, uniform amount consistent with exactly one missed file, not a scan-scope error. Root cause not tracked down (that session's own working tree no longer exists to diff against). Logged here as a correction, not an edit to the entry above, per this project's own established convention for this exact mistake. `site-settings-page`'s own delta below is computed against this corrected baseline, not the stale 227.
+
+### 2026-07-25 — after archiving `site-settings-page`
+
+Built a real `/settings` page — Theme, Font Size, and Reduced Motion as three `SectionHeader` sections, replacing the earlier stub — and moved the theme toggle out of `RightRail.tsx` entirely (rail order now Settings → Account → Sign In → outline trigger, no toggle). New `fontScale.ts`/`reducedMotion.ts` utilities mirror `theme.ts`'s exact storage-key-plus-pure-resolve-function shape; a new `SettingsBootstrap.tsx`, mounted once in the root layout, applies all three persisted settings on every page load, replacing `RightRail.tsx`'s own theme-only bootstrap effect entirely (D2). Reduced motion actually gates the site's two real animated elements rather than shipping as an inert flag: `RightRail`'s slide transition is suppressed via a scoped CSS rule keyed off a `.reduce-motion` class on `<html>` (deliberately not a JS-conditional className — flagged as a design deviation from the task's literal wording, functionally equivalent and more robust against the cross-component-reactivity gap a JS-state approach would have had), and `PageOutline`'s `scrollIntoView` reads the resolved preference fresh at the moment of each click (an explicit JS `behavior` option can't be overridden by CSS, so this one case genuinely needs a JS-level check). `theme-toggle.spec.ts`'s three scenarios moved into a new `settings.spec.ts` (old file deleted, not left stale) targeting `/settings` instead of the now-removed rail button, plus new font-size and reduced-motion coverage (12 tests total, including a `scrollIntoView` spy confirming the actual `behavior` argument passed, not just the stored preference value).
+
+| Language | Files | Lines | Code | Complexity |
+|---|---|---|---|---|
+| TypeScript | 131 | 10,409 | 9,459 | 553 |
+| Python | 42 | 4,087 | 3,305 | 265 |
+| XML | 21 | 458 | 458 | 0 |
+| JavaScript | 14 | 984 | 808 | 72 |
+| Apex | 7 | 780 | 634 | 37 |
+| JSON | 7 | 426 | 426 | 0 |
+| Plain Text | 5 | 24 | 24 | 0 |
+| Markdown | 3 | 185 | 146 | 0 |
+| CSS | 2 | 109 | 72 | 0 |
+| HTML | 2 | 84 | 77 | 0 |
+| TOML | 2 | 8 | 8 | 0 |
+| **Total** | **236** | **17,554** | **15,417** | **927** |
+
+ULOC: 10,263 · **DRYness: 58%**
+
+Delta vs. corrected previous (228 files): +8 files, +381 lines, +289 code lines, +21 complexity, DRYness flat (58% → 58%). File count reconciles exactly: 9 new files (`fontScale.ts`, `reducedMotion.ts`, `fontScale.test.ts`, `reducedMotion.test.ts`, `SettingsBootstrap.tsx`, `settings/ThemeSetting.tsx`, `settings/FontSizeSetting.tsx`, `settings/ReducedMotionSetting.tsx`, `e2e/settings.spec.ts`) minus 1 deleted (`theme-toggle.spec.ts`) = +8. DRYness holding exactly flat matches genuinely new, non-duplicative logic — each setting's utility file is a distinct, independently-testable pure function, not a copy-pasted variant of another.

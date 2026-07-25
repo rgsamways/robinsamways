@@ -5,6 +5,7 @@ import DrawerNav from "@/components/DrawerNav";
 import FeedbackWidget from "@/components/FeedbackWidget";
 import Header from "@/components/Header";
 import RightRail from "@/components/RightRail";
+import SettingsBootstrap from "@/components/SettingsBootstrap";
 import { THEME_STORAGE_KEY } from "@/components/theme";
 import "./globals.css";
 
@@ -64,6 +65,7 @@ export default function RootLayout({
           <div className="h-16 flex-1 bg-background xl:h-10" />
           <div className="hidden xl:block xl:w-16 xl:shrink-0" />
         </div>
+        <SettingsBootstrap />
         <div className="mx-auto flex max-w-6xl">
           <DrawerNav />
           <div className="min-w-0 flex-1 px-6 pb-10 pt-16 xl:px-10 xl:pt-10">
