@@ -457,3 +457,24 @@ Built a real `/settings` page — Theme, Font Size, and Reduced Motion as three 
 ULOC: 10,263 · **DRYness: 58%**
 
 Delta vs. corrected previous (228 files): +8 files, +381 lines, +289 code lines, +21 complexity, DRYness flat (58% → 58%). File count reconciles exactly: 9 new files (`fontScale.ts`, `reducedMotion.ts`, `fontScale.test.ts`, `reducedMotion.test.ts`, `SettingsBootstrap.tsx`, `settings/ThemeSetting.tsx`, `settings/FontSizeSetting.tsx`, `settings/ReducedMotionSetting.tsx`, `e2e/settings.spec.ts`) minus 1 deleted (`theme-toggle.spec.ts`) = +8. DRYness holding exactly flat matches genuinely new, non-duplicative logic — each setting's utility file is a distinct, independently-testable pure function, not a copy-pasted variant of another.
+
+### 2026-07-25 — after archiving `restructure-left-nav`
+
+Restructured the entire left nav: Metrics moved from Writing/Dev Log to its own `/metrics` route under Site; Sreditor moved from Writing to Work, gaining a from-scratch 10-page project-record submenu (`sreditor-status.json`, new); Farpost's and Vocare's submenus grew from 6 to 10 pages each (Bug List, Testing & Verification, Lightbulbs, Glossary, via three new shared components — `BugListSection.tsx`, `LightbulbsList.tsx`, `GlossaryList.tsx`); Atlas/Dispatch/Pulse moved from Farpost's own pill-tab bar (now deleted, `FarpostTabBar.tsx`) to a promoted-to-top-level Experiments group at `/techstacks/*`, with permanent redirects from every old `/farpost/farpost-*` URL; Dev Log's Code Showcase flattened from `/dev-log/code-showcase/<slug>` to `/dev-log/<slug>` directly, with the site-wide Bug Log/Testing & Verification/Glossary/Lightbulbs pages retired in favor of per-project equivalents (two real Farpost Pulse infrastructure bugs ported as new flattened Dev Log entries rather than a Bug List, since Pulse is now an Experiments piece with no Bug List page type). DRYness held flat (58% → 58%). File count reconciles exactly against the previous snapshot: 22 new files (3 shared components; 4 new Farpost pages; 4 new Vocare pages; 10 new Sreditor pages; `sreditor-status.json`) minus 9 deleted (`FarpostTabBar.tsx`; `bugLog.ts`, `glossary.ts`, `lightbulbs.ts` data/component files; the 4 retired site-wide Dev Log sub-pages; the Code Showcase hub page) = +13. DRYness holding exactly flat matches the new per-project pages being genuinely parallel structure (three near-identical shared components reused nine times across projects) rather than copy-pasted variation.
+
+| Language | Files | Lines | Code | Complexity |
+|---|---|---|---|---|
+| TypeScript | 143 | 10,758 | 9,746 | 597 |
+| Python | 42 | 4,087 | 3,305 | 265 |
+| XML | 21 | 458 | 458 | 0 |
+| JavaScript | 14 | 984 | 808 | 72 |
+| JSON | 8 | 596 | 596 | 0 |
+| Apex | 7 | 780 | 634 | 37 |
+| Plain Text | 5 | 24 | 24 | 0 |
+| Markdown | 3 | 185 | 146 | 0 |
+| CSS | 2 | 109 | 72 | 0 |
+| HTML | 2 | 84 | 77 | 0 |
+| TOML | 2 | 8 | 8 | 0 |
+| **Total** | **249** | **18,073** | **15,874** | **971** |
+
+ULOC: 10,438 · **DRYness: 58%**

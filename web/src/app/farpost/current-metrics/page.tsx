@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import FarpostTabBar from "@/components/farpost/FarpostTabBar";
 import PageHeading from "@/components/PageHeading";
 import StatusSnapshot from "@/components/project-record/StatusSnapshot";
 import { parseProjectStatus } from "@/components/project-record/types";
@@ -14,7 +13,6 @@ export default function FarpostCurrentMetricsPage() {
 
   return (
     <main className="py-10">
-      <FarpostTabBar />
       <PageHeading title="Farpost · Current Metrics">
         A dated, written status snapshot — not a live chart. Farpost&rsquo;s
         actual rebuild lives in a separate, gitignored repository this

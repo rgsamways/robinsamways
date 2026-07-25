@@ -13,6 +13,10 @@ const PAGES = [
   { href: "/vocare/upgrade-path", label: "Upgrade Path" },
   { href: "/vocare/current-metrics", label: "Current Metrics" },
   { href: "/vocare/outlook", label: "Outlook" },
+  { href: "/vocare/bug-list", label: "Bug List" },
+  { href: "/vocare/testing-verification", label: "Testing & Verification" },
+  { href: "/vocare/lightbulbs", label: "Lightbulbs" },
+  { href: "/vocare/glossary", label: "Glossary" },
 ];
 
 export default function VocarePage() {

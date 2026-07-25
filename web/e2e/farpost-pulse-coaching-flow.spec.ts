@@ -71,13 +71,24 @@ test.describe("Farpost Pulse: roster to coaching-tip flow", () => {
     await page.route(`${API_URL}/**`, mockFarpostPulseApi);
   });
 
-  test("selecting a tech from the roster leads to their detail page and a generated tip", async ({ page }) => {
+  test("old Farpost-nested URLs redirect permanently to the new Experiments routes", async ({ page }) => {
     await page.goto("/farpost/farpost-pulse");
+    await expect(page).toHaveURL("/techstacks/farpost-pulse");
+
+    await page.goto("/farpost/farpost-pulse/dashboard");
+    await expect(page).toHaveURL("/techstacks/farpost-pulse/dashboard");
+
+    await page.goto("/farpost/farpost-pulse/t1");
+    await expect(page).toHaveURL("/techstacks/farpost-pulse/t1");
+  });
+
+  test("selecting a tech from the roster leads to their detail page and a generated tip", async ({ page }) => {
+    await page.goto("/techstacks/farpost-pulse");
 
     await expect(page.getByRole("heading", { name: "Alex Rivera" })).toBeVisible();
     await page.getByRole("link", { name: /Alex Rivera/ }).click();
 
-    await expect(page).toHaveURL("/farpost/farpost-pulse/t1");
+    await expect(page).toHaveURL("/techstacks/farpost-pulse/t1");
     await expect(page.getByRole("heading", { name: /Alex Rivera/ })).toBeVisible();
     await expect(page.getByRole("cell", { name: "2026-07-01" })).toBeVisible();
     await expect(page.getByRole("cell", { name: "2026-07-05" })).toBeVisible();

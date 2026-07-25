@@ -1,10 +1,24 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import PageHeading from "@/components/PageHeading";
 import SectionHeader from "@/components/SectionHeader";
 
 export const metadata: Metadata = {
   title: "Sreditor · Robin Samways",
 };
+
+const PAGES = [
+  { href: "/sreditor/build-plan", label: "Build Plan" },
+  { href: "/sreditor/feature-list", label: "Feature List" },
+  { href: "/sreditor/tech-stack", label: "Tech Stack" },
+  { href: "/sreditor/upgrade-path", label: "Upgrade Path" },
+  { href: "/sreditor/current-metrics", label: "Current Metrics" },
+  { href: "/sreditor/outlook", label: "Outlook" },
+  { href: "/sreditor/bug-list", label: "Bug List" },
+  { href: "/sreditor/testing-verification", label: "Testing & Verification" },
+  { href: "/sreditor/lightbulbs", label: "Lightbulbs" },
+  { href: "/sreditor/glossary", label: "Glossary" },
+];
 
 export default function SreditorPage() {
   return (
@@ -13,6 +27,16 @@ export default function SreditorPage() {
         A CLI tool that judges SR&amp;ED tax-credit eligibility from a
         project&rsquo;s own OpenSpec change history, in near real time.
       </PageHeading>
+
+      <ul className="mt-8 space-y-2 text-sm">
+        {PAGES.map((page) => (
+          <li key={page.href}>
+            <Link href={page.href} className="text-accent hover:underline">
+              {page.label}
+            </Link>
+          </li>
+        ))}
+      </ul>
 
       <section>
         <SectionHeader title="ORIGIN_STORY" />

@@ -262,5 +262,17 @@
     "uloc": 10263,
     "drynessPercent": 58,
     "note": "Built a real /settings page (Theme, Font Size, Reduced Motion sections) replacing its stub, moving the theme toggle out of RightRail.tsx entirely. New fontScale.ts/reducedMotion.ts utilities mirror theme.ts's exact storage-key + pure-resolve-function shape; a new SettingsBootstrap.tsx (mounted once in the root layout) applies all three persisted settings on every page load, replacing RightRail's own theme-only bootstrap effect. Reduced motion actually gates the site's two real animated elements: RightRail's slide transition (a scoped CSS rule keyed off a `.reduce-motion` class, not a JS-conditional className) and PageOutline's scrollIntoView (behavior read fresh at each click, since an explicit JS behavior option can't be overridden by CSS). theme-toggle.spec.ts's scenarios moved into a new settings.spec.ts (old file deleted) targeting /settings instead of the now-removed rail button. DRYness held flat (58% -> 58%). File count reconciles exactly against the corrected baseline above: +9 new files, -1 deleted (theme-toggle.spec.ts) = +8. Numbers already reflect this entry's own append."
+  },
+  {
+    "date": "2026-07-25",
+    "change": "restructure-left-nav",
+    "label": "after archiving restructure-left-nav",
+    "files": 249,
+    "lines": 18073,
+    "code": 15874,
+    "complexity": 971,
+    "uloc": 10438,
+    "drynessPercent": 58,
+    "note": "Restructured the left nav: Metrics moved from Writing/Dev Log to /metrics under Site; Sreditor moved from Writing to Work with a from-scratch 10-page project-record submenu (sreditor-status.json, new); Farpost's and Vocare's submenus grew from 6 to 10 pages each via three new shared components (BugListSection.tsx, LightbulbsList.tsx, GlossaryList.tsx); Atlas/Dispatch/Pulse moved from Farpost's own pill-tab bar (FarpostTabBar.tsx, deleted) to a promoted-to-top-level Experiments group at /techstacks/*, with permanent redirects from every old /farpost/farpost-* URL; Dev Log's Code Showcase flattened from /dev-log/code-showcase/<slug> to /dev-log/<slug>, with the site-wide Bug Log/Testing & Verification/Glossary/Lightbulbs pages retired in favor of per-project equivalents. DRYness held flat (58% -> 58%). File count reconciles exactly: 22 new files minus 9 deleted = +13. Numbers already reflect this entry's own append."
   }
 ]

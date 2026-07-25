@@ -14,7 +14,15 @@ const PROJECT_RECORD_CHILDREN = (base: string): NavLink[] => [
   { href: `${base}/upgrade-path`, label: "Upgrade Path" },
   { href: `${base}/current-metrics`, label: "Current Metrics" },
   { href: `${base}/outlook`, label: "Outlook" },
+  { href: `${base}/bug-list`, label: "Bug List" },
+  { href: `${base}/testing-verification`, label: "Testing & Verification" },
+  { href: `${base}/lightbulbs`, label: "Lightbulbs" },
+  { href: `${base}/glossary`, label: "Glossary" },
 ];
+
+const DEV_LOG_ENTRIES: NavLink[] = [...CODE_SHOWCASE_ENTRIES]
+  .sort((a, b) => b.publishedAtUtc.localeCompare(a.publishedAtUtc))
+  .map((entry) => ({ href: `/dev-log/${entry.slug}`, label: entry.title }));
 
 const NAV_GROUPS: NavGroup[] = [
   {
@@ -22,6 +30,7 @@ const NAV_GROUPS: NavGroup[] = [
     links: [
       { href: "/", label: "Home" },
       { href: "/services", label: "Services" },
+      { href: "/metrics", label: "Metrics" },
     ],
   },
   {
@@ -29,33 +38,27 @@ const NAV_GROUPS: NavGroup[] = [
     links: [
       { href: "/farpost", label: "Farpost", children: PROJECT_RECORD_CHILDREN("/farpost") },
       { href: "/vocare", label: "Vocare", children: PROJECT_RECORD_CHILDREN("/vocare") },
-      { href: "/techstacks", label: "Experiments" },
+      { href: "/sreditor", label: "Sreditor", children: PROJECT_RECORD_CHILDREN("/sreditor") },
+    ],
+  },
+  {
+    heading: "Experiments",
+    links: [
+      {
+        href: "/techstacks",
+        label: "Experiments",
+        children: [
+          { href: "/techstacks/farpost-atlas", label: "Atlas" },
+          { href: "/techstacks/farpost-dispatch", label: "Dispatch" },
+          { href: "/techstacks/farpost-pulse", label: "Pulse" },
+          { href: "/techstacks/credential-flow", label: "Credential Flow" },
+        ],
+      },
     ],
   },
   {
     heading: "Writing",
-    links: [
-      {
-        href: "/dev-log",
-        label: "Dev Log",
-        children: [
-          { href: "/dev-log/bug-log", label: "Bug Log" },
-          { href: "/dev-log/metrics", label: "Metrics" },
-          { href: "/dev-log/testing-verification", label: "Testing & Verification" },
-          { href: "/dev-log/glossary", label: "Glossary" },
-          {
-            href: "/dev-log/code-showcase",
-            label: "Code Showcase",
-            children: CODE_SHOWCASE_ENTRIES.map((entry) => ({
-              href: `/dev-log/code-showcase/${entry.slug}`,
-              label: entry.title,
-            })),
-          },
-          { href: "/dev-log/lightbulbs", label: "Lightbulbs" },
-        ],
-      },
-      { href: "/sreditor", label: "Sreditor" },
-    ],
+    links: [{ href: "/dev-log", label: "Dev Log", children: DEV_LOG_ENTRIES }],
   },
   {
     heading: "Ops",

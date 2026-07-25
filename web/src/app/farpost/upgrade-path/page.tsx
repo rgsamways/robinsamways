@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import FarpostTabBar from "@/components/farpost/FarpostTabBar";
 import PageHeading from "@/components/PageHeading";
 import SectionHeader from "@/components/SectionHeader";
 
@@ -10,7 +9,6 @@ export const metadata: Metadata = {
 export default function FarpostUpgradePathPage() {
   return (
     <main className="py-10">
-      <FarpostTabBar />
       <PageHeading title="Farpost · Upgrade Path">
         Planned upgrades and evolutions to the live build, beyond the
         immediate rebuild work covered in Build Plan.

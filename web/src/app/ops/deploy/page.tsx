@@ -629,7 +629,7 @@ export default function DeployRunbookPage() {
             </>,
             <>
               Confirm{" "}
-              <code>https://robinsamways.ca/farpost/farpost-pulse</code>{" "}
+              <code>https://robinsamways.ca/techstacks/farpost-pulse</code>{" "}
               loads real data from the live Function App, not local/mock
               data.
             </>,
@@ -641,9 +641,12 @@ export default function DeployRunbookPage() {
           Live as of 2026-07-11 — deployed as its own Railway project
           (separate from <code>/api</code>&rsquo;s), Postgres seeded with
           all 13 real tracked buildings, confirmed working end to end at{" "}
-          <code>https://robinsamways.ca/farpost/farpost-atlas</code>{" "}
+          <code>https://robinsamways.ca/techstacks/farpost-atlas</code>{" "}
           (moved from <code>/narrative/farpost-atlas</code> by the{" "}
-          <code>farpost-hub-nav-restructure</code> change).
+          <code>farpost-hub-nav-restructure</code> change, then from{" "}
+          <code>/farpost/farpost-atlas</code> to its current{" "}
+          <code>/techstacks/</code> location by the{" "}
+          <code>restructure-left-nav</code> change).
         </p>
         <Steps
           items={[
@@ -766,7 +769,7 @@ export default function DeployRunbookPage() {
             </>,
             <>
               Confirm{" "}
-              <code>https://robinsamways.ca/farpost/farpost-atlas</code>{" "}
+              <code>https://robinsamways.ca/techstacks/farpost-atlas</code>{" "}
               loads the real seeded buildings and the rural-density overlay,
               not local/mock data.
             </>,
@@ -896,7 +899,7 @@ export default function DeployRunbookPage() {
           No <code>NEXT_PUBLIC_FARPOST_DISPATCH_API_URL</code> env var
           &mdash; unlike Farpost Pulse and Farpost Atlas,{" "}
           <code>web/</code> has no live API dependency on this piece at
-          all. <code>/farpost/farpost-dispatch</code> is a static
+          all. <code>/techstacks/farpost-dispatch</code> is a static
           case-study page with no live demo widget, deliberately, since a
           free-tier org&rsquo;s Partner Community login exposed publicly
           risks abuse and governor-limit exhaustion. A{" "}

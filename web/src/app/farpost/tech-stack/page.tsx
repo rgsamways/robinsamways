@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import FarpostTabBar from "@/components/farpost/FarpostTabBar";
 import PageHeading from "@/components/PageHeading";
 import SectionHeader from "@/components/SectionHeader";
 
@@ -10,7 +9,6 @@ export const metadata: Metadata = {
 export default function FarpostTechStackPage() {
   return (
     <main className="py-10">
-      <FarpostTabBar />
       <PageHeading title="Farpost · Tech Stack">
         The converged siloes stack as it applies to Farpost, plus the
         Farpost-specific items beyond that shared baseline.

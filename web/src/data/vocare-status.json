@@ -1,5 +1,5 @@
 {
-  "asOf": "2026-07-24",
+  "asOf": "2026-07-25",
   "deploymentStatus": "Live since 2026-07-21 on Railway (API) and Vercel (app), per Vocare's own M0 milestone. Stripe billing is still running in test mode.",
   "summary": "Vocare is an AI-conversational career/interview practice app sold as a $29 one-time lifetime fee, not a subscription — 7 of its 12 planned modules (M0-M5, M2.1) are built and live, with progress tracking (M6) actively in development.",
   "highlights": [
@@ -58,5 +58,32 @@
       "status": "planned",
       "note": "M11 — deliberately last, gated behind unresolved design questions."
     }
-  ]
+  ],
+  "testingVerification": [
+    "Vocare lives in its own separate repository, so this page can't show line-by-line test-suite output the way this site's own Dev Log can for its own code.",
+    "What's true today: the crisis-safety check and the deterministic feedback templates are both verified against real conversation transcripts before shipping, not just unit-tested in isolation, since a false negative on either one is the product's highest-stakes failure mode.",
+    "A more detailed, project-specific testing narrative will move here once there's more to show than a description of the practice."
+  ],
+  "bugList": [],
+  "lightbulbs": [
+    {
+      "slug": "vocare-anchor-audience-reframe",
+      "title": "The Anchor/Audience Reframe",
+      "summary": "Generalizes Vocare past \"interview practice\" into directed-conversation-skill practice generally: a configurable Anchor (the persona the user embodies) and Audience (the simulated counterpart), with interview prep as one special case.",
+      "dateLogged": "2026-07-25"
+    },
+    {
+      "slug": "own-stack-discovery-dev-log-entry",
+      "title": "Finding a Stack Already Converged On",
+      "summary": "Discovering Vocare had already converged on Fastify, Drizzle, Postgres, and better-auth before that combination was consciously named as \"the stack\" — an evidence-based origin story for Robin's own tech-stack choices.",
+      "dateLogged": "2026-07-24"
+    },
+    {
+      "slug": "vocare-pricing-history-dev-log-entry",
+      "title": "Vocare's Real Pricing History",
+      "summary": "Vocare's real pricing iteration in three days — a one-time lifetime fee, raised once, and a recurring model under internal consideration — as an honest pricing-judgment story.",
+      "dateLogged": "2026-07-24"
+    }
+  ],
+  "glossary": []
 }

@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Farpost from "@/components/Farpost";
 import PageHeading from "@/components/PageHeading";
 import SectionHeader from "@/components/SectionHeader";
-import FarpostTabBar from "@/components/farpost/FarpostTabBar";
 import SectionFilterBar from "@/components/SectionFilterBar";
 
 export const metadata: Metadata = {
@@ -232,7 +231,6 @@ export default function FarpostPage() {
 
   return (
     <main className="py-10">
-      <FarpostTabBar />
       <PageHeading title={<Farpost />}>
         A building-intelligence platform &mdash; NFC-tagged records that
         outlive any single owner, insurer, or contractor, born from a rural

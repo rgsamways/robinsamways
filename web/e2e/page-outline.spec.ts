@@ -129,7 +129,7 @@ test.describe("page outline flyout", () => {
   });
 
   test("a page with exactly one section shows no outline trigger", async ({ page }) => {
-    await page.goto("/dev-log/glossary");
+    await page.goto("/metrics");
 
     await expect(page.getByRole("button", { name: "On this page" })).toHaveCount(0);
   });

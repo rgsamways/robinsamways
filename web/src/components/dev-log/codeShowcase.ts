@@ -15,11 +15,15 @@ export type CodeShowcaseEntry = {
   whyThisMatters: string[];
 };
 
-// Real, verified code from the Farpost project — see
-// docs/farpost-devlog-handoff-robinsamways.md for the raw source material
-// this was written from. Entry 1 is the approved template (pasted as the
-// handoff specifies); entries 2-10 are written from that handoff's context
-// notes, not pasted as-is.
+// Real, verified development experience — not all of it code-centric, despite
+// the name (kept for continuity rather than renamed mid-migration). Entries
+// 1-10 are from the Farpost project — see
+// docs/farpost-devlog-handoff-robinsamways.md for the raw source material.
+// Entry 1 is the approved template (pasted as the handoff specifies);
+// entries 2-10 are written from that handoff's context notes, not pasted
+// as-is. Entries 11-12 are ported from the retired dev-log/bug-log page
+// (restructure-left-nav) — real Farpost Pulse infrastructure bugs with no
+// per-Work-project Bug List home now that Pulse is an Experiments piece.
 export const CODE_SHOWCASE_ENTRIES: CodeShowcaseEntry[] = [
   {
     slug: "silent-slug-collision",
@@ -521,6 +525,46 @@ async def preen_contribution(raw_text: str, role: str) -> dict:
     ],
     whyThisMatters: [
       "Both details are the kind that don't show up in a quick demo — a synchronous call blocking an event loop only becomes visible under real concurrent load, and an LLM's occasional code-fence wrapping only shows up after enough real calls. Building an AI feature that respects the runtime it's running on, and doesn't take an LLM's output format on faith, is what real AI-integration experience looks like, versus a feature that only works in the one case it was tested against.",
+    ],
+  },
+  {
+    slug: "cosmos-db-shared-throughput",
+    project: "Farpost Pulse",
+    category: "Infrastructure",
+    date: "2026-07-10",
+    publishedAtUtc: "2026-07-10T14:00:00Z",
+    title: "Cosmos DB rejected my seed script — and the fix wasn't in the error message",
+    teaser: "A batch of Cosmos DB containers each quietly reserved its own throughput, silently stacking past the account cap.",
+    framing: [
+      "Seeding Farpost Pulse's real Cosmos DB account failed partway through, with an error that at least named exact numbers: it would have pushed total throughput to 1200 RU/s against a 1000 RU/s account cap. Three containers, each silently requesting its own 400 RU/s allocation by default, had quietly stacked up past the limit — nothing in the code, or the Cosmos SDK's own method signatures, hinted this would happen ahead of time.",
+      "The fix itself was small — explicitly provision shared throughput at the database level (1000 RU/s), and leave the container-creation calls otherwise untouched, so all three containers draw from one pool instead of each reserving their own. But re-running the script wasn't the end of it: the first, failed attempt had already half-succeeded, leaving two containers already provisioned under the old dedicated-throughput model. A code fix can't retroactively convert an already-existing resource. The database had to be deleted and recreated cleanly, then verified directly in the Azure Portal — not just by trusting a second clean run.",
+    ],
+    codeBlocks: [],
+    theFix: [
+      "RU/s (Request Units per second) is Cosmos DB's normalized \"cost of doing work\" currency — a blended measure of read/write/query cost, decoupled from CPU, RAM, or disk, that every operation draws from a bounded budget. Shared vs. dedicated throughput is the provisioning choice that decides whether that budget is per-container or pooled. Leave it unspecified, and each container quietly reserves its own slice by default — fine until enough containers exist to blow past an account's cap, exactly what happened here.",
+    ],
+    whyThisMatters: [
+      "The broader lesson generalizes past Cosmos DB: after applying a fix, check a cloud resource's actual live state directly, not just whether the script ran without an error this time. A partial failure can leave real infrastructure sitting in an inconsistent state that a second, corrected run won't self-heal — the kind of verification discipline that only shows up once something has actually gone wrong in production-adjacent infrastructure.",
+    ],
+  },
+  {
+    slug: "flex-consumption-zero-functions",
+    project: "Farpost Pulse",
+    category: "Infrastructure",
+    date: "2026-07-10",
+    publishedAtUtc: "2026-07-10T16:00:00Z",
+    title: "Azure said the deploy succeeded. The app had zero functions.",
+    teaser: "A 'successful' Azure Functions deploy that silently shipped without its dependencies, and the log stream that finally showed why.",
+    framing: [
+      "`func azure functionapp publish` reported complete success — every step \"completed,\" and Azure's own Deployment Center independently confirmed \"Succeeded (Active).\" And yet every HTTP endpoint 404'd, and the Function App's dashboard showed zero registered functions, the same screen shown for a brand-new, never-deployed app. Nothing about the deploy command's own output, or the platform's own status, pointed at why.",
+      "Working through the obvious candidates first — a routing misconfiguration, a restart, a deeper look at the deployment logs — ruled each one out without finding the actual cause. The real breakthrough came from the live Log stream, watched while triggering a fresh request: the runtime's own startup log showed it actively searching for functions and finding none. Not crashing, not erroring — just quietly finding nothing, which is exactly why none of the deployment-layer checks had surfaced anything.",
+    ],
+    codeBlocks: [],
+    theFix: [
+      "The root cause, once found, was two things compounding: the deploy had used a local build rather than Azure's own server-side build step, and `.funcignore` excluded `node_modules` from the uploaded package. Locally-built code with its dependencies stripped out means every function file's top-level `require()` call silently fails, which quietly prevents that file from ever registering itself. The fix — removing `node_modules` from `.funcignore` — was confirmed working two ways before even checking the app again: the deploy package jumped from 11.2 KB to 8.2 MB, and the Log stream then showed all four functions actually registering.",
+    ],
+    whyThisMatters: [
+      "A platform reporting \"deployment succeeded\" only confirms the upload/build pipeline finished — it says nothing about whether the runtime can actually load and register anything from what got uploaded. Those are two genuinely separate layers of \"success,\" and only one of them is visible by default. The generalizable habit: after a \"successful\" deploy, check the runtime's own live behavior directly — a real log stream, a real request — rather than trusting the deployment platform's own success report as the final word.",
     ],
   },
 ];

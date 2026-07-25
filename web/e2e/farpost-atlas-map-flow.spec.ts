@@ -78,8 +78,16 @@ test.describe("Farpost Atlas: map to building-detail flow", () => {
     await page.route(`${API_URL}/**`, mockFarpostAtlasApi);
   });
 
-  test("clicking a map marker's popup link navigates to that building's tracked records", async ({ page }) => {
+  test("old Farpost-nested URLs redirect permanently to the new Experiments routes", async ({ page }) => {
     await page.goto("/farpost/farpost-atlas");
+    await expect(page).toHaveURL("/techstacks/farpost-atlas");
+
+    await page.goto("/farpost/farpost-atlas/1");
+    await expect(page).toHaveURL("/techstacks/farpost-atlas/1");
+  });
+
+  test("clicking a map marker's popup link navigates to that building's tracked records", async ({ page }) => {
+    await page.goto("/techstacks/farpost-atlas");
 
     const marker = page.locator(".leaflet-marker-icon").first();
     await expect(marker).toBeVisible();
@@ -87,10 +95,10 @@ test.describe("Farpost Atlas: map to building-detail flow", () => {
 
     const popupLink = page.locator(".leaflet-popup-content a", { hasText: "View tracked records" });
     await expect(popupLink).toBeVisible();
-    await expect(popupLink).toHaveAttribute("href", "/farpost/farpost-atlas/1");
+    await expect(popupLink).toHaveAttribute("href", "/techstacks/farpost-atlas/1");
 
     await popupLink.click();
-    await expect(page).toHaveURL("/farpost/farpost-atlas/1");
+    await expect(page).toHaveURL("/techstacks/farpost-atlas/1");
 
     await expect(page.getByRole("heading", { name: "88 Weslemkoon Lake Road" })).toBeVisible();
     await expect(page.getByText("deep rural")).toBeVisible();
@@ -99,7 +107,7 @@ test.describe("Farpost Atlas: map to building-detail flow", () => {
   });
 
   test("toggling the rural-density overlay renders the boundary polygon", async ({ page }) => {
-    await page.goto("/farpost/farpost-atlas");
+    await page.goto("/techstacks/farpost-atlas");
     await expect(page.locator(".leaflet-marker-icon").first()).toBeVisible();
 
     await page.getByText("Show rural-density overlay").click();

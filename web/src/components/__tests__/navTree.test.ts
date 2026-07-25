@@ -37,4 +37,14 @@ describe("isExpanded", () => {
   it("a manual override expands an otherwise-inactive group", () => {
     expect(isExpanded(link, "/vocare", { "/farpost": true })).toBe(true);
   });
+
+  it("auto-expands the Experiments group when a piece route is active", () => {
+    const experimentsLink = { href: "/techstacks", label: "Experiments", children: [] };
+    expect(isExpanded(experimentsLink, "/techstacks/farpost-atlas", {})).toBe(true);
+  });
+
+  it("auto-expands Sreditor's 10-page submenu when one of its pages is active", () => {
+    const sreditorLink = { href: "/sreditor", label: "Sreditor", children: [] };
+    expect(isExpanded(sreditorLink, "/sreditor/bug-list", {})).toBe(true);
+  });
 });

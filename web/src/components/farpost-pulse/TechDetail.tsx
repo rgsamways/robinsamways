@@ -64,7 +64,7 @@ export default function TechDetail({ techId }: { techId: string }) {
     return (
       <main className="py-10">
         <p className="text-sm">No technician found with that id.</p>
-        <Link href="/farpost/farpost-pulse" className="mt-2 inline-block text-sm text-accent hover:underline">
+        <Link href="/techstacks/farpost-pulse" className="mt-2 inline-block text-sm text-accent hover:underline">
           ← Back to Tech Roster
         </Link>
       </main>
@@ -86,7 +86,7 @@ export default function TechDetail({ techId }: { techId: string }) {
   return (
     <main className="py-10">
       <p className="text-xs">
-        <Link href="/farpost/farpost-pulse" className="text-accent hover:underline">
+        <Link href="/techstacks/farpost-pulse" className="text-accent hover:underline">
           ← Tech Roster
         </Link>
       </p>

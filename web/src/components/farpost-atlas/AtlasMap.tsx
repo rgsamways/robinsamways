@@ -118,7 +118,7 @@ export default function AtlasMap() {
                 <Popup>
                   <p className="font-semibold">{building.address}</p>
                   <p className="text-xs">{building.region_name}</p>
-                  <Link href={`/farpost/farpost-atlas/${building.id}`} className="text-accent underline">
+                  <Link href={`/techstacks/farpost-atlas/${building.id}`} className="text-accent underline">
                     View tracked records &rarr;
                   </Link>
                 </Popup>

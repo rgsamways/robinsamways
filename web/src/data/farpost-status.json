@@ -1,7 +1,7 @@
 {
-  "asOf": "2026-07-24",
-  "deploymentStatus": "In active development in siloes/farpost/, not yet deployed to a public URL. The original production system (MongoDB, FastAPI, Twilio) remains live and unaffected while the rebuild proceeds separately.",
-  "summary": "The rebuild is porting Farpost's live dispatch and building-record logic off its original MongoDB/FastAPI/Twilio stack onto the converged siloes stack (Fastify, Drizzle, Postgres, better-auth), rather than starting from a blank slate.",
+  "asOf": "2026-07-25",
+  "deploymentStatus": "In active development in Farpost's own separate, gitignored rebuild repository, not yet deployed to a public URL. The original production system (MongoDB, FastAPI, Twilio) remains live and unaffected while the rebuild proceeds separately.",
+  "summary": "The rebuild is porting Farpost's live dispatch and building-record logic off its original MongoDB/FastAPI/Twilio stack onto a converged Fastify/Drizzle/Postgres/better-auth stack, rather than starting from a blank slate.",
   "highlights": [
     "Original production system remains live and untouched while the rebuild proceeds in its own separate, gitignored repository.",
     "Passwordless magic-link auth (better-auth), matching Vocare's proven pattern, is the identity model for the rebuild.",
@@ -11,30 +11,63 @@
     {
       "name": "Rural claims dispatch (reputation-ranked professional matching)",
       "status": "planned",
-      "note": "Live today on the original stack; being ported onto the converged siloes stack.",
-      "href": "/farpost/farpost-dispatch"
+      "note": "Live today on the original stack; being ported onto the rebuild's converged stack.",
+      "href": "/techstacks/farpost-dispatch"
     },
     {
       "name": "NFC-tagged building records with per-category fact staleness",
       "status": "planned",
-      "note": "Live today on the original stack; being ported onto the converged siloes stack."
+      "note": "Live today on the original stack; being ported onto the rebuild's converged stack."
     },
     {
       "name": "Passwordless (better-auth) account sign-in",
       "status": "planned",
       "note": "New for the rebuild — the original stack has no equivalent today."
+    }
+  ],
+  "testingVerification": [
+    "Farpost's rebuild lives in its own separate, gitignored repository, so this page can't show line-by-line test-suite output the way this site's own Dev Log can for its own code.",
+    "What's true today: the rebuild's early auth and building-record logic is being ported deliberately, feature by feature, off the original system's already-proven behavior rather than written from a blank slate — each ported piece is checked against how the original system actually behaves before being considered done.",
+    "A more detailed, project-specific testing narrative will move here once the rebuild has enough surface area to make one honest."
+  ],
+  "bugList": [],
+  "lightbulbs": [
+    {
+      "slug": "farpost-origin-story",
+      "title": "Farpost's Real Origin Story",
+      "summary": "Open the Farpost page with Robin's real founder story — a rural adjuster's dispatch problem, an Android side-project that collided with a competitor, and the RFID-tag idea salvaged into Farpost's building-intelligence platform.",
+      "dateLogged": "2026-07-07",
+      "graduatedTo": { "label": "See it live on the Farpost page", "href": "/farpost" }
     },
     {
-      "name": "Atlas — rural-density building map overlay",
-      "status": "planned",
-      "note": "A portfolio-demo idea, not yet built on either stack, slotted into this build plan.",
-      "href": "/farpost/farpost-atlas"
+      "slug": "farpost-atlas",
+      "title": "Farpost Atlas",
+      "summary": "A geospatial map of tracked buildings with staleness indicators and a rural-density overlay — proves GIS/spatial-data skills genuinely distinct from this site's other pieces, directly portable to the real Farpost product.",
+      "dateLogged": "2026-07-10",
+      "graduatedTo": { "label": "See it live as an Experiments piece", "href": "/techstacks/farpost-atlas" }
     },
     {
-      "name": "Pulse — AI-assisted coaching tips for field technicians",
-      "status": "planned",
-      "note": "A portfolio-demo idea, not yet built on either stack, slotted into this build plan.",
-      "href": "/farpost/farpost-pulse"
+      "slug": "farpost-dispatch",
+      "title": "Farpost Dispatch",
+      "summary": "A Salesforce Experience Cloud partner portal matching field professionals to jobs across rural coverage areas — a direct callback to Farpost's real founding story, proving building inside Salesforce rather than just integrating with it.",
+      "dateLogged": "2026-07-10",
+      "graduatedTo": { "label": "See it live as an Experiments piece", "href": "/techstacks/farpost-dispatch" }
+    },
+    {
+      "slug": "fastify-vs-express-dev-log-entry",
+      "title": "Choosing Fastify Over Express",
+      "summary": "The researched, against-the-grain choice of Fastify over Express for the Farpost rebuild, backed by Express's decade-long major-version gap and Fastify's schema-first, async-native design.",
+      "dateLogged": "2026-07-24"
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Twilio",
+      "answer": "Twilio is a company that lets software send and receive real phone calls and text messages without a business having to build its own telecom infrastructure. Think of it as a phone network you control entirely through code — the same way a payment processor lets a website accept credit cards without becoming its own bank."
+    },
+    {
+      "term": "NFC/RFID",
+      "answer": "Both are ways for a small chip to talk to a nearby device wirelessly, over a few centimeters, with no battery of its own — the same technology behind tap-to-pay cards and building-access fobs. NFC usually means the shorter-range, phone-tap kind; RFID is the broader umbrella term. Stuck to a physical object, a chip like this lets a phone \"read\" a permanent digital record just by tapping it — a durable link between a real, physical thing and the data about it."
     }
   ]
 }

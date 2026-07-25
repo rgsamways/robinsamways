@@ -47,11 +47,11 @@ test.describe("/farpost section filter pill bar", () => {
     }
   });
 
-  test("FarpostTabBar navigation pills stay above the heading, untouched", async ({ page }) => {
+  test("the heading and intro blurb render with no tab bar above them", async ({ page }) => {
     await page.goto("/farpost");
 
-    const originsPill = page.getByRole("link", { name: "Origins" });
-    await expect(originsPill).toHaveAttribute("aria-current", "page");
+    await expect(page.getByRole("navigation", { name: "Farpost sections" })).toHaveCount(0);
     await expect(page.getByRole("heading", { name: "$ Farpost" })).toBeVisible();
+    await expect(page.getByText(/NFC-tagged records that outlive any single owner/)).toBeVisible();
   });
 });

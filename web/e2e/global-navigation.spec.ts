@@ -98,27 +98,46 @@ test.describe("collapsible nav groups", () => {
     await expect(page).toHaveURL("/vocare/current-metrics");
   });
 
-  test("Dev Log submenu navigates to Bug Log", async ({ page }) => {
+  test("Dev Log submenu lists its entries directly, with no intermediate Code Showcase node", async ({ page }) => {
     await page.goto("/");
 
     const nav = page.getByRole("navigation", { name: "Site" });
     await nav.getByRole("button", { name: "Expand Dev Log" }).click();
-    await nav.getByRole("link", { name: "Bug Log" }).click();
-
-    await expect(page).toHaveURL("/dev-log/bug-log");
-  });
-
-  test("Code Showcase nests under Dev Log and lists articles by title", async ({ page }) => {
-    await page.goto("/");
-
-    const nav = page.getByRole("navigation", { name: "Site" });
-    await nav.getByRole("button", { name: "Expand Dev Log" }).click();
-    await nav.getByRole("button", { name: "Expand Code Showcase" }).click();
+    await expect(nav.getByRole("button", { name: "Expand Code Showcase" })).toHaveCount(0);
 
     const articleLink = nav.getByRole("link", { name: "The Bug That Silently Ate 2,706 Records" });
     await expect(articleLink).toBeVisible();
     await articleLink.click();
 
-    await expect(page).toHaveURL("/dev-log/code-showcase/silent-slug-collision");
+    await expect(page).toHaveURL("/dev-log/silent-slug-collision");
+  });
+
+  test("Sreditor submenu navigates to a project-record page", async ({ page }) => {
+    await page.goto("/");
+
+    const nav = page.getByRole("navigation", { name: "Site" });
+    await nav.getByRole("button", { name: "Expand Sreditor" }).click();
+    await nav.getByRole("link", { name: "Bug List" }).click();
+
+    await expect(page).toHaveURL("/sreditor/bug-list");
+  });
+
+  test("Experiments is a top-level group, not nested under Work, and its submenu lists all four pieces", async ({
+    page,
+  }) => {
+    await page.goto("/");
+
+    const nav = page.getByRole("navigation", { name: "Site" });
+    await nav.getByRole("button", { name: "Expand Farpost" }).click();
+    await expect(nav.getByRole("link", { name: "Atlas" })).toHaveCount(0);
+
+    await nav.getByRole("button", { name: "Expand Experiments" }).click();
+    await expect(nav.getByRole("link", { name: "Atlas" })).toBeVisible();
+    await expect(nav.getByRole("link", { name: "Dispatch" })).toBeVisible();
+    await expect(nav.getByRole("link", { name: "Pulse" })).toBeVisible();
+    await expect(nav.getByRole("link", { name: "Credential Flow" })).toBeVisible();
+
+    await nav.getByRole("link", { name: "Atlas" }).click();
+    await expect(page).toHaveURL("/techstacks/farpost-atlas");
   });
 });

@@ -47,21 +47,6 @@ The `/farpost` page SHALL include a `PROCESS` section describing the spec-first,
 - **WHEN** a visitor reads the `PROCESS` section's mention of contemporaneous R&D logging
 - **THEN** the copy does not name or promote "Sreditor" as a product, since that idea is scoped to stand on its own separately from the Farpost page
 
-### Requirement: Farpost renders as a hub with a pill-tab bar to its sub-pieces
-The `/farpost` route and all of its sub-pages SHALL display a horizontal pill-tab bar with four tabs — Origins, Atlas, Dispatch, Pulse — each a real navigation link (not a filter) to that piece's own page: `/farpost` (Origins, the default view), `/farpost/farpost-atlas`, `/farpost/farpost-dispatch`, `/farpost/farpost-pulse`. The tab bar SHALL indicate which tab corresponds to the current page. On `/farpost` itself, the tab bar SHALL render above the page's heading and intro blurb, matching every other Farpost sub-page's tab-bar placement.
-
-#### Scenario: Visitor sees the pill-tab bar on the hub
-- **WHEN** a visitor loads `/farpost`
-- **THEN** the page shows the pill-tab bar first, with Origins, Atlas, Dispatch, and Pulse and Origins indicated as active, followed by the "$ Farpost" heading and intro blurb
-
-#### Scenario: Visitor navigates between Farpost pieces via the pill bar
-- **WHEN** a visitor on `/farpost` activates the "Atlas" pill
-- **THEN** the browser navigates to `/farpost/farpost-atlas`, and that page shows the same pill-tab bar with Atlas indicated as active
-
-#### Scenario: The pill bar appears on every Farpost sub-page
-- **WHEN** a visitor loads any of `/farpost/farpost-atlas`, `/farpost/farpost-dispatch`, or `/farpost/farpost-pulse`
-- **THEN** the same pill-tab bar is present, allowing direct navigation to any other Farpost piece without returning to `/farpost` first
-
 ### Requirement: Origins is the hub's default content
 The Origin Story, Problems Farpost Solves, Building Lifecycle Example, and Process sections (as already required elsewhere in this capability) SHALL render at `/farpost` itself, as the Origins tab's content — not at a separate sub-route.
 
@@ -69,26 +54,19 @@ The Origin Story, Problems Farpost Solves, Building Lifecycle Example, and Proce
 - **WHEN** a visitor loads `/farpost`
 - **THEN** the page shows the Origin Story, Problems Farpost Solves, Building Lifecycle Example, and Process sections directly, with no intermediate hub-only landing view
 
-### Requirement: Dispatch renders as a real case-study page
-The `/farpost/farpost-dispatch` route SHALL render the real Farpost Dispatch case-study page (its required sections and content are specified by the `farpost-dispatch` capability), replacing the earlier placeholder entirely.
-
-#### Scenario: Visitor sees real content, not a placeholder
-- **WHEN** a visitor loads `/farpost/farpost-dispatch`
-- **THEN** the page shows the real case-study content — not "coming soon" placeholder text — while still rendering the shared Farpost pill-tab bar with Dispatch indicated as active
-
 ### Requirement: Farpost hub has an intro blurb beneath its heading
-The `/farpost` page's "$ Farpost" heading SHALL be followed by a short intro blurb (one to two sentences), matching the pattern already used on the Sreditor and Tech/Stacks pages' own headings.
+The `/farpost` page's "$ Farpost" heading SHALL be followed directly by a short intro blurb (one to two sentences), matching the pattern already used on the Sreditor and Experiments pages' own headings.
 
 #### Scenario: Visitor sees the intro blurb under the heading
 - **WHEN** a visitor loads `/farpost`
-- **THEN** the page shows a short intro blurb directly beneath the "$ Farpost" heading, after the pill-tab bar
+- **THEN** the page shows a short intro blurb directly beneath the "$ Farpost" heading
 
 ### Requirement: A pill bar filters the Origins tab's own sections by visibility
-The `/farpost` page SHALL display a horizontal row of pills below its "$ Farpost" heading and intro blurb, above the Origin Story section, one pill per section (Origin Story, Problems It Solves, Lifecycle Example, Process). Activating a pill toggles it on or off; when one or more pills are active, only the corresponding sections are shown. With no pills active, all sections are shown. This filter bar is distinct from the existing `FarpostTabBar` pill-tab navigation bar, which continues to render above the heading and link to Farpost's sub-pages.
+The `/farpost` page SHALL display a horizontal row of pills below its "$ Farpost" heading and intro blurb, above the Origin Story section, one pill per section (Origin Story, Problems It Solves, Lifecycle Example, Process). Activating a pill toggles it on or off; when one or more pills are active, only the corresponding sections are shown. With no pills active, all sections are shown.
 
 #### Scenario: Filter bar renders below the heading and intro blurb
 - **WHEN** a visitor loads `/farpost`
-- **THEN** the pill-tab navigation bar appears first, then the "$ Farpost" heading and intro blurb, then the section-filter pill bar, then the Origin Story section
+- **THEN** the "$ Farpost" heading and intro blurb appear first, then the section-filter pill bar, then the Origin Story section
 
 #### Scenario: Activating a pill isolates its section
 - **WHEN** a visitor activates the "Process" pill

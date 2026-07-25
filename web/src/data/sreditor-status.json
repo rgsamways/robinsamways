@@ -1,0 +1,110 @@
+{
+  "asOf": "2026-07-25",
+  "deploymentStatus": "Not yet published as a standalone package — every command works end to end against a real, unpublished local build. `npm publish` and tagging `v0.1.0` is the one remaining step, held back pending sign-off, not a technical blocker.",
+  "summary": "Sreditor is a CLI tool, Node.js and TypeScript, that reads a project's archived OpenSpec change artifacts and judges each one against CRA's SR&ED three-part test in near real time, so a developer's tax-credit documentation gets written contemporaneously instead of reconstructed months later at filing time.",
+  "highlights": [
+    "Judged against its own build first, Sreditor found itself SR&ED-ineligible at every single phase — then, judged against Farpost's real 48-change history, it returned exactly one defensible claim. A skeptical judge that clears almost nothing, twice, including work it has every incentive to find eligible in, is the calibration the whole design bet on.",
+    "Every judgment prompt lives in the repo as plain TypeScript, readable by a developer, their accountant, or a CRA reviewer, not hidden behind a platform — transparency is the actual trust mechanism, not a slogan.",
+    "Every call runs against the developer's own Anthropic account at standard rates, no markup, no subscription — the direct structural reason a solo developer or a tiny CCPC is a market the funded, per-seat-priced competitors aren't built to serve."
+  ],
+  "features": [
+    {
+      "name": "sreditor init — AI-assisted anchor-document interview",
+      "status": "shipped",
+      "note": "Drafts a developer-authored goal/uncertainty/success-criteria document; the AI only assists in framing, never invents content, and the document is append-only once saved."
+    },
+    {
+      "name": "sreditor judge — three-part-test eligibility + scope-drift audit",
+      "status": "shipped",
+      "note": "A deliberately skeptical Claude (Sonnet 5) prompt, structured through zod schemas so output is never freeform prose. Scope-drift audit runs as a second, separate model call."
+    },
+    {
+      "name": "Corroborating signals in judge",
+      "status": "shipped",
+      "note": "Three optional git-to-code correlation tools can feed extra context into a judgment, but are structurally barred from ever determining eligibility on their own."
+    },
+    {
+      "name": "sreditor rollup — CRA-shaped project grouping",
+      "status": "shipped",
+      "note": "Gated behind a real pre-call token-cost estimate, since it's the one command that processes the whole accumulated log at once."
+    },
+    {
+      "name": "sreditor report — T661-structured markdown",
+      "status": "shipped",
+      "note": "Real word counts checked against the 350/700/350 line limits."
+    },
+    {
+      "name": "sreditor scan / status / doctor",
+      "status": "shipped",
+      "note": "Utility commands for the day-to-day workflow."
+    },
+    {
+      "name": "npm publish, v0.1.0",
+      "status": "planned",
+      "note": "Held back pending sign-off, not a technical blocker."
+    },
+    {
+      "name": "PDF/CSV report output",
+      "status": "planned",
+      "note": "Markdown-only today."
+    },
+    {
+      "name": "Source adapters beyond OpenSpec",
+      "status": "planned",
+      "note": "The adapter interface is designed to be tool-agnostic; OpenSpec is the only one built so far."
+    }
+  ],
+  "testingVerification": [
+    "As of the most recent count: 26 TypeScript source files, 1,222 non-blank lines of code, 52 passing tests across 12 test files. Every command works end to end against real Anthropic API calls, not fixtures.",
+    "Two real tests, not one. Judged against its own build first, Sreditor found itself SR&ED-ineligible at every single phase. Then, judged against Farpost's real, unrelated OpenSpec history — 48 archived changes, roughly four times Sreditor's own build — it returned exactly one defensible claim, a project rollup synthesized from three individually-ineligible changes.",
+    "Testing against a codebase four times Sreditor's own size broke things dogfooding never touched: rollup failed outright against Farpost's mostly-ineligible 48-change log — first an opaque parse error, then a clean token-limit error once diagnosed — fixed by having code assemble the ineligible-change bucket instead of the model.",
+    "Worth stating plainly rather than implying full determinism: rollup's exact grouping showed real run-to-run variance — an earlier run pulled a fourth, unrelated change into the dispatch narrative; the saved run kept it at three, same underlying story, a different boundary."
+  ],
+  "bugList": [
+    {
+      "slug": "sreditor-tool-integration-bugs",
+      "title": "Sreditor's Tool-Integration Bugs",
+      "date": "2026-07-11",
+      "theBug": [
+        "Building Sreditor's corroborating-signals feature — the optional git-to-code correlation tools that feed extra context into a judgment — surfaced a real batch of subprocess-integration bugs: a `cross-spawn` invocation issue, an ANSI-escape-code leak into what was supposed to be clean text output, and an `ENOBUFS` buffer overflow from a subprocess producing more output than the parent expected to capture."
+      ],
+      "theFix": [
+        "Each bug traced back to treating a spawned subprocess's output as a clean, bounded string by default, when it's neither — it needs explicit encoding/stripping and an explicit buffer ceiling. Judged against its own build afterward, Sreditor's own judgment engine correctly ruled this debugging work SR&ED-ineligible: real effort, but routine subprocess-integration troubleshooting, not a resolved technological uncertainty."
+      ]
+    },
+    {
+      "slug": "sreditor-farpost-scale-bugs",
+      "title": "Sreditor at Farpost's Real Scale",
+      "date": "2026-07-11",
+      "theBug": [
+        "Testing Sreditor against Farpost's real, much larger 48-change OpenSpec history — roughly four times the size of Sreditor's own build — surfaced a second, different batch of bugs that dogfooding against Sreditor's own smaller history never touched: a token-ceiling crash in rollup, missing reasoning output from the model on some judgments, and run-to-run grouping non-determinism."
+      ],
+      "theFix": [
+        "The token-ceiling crash was fixed by having code assemble the ineligible-change bucket instead of asking the model to enumerate every ineligible change itself, which had been blowing the output ceiling at Farpost's scale. The run-to-run grouping variance wasn't \"fixed\" so much as surfaced and documented honestly — rollup's exact grouping boundary can shift between runs while still landing on the same underlying story, worth stating plainly rather than implying full determinism."
+      ]
+    }
+  ],
+  "lightbulbs": [
+    {
+      "slug": "sreditor",
+      "title": "Sreditor",
+      "summary": "A portfolio piece teaching other developers to run their own SR&ED tax-credit documentation practice, using this project's own R&D log as the working example.",
+      "dateLogged": "2026-07-07",
+      "graduatedTo": { "label": "See it live on the Sreditor page", "href": "/sreditor" }
+    }
+  ],
+  "glossary": [
+    {
+      "term": "SR&ED",
+      "answer": "SR&ED (Scientific Research & Experimental Development) is a Canadian federal tax credit that refunds part of the cost of work spent resolving a genuine technical unknown — not just building a feature, but figuring out something that wasn't already known how to do. Think of it as the government sharing the cost of your company's real trial-and-error, the same way a research grant would, but claimed after the fact through the tax system instead of applied for in advance."
+    },
+    {
+      "term": "T661",
+      "answer": "Form T661 is the actual government form a company files to claim SR&ED — three short, word-limited sections asking what was technically uncertain, what was systematically tried, and what was learned. It's the paperwork the whole practice is ultimately in service of: good contemporaneous notes make filling this out honest and fast; reconstructed-after-the-fact notes make it slow and full of guesswork."
+    },
+    {
+      "term": "Zod",
+      "answer": "Zod is a code library for describing the exact shape data is supposed to have, then automatically checking real data against that shape and rejecting anything that doesn't match. Sreditor uses it so an AI model's judgment always comes back as a predictable, structured answer instead of loose paragraphs of prose that would need to be re-interpreted by hand."
+    }
+  ]
+}

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import FarpostTabBar from "@/components/farpost/FarpostTabBar";
 import PageHeading from "@/components/PageHeading";
 import SectionHeader from "@/components/SectionHeader";
 
@@ -11,7 +10,6 @@ export const metadata: Metadata = {
 export default function FarpostBuildPlanPage() {
   return (
     <main className="py-10">
-      <FarpostTabBar />
       <PageHeading title="Farpost · Build Plan">
         Forward build sequencing for the real Farpost rebuild, as far as it
         can currently be forecast — this is provisional and will evolve as
@@ -24,7 +22,7 @@ export default function FarpostBuildPlanPage() {
           <p>
             Port the two pieces of domain logic that already work in
             production — reputation-ranked dispatch (see{" "}
-            <Link href="/farpost/farpost-dispatch" className="text-accent hover:underline">
+            <Link href="/techstacks/farpost-dispatch" className="text-accent hover:underline">
               Farpost Dispatch
             </Link>
             ) and NFC-tagged building records with per-category fact
@@ -47,11 +45,11 @@ export default function FarpostBuildPlanPage() {
         <div className="space-y-3 text-sm leading-relaxed">
           <p>
             Atlas and Pulse started as standalone portfolio demos (
-            <Link href="/farpost/farpost-atlas" className="text-accent hover:underline">
+            <Link href="/techstacks/farpost-atlas" className="text-accent hover:underline">
               Atlas
             </Link>
             ,{" "}
-            <Link href="/farpost/farpost-pulse" className="text-accent hover:underline">
+            <Link href="/techstacks/farpost-pulse" className="text-accent hover:underline">
               Pulse
             </Link>
             ) because there wasn&rsquo;t time to build them into the real
