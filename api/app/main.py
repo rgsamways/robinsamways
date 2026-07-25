@@ -5,6 +5,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 
 from app import models  # noqa: F401  (registers SQLModel metadata)
+from app.accounts.routes import router as accounts_router
+from app.billing.routes import router as billing_router
 from app.contact import router as contact_router
 from app.db import engine, init_db
 from app.feedback import router as feedback_router
@@ -27,12 +29,14 @@ app.add_middleware(
         "http://localhost:3000",
     ],
     allow_methods=["GET", "POST", "PATCH", "DELETE"],
-    allow_headers=["Content-Type"],
+    allow_headers=["Content-Type", "Authorization"],
 )
 
 app.include_router(contact_router)
 app.include_router(feedback_router)
 app.include_router(salesforce_router)
+app.include_router(accounts_router)
+app.include_router(billing_router)
 
 
 @app.get("/health")

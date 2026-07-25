@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import SectionHeader from "@/components/SectionHeader";
 import SectionFilterBar from "@/components/SectionFilterBar";
+import SubscribeControl from "@/components/services/SubscribeControl";
 
 export const metadata: Metadata = {
   title: "Services · Robin Samways",
@@ -19,6 +20,10 @@ export default function ServicesPage() {
             A straightforward, hosted website — three starting packages,
             described below. Exact scope and pricing are worked out per
             project; get in touch and I&rsquo;ll follow up with a quote.
+          </p>
+          <p className="mb-4 text-xs text-muted">
+            Pricing is quoted per project and disclosed in full before any
+            payment is collected.
           </p>
           <div className="grid gap-4 sm:grid-cols-3">
             <div className="border border-foreground/20 p-4">
@@ -77,6 +82,10 @@ export default function ServicesPage() {
               , is another: a real Node.js/Azure Functions backend with its
               own database, dashboards, and coaching logic.
             </p>
+            <p className="text-xs text-muted">
+              Pricing is quoted per project and disclosed in full before any
+              payment is collected.
+            </p>
           </div>
           <p className="mt-4 text-sm leading-relaxed">
             <Link href="/" className="text-accent underline">
@@ -107,6 +116,10 @@ export default function ServicesPage() {
               , is a direct example. So is the native, production-line
               mobile software built at Padre Software, deployed onsite at
               manufacturing facilities across Canada and the United States.
+            </p>
+            <p className="text-xs text-muted">
+              Pricing is quoted per project and disclosed in full before any
+              payment is collected.
             </p>
           </div>
           <p className="mt-4 text-sm leading-relaxed">
@@ -140,6 +153,10 @@ export default function ServicesPage() {
               integrations with Salesforce, Stripe, Twilio, and Azure — not
               just claimed on a resume.
             </p>
+            <p className="text-xs text-muted">
+              Pricing is quoted per project and disclosed in full before any
+              payment is collected.
+            </p>
           </div>
           <p className="mt-4 text-sm leading-relaxed">
             <Link href="/" className="text-accent underline">
@@ -161,6 +178,10 @@ export default function ServicesPage() {
               fixes, feature work, or ongoing support for a project
               that&rsquo;s already live. No new build required to get
               started.
+            </p>
+            <p className="text-xs text-muted">
+              $125/hour, typically $100–$150/hour depending on project
+              complexity.
             </p>
           </div>
           <p className="mt-4 text-sm leading-relaxed">
@@ -199,6 +220,28 @@ export default function ServicesPage() {
               Book field documentation at field.farpost.ca
             </a>
           </p>
+        </section>
+      ),
+    },
+    {
+      id: "troubleshooting-questions",
+      label: "Troubleshooting & Questions",
+      node: (
+        <section>
+          <SectionHeader title="TROUBLESHOOTING_QUESTIONS" />
+          <div className="space-y-4 text-sm leading-relaxed">
+            <p>
+              For the computer and application-design questions that come
+              up outside a formal project — the kind of thing people already
+              ask me informally. A standing subscription instead of a
+              one-off favour: ongoing troubleshooting and design advice,
+              billed simply.
+            </p>
+            <p className="text-xs text-muted">$1/month, billed as $12/year.</p>
+          </div>
+          <div className="mt-4">
+            <SubscribeControl />
+          </div>
         </section>
       ),
     },

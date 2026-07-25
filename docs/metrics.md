@@ -384,3 +384,26 @@ Restructured the left nav from a flat link list into a recursive collapsible tre
 ULOC: 8,776 · **DRYness: 58%**
 
 Delta vs. previous: +33 files, +1,661 lines, +1,493 code lines, +63 complexity, DRYness dipped 1 point (59% → 58%) — still comfortably inside the healthy band, no `docs/issues.md` entry warranted. File count reconciles with the shape of the work: +31 TypeScript files (twelve new project-record pages, the Farpost/Vocare shared `project-record/` components, six new Dev Log route files, the Code Showcase index/article routes plus a timestamp utility, the Lightbulbs page and data, the recursive `navTree.ts` nav-matching logic, and their accompanying unit tests) and +2 JSON (`farpost-status.json`, `vocare-status.json`); `CSS`'s single existing file (`globals.css`) grew by 28 lines for the new scrollbar styling, not a new file. Python/API were untouched this change. The 1-point dip is consistent with a large volume of genuinely new page content and a recursive nav component, not duplicated logic.
+
+### 2026-07-25 — after archiving `services-payments`
+
+Added the first accounts and first payment-collecting code in this codebase: a passwordless magic-link `account-auth` module (`api/app/accounts/` — `Account`/`SignInToken` models, an HMAC-signed stateless session token, request/verify routes), a Stripe billing module (`api/app/billing/` — `StripeGateway` wrapping every raw Stripe SDK call, `SubscriptionService`/`FulfillmentFeeService`, checkout/webhook/portal/fulfillment-fee routes, the two-tier cancellation/refund policy from `docs/core-billing-model.md`), a seventh `/services` section (Troubleshooting & Questions, $12/year, a real Subscribe control), and understated "quoted per project" / real-rate pricing copy on the other six sections. `/sign-in` and `SignInForm.tsx` were replaced wholesale (no more fake "isn't live yet" stub), and a new `/sign-in/verify` route completes the magic-link flow. 36 new pytest tests — real (if lightweight) SQLite-backed persistence tests for the `Account`/`SignInToken`/`Subscription`/`FulfillmentFee` lifecycle (the first tests in this codebase to exercise a real `select()` query — which caught two genuine latent bugs, see `docs/sreditor/2026/2026-07-25-stripe-annual-subscription-refund-assembly.md`), pure-function refund-math tests, and mocked-Stripe-SDK webhook-handler tests.
+
+| Language | Files | Lines | Code | Complexity |
+|---|---|---|---|---|
+| TypeScript | 117 | 9,730 | 8,959 | 505 |
+| Python | 42 | 4,085 | 3,303 | 265 |
+| XML | 21 | 458 | 458 | 0 |
+| JavaScript | 14 | 984 | 808 | 72 |
+| Apex | 7 | 780 | 634 | 37 |
+| JSON | 7 | 390 | 390 | 0 |
+| Plain Text | 5 | 24 | 24 | 0 |
+| Markdown | 3 | 185 | 146 | 0 |
+| CSS | 2 | 88 | 65 | 0 |
+| HTML | 2 | 84 | 77 | 0 |
+| TOML | 2 | 8 | 8 | 0 |
+| **Total** | **222** | **16,816** | **14,872** | **879** |
+
+ULOC: 9,695 · **DRYness: 58%**
+
+Delta vs. previous: +18 files, +1,781 lines, +1,457 code lines, +128 complexity, DRYness flat (58% → 58%). File count reconciles exactly with the new files added: 4 in `api/app/accounts/`, 6 in `api/app/billing/`, 4 new pytest files (`test_accounts.py`, `test_billing_models.py`, `test_billing_webhooks.py`, `test_refund.py`), and 4 in `web/src` (`components/session.ts`, `components/VerifySignIn.tsx`, `components/services/SubscribeControl.tsx`, `app/sign-in/verify/page.tsx`) — 4+6+4+4 = 18. DRYness holding exactly flat is consistent with this being almost entirely new, non-duplicative logic (a new account/billing domain, not a variation on existing patterns) rather than copy-pasted code. Numbers already reflect this entry's own append to `web/src/data/metrics.json`.

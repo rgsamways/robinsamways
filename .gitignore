@@ -61,6 +61,12 @@ local_settings.py
 db.sqlite3
 db.sqlite3-journal
 
+# Test-only SQLite databases created at collection time by api/tests/conftest.py
+# and pieces/farpost-atlas-geo/tests/conftest.py (real, if lightweight,
+# persistence for query-logic tests) — regenerated every run, never real data.
+*.sqlite3
+*.sqlite3-journal
+
 # Flask stuff:
 instance/
 .webassets-cache

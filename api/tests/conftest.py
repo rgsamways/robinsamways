@@ -1,11 +1,26 @@
 import os
+from pathlib import Path
 
 # Set before any `app.*` import: app.db reads DATABASE_URL at import time
-# (os.environ["DATABASE_URL"]) and would raise KeyError otherwise. The value
-# is never actually connected to in tests — TestClient is used outside a
-# `with` block, so FastAPI's lifespan (and its real init_db() call) never
-# fires. See tests/test_loan_applications.py for why that matters.
-os.environ.setdefault("DATABASE_URL", "postgresql+asyncpg://test:test@localhost:5432/test")
+# (os.environ["DATABASE_URL"]) and would raise KeyError otherwise.
+#
+# Two different DB postures share this one conftest.py:
+# - contact.py/feedback.py/salesforce.py tests use `client` (TestClient
+#   *outside* a `with` block, so FastAPI's lifespan — and its real init_db()
+#   call — never fires) plus `fake_db_session`, which monkeypatches their
+#   `async_session` references directly. These never touch a real database
+#   at all, regardless of what DATABASE_URL points at. See
+#   tests/test_loan_applications.py for why that matters.
+# - account-auth/billing tests need real query behavior (does this email
+#   already have an account? has this token been used?) — same reasoning as
+#   pieces/farpost-atlas-geo's own precedent: a real, if lightweight, SQLite
+#   database rather than mocking persistence entirely, since that querying
+#   is itself the thing worth testing. `db_client` (TestClient used *as* a
+#   context manager) triggers the real init_db() against this file.
+TEST_DB_PATH = Path(__file__).resolve().parent / "test.sqlite3"
+if TEST_DB_PATH.exists():
+    TEST_DB_PATH.unlink()
+os.environ.setdefault("DATABASE_URL", f"sqlite+aiosqlite:///{TEST_DB_PATH}")
 
 import pytest
 from fastapi.testclient import TestClient
@@ -17,6 +32,12 @@ from app import contact, feedback, salesforce
 @pytest.fixture
 def client() -> TestClient:
     return TestClient(app)
+
+
+@pytest.fixture
+def db_client():
+    with TestClient(app) as test_client:
+        yield test_client
 
 
 @pytest.fixture(autouse=True)

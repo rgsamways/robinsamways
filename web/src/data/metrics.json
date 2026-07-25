@@ -214,5 +214,17 @@
     "uloc": 8776,
     "drynessPercent": 58,
     "note": "Restructured the left nav into a recursive collapsible tree (Work > Farpost/Vocare project-record submenus, Writing > Dev Log > Code Showcase nested three deep), added twelve new Farpost/Vocare project-record pages backed by two new per-silo status-data files, split Dev Log into a hub plus six real routes (Code Showcase now one route per article with UTC/Eastern timestamps), added a public Lightbulbs page, and renamed Tech/Stacks to Experiments. Also fixed a desktop header-content bleed-through bug, widened the center column below the xl breakpoint, moved the header photo to the left of its text, and replaced the default browser scrollbar with a near-background-color one. DRYness dipped 1 point (59% -> 58%), still comfortably inside the healthy band -- consistent with a large amount of genuinely new page content and a recursive nav component rather than duplicated logic."
+  },
+  {
+    "date": "2026-07-25",
+    "change": "services-payments",
+    "label": "after archiving services-payments",
+    "files": 222,
+    "lines": 16816,
+    "code": 14872,
+    "complexity": 879,
+    "uloc": 9695,
+    "drynessPercent": 58,
+    "note": "Added the first accounts and first payment-collecting code in this codebase: a passwordless magic-link account-auth module (app/accounts/), a Stripe billing module (app/billing/ -- StripeGateway, SubscriptionService, FulfillmentFeeService, the checkout/webhook/portal/fulfillment-fee routes), a seventh /services section (Troubleshooting & Questions) with a real Subscribe control, understated pricing copy on the other six sections, and 36 new pytest tests (real SQLite-backed persistence tests for Account/SignInToken/Subscription/FulfillmentFee, pure-function refund-math tests, and mocked-Stripe-SDK webhook-handler tests). DRYness held flat (58% -> 58%). Numbers already reflect this entry's own append."
   }
 ]

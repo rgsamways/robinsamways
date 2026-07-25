@@ -1,6 +1,6 @@
 ## MODIFIED Requirements
 
-### Requirement: Services page renders six sections behind a pill filter bar
+### Requirement: Services page renders seven sections behind a pill filter bar
 The `/services` route SHALL render a "$ Services" heading, followed by a short intro blurb, followed by a pill-style filter bar (matching `/dev-log`'s and `/farpost`'s existing pill-bar pattern) with one pill per section — Web Sites, Web Applications, Native Applications, Platform, Hourly, Field Documentation, and Troubleshooting & Questions — filtering which sections are shown. With no pills active, all seven sections are shown.
 
 #### Scenario: Visitor sees all seven sections by default
@@ -52,3 +52,14 @@ Any section on the Services page MAY display pricing information, shown in an un
 #### Scenario: The homepage never mentions pricing
 - **WHEN** a visitor loads the homepage
 - **THEN** no pricing information from any `/services` category appears anywhere on it
+
+### Requirement: The site remains free to browse outside Troubleshooting & Questions
+No part of the site other than actually subscribing to or managing the Troubleshooting & Questions plan SHALL require sign-in or payment. Browsing `/services`, reading any section's content or pricing information, and using the homepage contact form SHALL remain open to every visitor, signed in or not.
+
+#### Scenario: An unauthenticated visitor can read every section
+- **WHEN** a visitor who has never signed in loads `/services`
+- **THEN** they can read all seven sections in full, including pricing information, without being prompted to sign in or pay
+
+#### Scenario: The contact form stays open to everyone
+- **WHEN** a visitor who is not signed in and not a subscriber submits the homepage contact form
+- **THEN** the system accepts the submission the same as it does today, with no sign-in or payment required

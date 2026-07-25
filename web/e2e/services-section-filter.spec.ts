@@ -7,10 +7,11 @@ const SECTION_PILLS = [
   { label: "Platform", heading: "PLATFORM" },
   { label: "Hourly", heading: "HOURLY" },
   { label: "Field Documentation", heading: "FIELD_DOCUMENTATION" },
+  { label: "Troubleshooting & Questions", heading: "TROUBLESHOOTING_QUESTIONS" },
 ];
 
 test.describe("/services section filter pill bar", () => {
-  test("renders all six pills and every section by default", async ({ page }) => {
+  test("renders all seven pills and every section by default", async ({ page }) => {
     await page.goto("/services");
 
     const group = page.getByRole("group", { name: "filter services sections" });
@@ -35,7 +36,7 @@ test.describe("/services section filter pill bar", () => {
     }
   });
 
-  test("clearing every active pill restores all six sections", async ({ page }) => {
+  test("clearing every active pill restores all seven sections", async ({ page }) => {
     await page.goto("/services");
 
     const group = page.getByRole("group", { name: "filter services sections" });
