@@ -11,7 +11,7 @@ export default function FarpostUpgradePathPage() {
     <main className="py-10">
       <FarpostTabBar />
       <h1 className="text-xl font-bold">
-        <span className="text-accent">$</span> Farpost &middot; Upgrade Path
+        <span className="text-accent">$</span>{" "}Farpost &middot; Upgrade Path
       </h1>
       <p className="mt-2 text-sm text-muted">
         Planned upgrades and evolutions to the live build, beyond the

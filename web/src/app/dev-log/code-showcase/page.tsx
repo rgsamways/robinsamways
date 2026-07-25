@@ -11,7 +11,7 @@ export default function CodeShowcaseIndexPage() {
   return (
     <main className="py-10">
       <h1 className="text-xl font-bold">
-        <span className="text-accent">$</span> Dev Log &middot; Code Showcase
+        <span className="text-accent">$</span>{" "}Dev Log &middot; Code Showcase
       </h1>
       <p className="mt-2 text-sm leading-relaxed text-muted">
         Real, verified code pulled straight from the Farpost project — not

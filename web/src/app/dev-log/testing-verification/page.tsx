@@ -9,7 +9,7 @@ export default function TestingVerificationPage() {
   return (
     <main className="py-10">
       <h1 className="text-xl font-bold">
-        <span className="text-accent">$</span> Dev Log &middot; Testing &amp; Verification
+        <span className="text-accent">$</span>{" "}Dev Log &middot; Testing &amp; Verification
       </h1>
       <p className="mt-2 text-sm text-muted">How this site actually gets verified.</p>
 

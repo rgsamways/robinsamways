@@ -25,7 +25,7 @@ export default function VocareBuildPlanPage() {
   return (
     <main className="py-10">
       <h1 className="text-xl font-bold">
-        <span className="text-accent">$</span> Vocare &middot; Build Plan
+        <span className="text-accent">$</span>{" "}Vocare &middot; Build Plan
       </h1>
       <p className="mt-2 text-sm text-muted">
         The real module map (M0&ndash;M11) as of 2026-07-24 — provisional and

@@ -11,7 +11,7 @@ export default function FarpostOutlookPage() {
     <main className="py-10">
       <FarpostTabBar />
       <h1 className="text-xl font-bold">
-        <span className="text-accent">$</span> Farpost &middot; Outlook
+        <span className="text-accent">$</span>{" "}Farpost &middot; Outlook
       </h1>
       <p className="mt-2 text-sm text-muted">
         Where Farpost is headed beyond the near-term build plan.

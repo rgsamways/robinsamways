@@ -9,7 +9,7 @@ export default function VocareTechStackPage() {
   return (
     <main className="py-10">
       <h1 className="text-xl font-bold">
-        <span className="text-accent">$</span> Vocare &middot; Tech Stack
+        <span className="text-accent">$</span>{" "}Vocare &middot; Tech Stack
       </h1>
       <p className="mt-2 text-sm text-muted">
         The converged siloes stack as it applies to Vocare, plus the

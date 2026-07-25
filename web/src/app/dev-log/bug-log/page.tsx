@@ -10,7 +10,7 @@ export default function BugLogPage() {
   return (
     <main className="py-10">
       <h1 className="text-xl font-bold">
-        <span className="text-accent">$</span> Dev Log &middot; Bug Log
+        <span className="text-accent">$</span>{" "}Dev Log &middot; Bug Log
       </h1>
       <p className="mt-2 text-sm leading-relaxed text-muted">
         Real bugs actually hit during development, each paired with the

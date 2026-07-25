@@ -13,7 +13,7 @@ export default function VocareCurrentMetricsPage() {
   return (
     <main className="py-10">
       <h1 className="text-xl font-bold">
-        <span className="text-accent">$</span> Vocare &middot; Current Metrics
+        <span className="text-accent">$</span>{" "}Vocare &middot; Current Metrics
       </h1>
       <p className="mt-2 text-sm text-muted">
         A dated, written status snapshot — not a live chart. Vocare&rsquo;s

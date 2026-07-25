@@ -11,7 +11,7 @@ export default function FarpostTechStackPage() {
     <main className="py-10">
       <FarpostTabBar />
       <h1 className="text-xl font-bold">
-        <span className="text-accent">$</span> Farpost &middot; Tech Stack
+        <span className="text-accent">$</span>{" "}Farpost &middot; Tech Stack
       </h1>
       <p className="mt-2 text-sm text-muted">
         The converged siloes stack as it applies to Farpost, plus the

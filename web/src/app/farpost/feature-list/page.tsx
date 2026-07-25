@@ -15,7 +15,7 @@ export default function FarpostFeatureListPage() {
     <main className="py-10">
       <FarpostTabBar />
       <h1 className="text-xl font-bold">
-        <span className="text-accent">$</span> Farpost &middot; Feature List
+        <span className="text-accent">$</span>{" "}Farpost &middot; Feature List
       </h1>
       <p className="mt-2 text-sm text-muted">
         Real and planned Farpost capabilities, each flagged shipped or

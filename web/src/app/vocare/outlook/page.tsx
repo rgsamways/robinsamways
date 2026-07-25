@@ -9,7 +9,7 @@ export default function VocareOutlookPage() {
   return (
     <main className="py-10">
       <h1 className="text-xl font-bold">
-        <span className="text-accent">$</span> Vocare &middot; Outlook
+        <span className="text-accent">$</span>{" "}Vocare &middot; Outlook
       </h1>
       <p className="mt-2 text-sm text-muted">
         The build itself is well-specified and mostly executed — the

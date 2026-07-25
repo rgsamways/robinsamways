@@ -13,7 +13,7 @@ export default function VocareFeatureListPage() {
   return (
     <main className="py-10">
       <h1 className="text-xl font-bold">
-        <span className="text-accent">$</span> Vocare &middot; Feature List
+        <span className="text-accent">$</span>{" "}Vocare &middot; Feature List
       </h1>
       <p className="mt-2 text-sm text-muted">
         Real and planned Vocare capabilities, each flagged shipped or

@@ -10,7 +10,7 @@ export default function GlossaryPage() {
   return (
     <main className="py-10">
       <h1 className="text-xl font-bold">
-        <span className="text-accent">$</span> Dev Log &middot; Glossary
+        <span className="text-accent">$</span>{" "}Dev Log &middot; Glossary
       </h1>
       <p className="mt-2 text-sm leading-relaxed text-muted">
         Translating a technical decision for someone who wasn&rsquo;t in the

@@ -10,7 +10,7 @@ export default function LightbulbsPage() {
   return (
     <main className="py-10">
       <h1 className="text-xl font-bold">
-        <span className="text-accent">$</span> Dev Log &middot; Lightbulbs
+        <span className="text-accent">$</span>{" "}Dev Log &middot; Lightbulbs
       </h1>
       <p className="mt-2 text-sm leading-relaxed text-muted">
         An idea doesn&rsquo;t need a build decision to be worth capturing —

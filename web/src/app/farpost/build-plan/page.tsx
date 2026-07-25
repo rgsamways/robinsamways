@@ -12,7 +12,7 @@ export default function FarpostBuildPlanPage() {
     <main className="py-10">
       <FarpostTabBar />
       <h1 className="text-xl font-bold">
-        <span className="text-accent">$</span> Farpost &middot; Build Plan
+        <span className="text-accent">$</span>{" "}Farpost &middot; Build Plan
       </h1>
       <p className="mt-2 text-sm text-muted">
         Forward build sequencing for the real Farpost rebuild, as far as it
