@@ -48,15 +48,25 @@ export default function DrawerNav() {
 
   return (
     <>
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        aria-label="Open navigation"
-        aria-expanded={open}
-        className="fixed left-4 top-4 z-30 flex h-9 w-9 items-center justify-center rounded-md border border-foreground/20 bg-background text-lg xl:hidden"
-      >
-        ☰
-      </button>
+      <div className="fixed left-4 top-4 z-30 flex items-center gap-4 xl:hidden">
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          aria-label="Open navigation"
+          aria-expanded={open}
+          className="flex h-9 w-9 items-center justify-center rounded-md border border-foreground/20 bg-background text-lg"
+        >
+          ☰
+        </button>
+        <Link
+          href="/"
+          aria-hidden="true"
+          tabIndex={-1}
+          className="flex h-9 items-center rounded-md border border-foreground/20 bg-background px-3 text-sm font-bold"
+        >
+          <span className="text-accent">$</span>&nbsp;Robin Samways
+        </Link>
+      </div>
 
       {open && (
         <div

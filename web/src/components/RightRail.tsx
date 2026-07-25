@@ -1,6 +1,7 @@
 "use client";
 
 import { Lightbulb, Settings } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { resolveInitialTheme, THEME_STORAGE_KEY, type Theme } from "./theme";
 
@@ -39,15 +40,23 @@ export default function RightRail() {
 
   return (
     <>
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        aria-label="Open display options"
-        aria-expanded={open}
-        className="fixed right-4 top-4 z-30 flex h-9 w-9 items-center justify-center rounded-md border border-foreground/20 bg-background xl:hidden"
-      >
-        <Settings className="h-5 w-5" />
-      </button>
+      <div className="fixed right-4 top-4 z-30 flex items-center gap-4 xl:hidden">
+        <Link
+          href="/sign-in"
+          className="flex h-9 items-center rounded-md border border-foreground/20 bg-background px-3 text-sm font-bold"
+        >
+          Sign In
+        </Link>
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          aria-label="Open display options"
+          aria-expanded={open}
+          className="flex h-9 w-9 items-center justify-center rounded-md border border-foreground/20 bg-background"
+        >
+          <Settings className="h-5 w-5" />
+        </button>
+      </div>
 
       {open && (
         <div
