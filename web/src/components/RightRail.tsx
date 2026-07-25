@@ -40,22 +40,27 @@ export default function RightRail() {
 
   return (
     <>
-      <div className="fixed right-4 top-4 z-30 flex items-center gap-4 xl:hidden">
-        <Link
-          href="/sign-in"
-          className="flex h-9 items-center rounded-md border border-foreground/20 bg-background px-3 text-sm font-bold"
-        >
-          Sign In
-        </Link>
-        <button
-          type="button"
-          onClick={() => setOpen(true)}
-          aria-label="Open display options"
-          aria-expanded={open}
-          className="flex h-9 w-9 items-center justify-center rounded-md border border-foreground/20 bg-background"
-        >
-          <Settings className="h-5 w-5" />
-        </button>
+      {/* Mirrors DrawerNav's shell so this group tracks the content
+          column's right edge instead of the viewport's — same box, right
+          edge instead of left. */}
+      <div className="pointer-events-none fixed inset-x-0 top-4 z-30 xl:hidden">
+        <div className="mx-auto flex max-w-6xl items-center justify-end gap-4 px-6">
+          <Link
+            href="/sign-in"
+            className="pointer-events-auto flex h-9 items-center rounded-md border border-foreground/20 bg-background px-3 text-sm font-bold"
+          >
+            Sign In
+          </Link>
+          <button
+            type="button"
+            onClick={() => setOpen(true)}
+            aria-label="Open display options"
+            aria-expanded={open}
+            className="pointer-events-auto flex h-9 w-9 items-center justify-center rounded-md border border-foreground/20 bg-background"
+          >
+            <Settings className="h-5 w-5" />
+          </button>
+        </div>
       </div>
 
       {open && (

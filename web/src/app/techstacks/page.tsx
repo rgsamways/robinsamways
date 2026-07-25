@@ -23,18 +23,19 @@ const PROJECTS = [
 ];
 
 export const metadata: Metadata = {
-  title: "Tech/Stacks · Robin Samways",
+  title: "Experiments · Robin Samways",
 };
 
 export default function TechStacksPage() {
   return (
     <main className="py-10">
       <h1 className="text-xl font-bold">
-        <span className="text-accent">$</span> Tech/Stacks
+        <span className="text-accent">$</span> Experiments
       </h1>
       <p className="mt-2 text-sm text-muted">
-        Ideas with no relation to Farpost &mdash; a place to try a stack
-        or a concept just to see if it can be built.
+        Standalone technical experiments with no relation to a named,
+        ongoing project like Farpost or Vocare &mdash; a place to try a
+        stack or a concept just to see if it can be built.
       </p>
 
       <TechStacksBrowser tags={TAGS} projects={PROJECTS} />

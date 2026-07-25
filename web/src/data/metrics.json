@@ -202,5 +202,17 @@
     "uloc": 7945,
     "drynessPercent": 59,
     "note": "Replaced the hamburger dropdown and stacked light/dark toggle with a real, site-wide DrawerNav/RightRail (sticky on desktop, sliding drawer on mobile), grouped nav surfacing /ops/deploy for the first time, and a simplified Header re-pinned at its own scroll offset. Unlike prior snapshots, this count also includes same-session uncommitted exploratory work (the isolated /prototype/homepage-drawer mock) that scc can't distinguish from the shipped change -- the delta isn't attributable to site-drawer-nav alone. DRYness dipped 1 point (60% -> 59%), still well inside the healthy band."
+  },
+  {
+    "date": "2026-07-24",
+    "change": "left-nav-restructure",
+    "label": "after archiving left-nav-restructure",
+    "files": 204,
+    "lines": 15035,
+    "code": 13415,
+    "complexity": 751,
+    "uloc": 8776,
+    "drynessPercent": 58,
+    "note": "Restructured the left nav into a recursive collapsible tree (Work > Farpost/Vocare project-record submenus, Writing > Dev Log > Code Showcase nested three deep), added twelve new Farpost/Vocare project-record pages backed by two new per-silo status-data files, split Dev Log into a hub plus six real routes (Code Showcase now one route per article with UTC/Eastern timestamps), added a public Lightbulbs page, and renamed Tech/Stacks to Experiments. Also fixed a desktop header-content bleed-through bug, widened the center column below the xl breakpoint, moved the header photo to the left of its text, and replaced the default browser scrollbar with a near-background-color one. DRYness dipped 1 point (59% -> 58%), still comfortably inside the healthy band -- consistent with a large amount of genuinely new page content and a recursive nav component rather than duplicated logic."
   }
 ]

@@ -1,0 +1,62 @@
+{
+  "asOf": "2026-07-24",
+  "deploymentStatus": "Live since 2026-07-21 on Railway (API) and Vercel (app), per Vocare's own M0 milestone. Stripe billing is still running in test mode.",
+  "summary": "Vocare is an AI-conversational career/interview practice app sold as a $29 one-time lifetime fee, not a subscription — 7 of its 12 planned modules (M0-M5, M2.1) are built and live, with progress tracking (M6) actively in development.",
+  "highlights": [
+    "The core conversation engine never surfaces a score, grade, or evaluative language mid-session — called the product's central point of differentiation from subscription competitors that judge in real time.",
+    "A live, per-turn crisis-safety check runs independently of the async coaching pipeline, since an open-ended \"talk about your career\" format can surface real distress a scripted chatbot wouldn't.",
+    "A fair-use velocity cap protects the $29-lifetime-unlimited model from the kind of runaway-cost failure mode an uncapped unlimited lifetime offer can create."
+  ],
+  "features": [
+    {
+      "name": "Passwordless magic-link auth, $29 paywall, 3 free sessions, age/country capture",
+      "status": "shipped",
+      "note": "M1 — Stripe still running in test mode."
+    },
+    {
+      "name": "Core conversation engine (question arc, adaptive follow-up, crisis-safety net)",
+      "status": "shipped",
+      "note": "M2 — no real-time scoring, by design."
+    },
+    {
+      "name": "App navigation shell (Conversation / Feedback / Progress & Anchors / Profile)",
+      "status": "shipped",
+      "note": "M2.1"
+    },
+    {
+      "name": "Voice capture (Web Speech API / Expo speech recognition)",
+      "status": "shipped",
+      "note": "M3 — one real-device re-verification still owed."
+    },
+    {
+      "name": "Async post-session mining pipeline",
+      "status": "shipped",
+      "note": "M4 — deliberately decoupled in timing from the live conversation."
+    },
+    {
+      "name": "Deterministic, template-based coaching feedback",
+      "status": "shipped",
+      "note": "M5 — never a numeric score."
+    },
+    {
+      "name": "Progress over time (session history, trend indicators, anchors)",
+      "status": "planned",
+      "note": "M6 — actively in development."
+    },
+    {
+      "name": "Consent-gated aggregate data tiers (Tier 2b, Tier 2a, Tier 1)",
+      "status": "planned",
+      "note": "M7-M9 — not started."
+    },
+    {
+      "name": "Android packaging (Expo shell, Play Store)",
+      "status": "planned",
+      "note": "M10 — not conditional on anything else."
+    },
+    {
+      "name": "Employer-facing surface (second revenue line)",
+      "status": "planned",
+      "note": "M11 — deliberately last, gated behind unresolved design questions."
+    }
+  ]
+}

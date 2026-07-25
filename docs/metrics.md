@@ -361,3 +361,26 @@ Replaced the header's hamburger dropdown and stacked light/dark toggle with a re
 ULOC: 7,945 · **DRYness: 59%**
 
 Delta vs. previous: +15 files, +1,169 lines, +995 code lines, +44 complexity, DRYness dipped 1 point (60% → 59%) — still comfortably inside the healthy band, no `docs/issues.md` entry warranted. The dip and most of the file/line growth trace to the mock (five parallel theme-token tables, several small never-reused-elsewhere components) rather than the real shipped nav, which mostly replaced existing components 1:1.
+
+### 2026-07-24 — after archiving `left-nav-restructure`
+
+Restructured the left nav from a flat link list into a recursive collapsible tree (up to 3 levels deep): Work gained Farpost and Vocare submenus, each with six new project-record pages (Build Plan, Feature List, Tech Stack, Upgrade Path, Current Metrics, Outlook), backed by two new per-silo status-data files (`farpost-status.json`, `vocare-status.json`) so the fast-changing pages update via a data-file edit rather than a prose rewrite. Writing's Dev Log split from one pill-filtered page into a hub plus six real routes, with Code Showcase going a level deeper still into one route per article (each carrying a UTC timestamp alongside its Eastern-time equivalent). Added a public Lightbulbs page surfacing `docs/lightbulbs/` for the first time, reframed the Glossary as a communication-skill demonstration, and renamed Tech/Stacks to Experiments. Also fixed several things Robin found during review: a desktop header-content bleed-through bug (the mobile-only content mask needed a desktop equivalent scoped to just the content column, not the sidebars), the center content column not expanding to use available width below the `xl` breakpoint, the header photo moved to the left of its text, and the default browser scrollbar replaced with one closer to the background color.
+
+| Language | Files | Lines | Code | Complexity |
+|---|---|---|---|---|
+| TypeScript | 113 | 9,427 | 8,689 | 469 |
+| Python | 28 | 2,635 | 2,144 | 173 |
+| XML | 21 | 458 | 458 | 0 |
+| JavaScript | 14 | 984 | 808 | 72 |
+| Apex | 7 | 780 | 634 | 37 |
+| JSON | 7 | 366 | 366 | 0 |
+| Plain Text | 5 | 21 | 21 | 0 |
+| Markdown | 3 | 185 | 146 | 0 |
+| CSS | 2 | 88 | 65 | 0 |
+| HTML | 2 | 84 | 77 | 0 |
+| TOML | 2 | 7 | 7 | 0 |
+| **Total** | **204** | **15,035** | **13,415** | **751** |
+
+ULOC: 8,776 · **DRYness: 58%**
+
+Delta vs. previous: +33 files, +1,661 lines, +1,493 code lines, +63 complexity, DRYness dipped 1 point (59% → 58%) — still comfortably inside the healthy band, no `docs/issues.md` entry warranted. File count reconciles with the shape of the work: +31 TypeScript files (twelve new project-record pages, the Farpost/Vocare shared `project-record/` components, six new Dev Log route files, the Code Showcase index/article routes plus a timestamp utility, the Lightbulbs page and data, the recursive `navTree.ts` nav-matching logic, and their accompanying unit tests) and +2 JSON (`farpost-status.json`, `vocare-status.json`); `CSS`'s single existing file (`globals.css`) grew by 28 lines for the new scrollbar styling, not a new file. Python/API were untouched this change. The 1-point dip is consistent with a large volume of genuinely new page content and a recursive nav component, not duplicated logic.

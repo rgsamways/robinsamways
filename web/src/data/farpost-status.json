@@ -1,0 +1,40 @@
+{
+  "asOf": "2026-07-24",
+  "deploymentStatus": "In active development in siloes/farpost/, not yet deployed to a public URL. The original production system (MongoDB, FastAPI, Twilio) remains live and unaffected while the rebuild proceeds separately.",
+  "summary": "The rebuild is porting Farpost's live dispatch and building-record logic off its original MongoDB/FastAPI/Twilio stack onto the converged siloes stack (Fastify, Drizzle, Postgres, better-auth), rather than starting from a blank slate.",
+  "highlights": [
+    "Original production system remains live and untouched while the rebuild proceeds in its own separate, gitignored repository.",
+    "Passwordless magic-link auth (better-auth), matching Vocare's proven pattern, is the identity model for the rebuild.",
+    "Reputation-based dispatch ranking and NFC-tagged building records are the two pieces of domain logic being carried over deliberately, not reinvented from scratch."
+  ],
+  "features": [
+    {
+      "name": "Rural claims dispatch (reputation-ranked professional matching)",
+      "status": "planned",
+      "note": "Live today on the original stack; being ported onto the converged siloes stack.",
+      "href": "/farpost/farpost-dispatch"
+    },
+    {
+      "name": "NFC-tagged building records with per-category fact staleness",
+      "status": "planned",
+      "note": "Live today on the original stack; being ported onto the converged siloes stack."
+    },
+    {
+      "name": "Passwordless (better-auth) account sign-in",
+      "status": "planned",
+      "note": "New for the rebuild — the original stack has no equivalent today."
+    },
+    {
+      "name": "Atlas — rural-density building map overlay",
+      "status": "planned",
+      "note": "A portfolio-demo idea, not yet built on either stack, slotted into this build plan.",
+      "href": "/farpost/farpost-atlas"
+    },
+    {
+      "name": "Pulse — AI-assisted coaching tips for field technicians",
+      "status": "planned",
+      "note": "A portfolio-demo idea, not yet built on either stack, slotted into this build plan.",
+      "href": "/farpost/farpost-pulse"
+    }
+  ]
+}

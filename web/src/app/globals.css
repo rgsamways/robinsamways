@@ -30,3 +30,31 @@ body {
   color: var(--foreground);
   font-family: var(--font-mono), ui-monospace, monospace;
 }
+
+/* A thin scrollbar close to the background color site-wide, so a scrolling
+   panel (the left nav's own overflow-y-auto, in particular) doesn't render
+   the browser's default stark white/gray bar against a dark theme. Uses
+   --skills-bg (already a subtle near-background tone) rather than --muted,
+   only brightening to --muted on hover so it's still findable. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--skills-bg) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--skills-bg);
+  border-radius: 8px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
+}

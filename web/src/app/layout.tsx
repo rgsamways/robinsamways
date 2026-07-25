@@ -50,14 +50,24 @@ export default function RootLayout({
             `,
           }}
         />
+        {/* Mirrors the real nav/content/rail column widths below so this
+            mask covers exactly the content column's own top gap at every
+            breakpoint — full width on mobile (nav/rail are position:fixed,
+            out of flow there), narrowed to the middle column once xl:
+            widths put the sidebars back in flow, so it never paints over
+            either sidebar's own sticky-to-the-top content. */}
         <div
           aria-hidden="true"
-          className="fixed inset-x-0 top-0 z-20 h-16 bg-background xl:hidden"
-        />
+          className="pointer-events-none fixed inset-x-0 top-0 z-20 mx-auto flex max-w-6xl"
+        >
+          <div className="hidden xl:block xl:w-64 xl:shrink-0" />
+          <div className="h-16 flex-1 bg-background xl:h-10" />
+          <div className="hidden xl:block xl:w-16 xl:shrink-0" />
+        </div>
         <div className="mx-auto flex max-w-6xl">
           <DrawerNav />
           <div className="min-w-0 flex-1 px-6 pb-10 pt-16 xl:px-10 xl:pt-10">
-            <div className="max-w-3xl">
+            <div className="w-full xl:max-w-3xl">
               <Header />
               {children}
               <FeedbackWidget />
