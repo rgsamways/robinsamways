@@ -407,3 +407,26 @@ Added the first accounts and first payment-collecting code in this codebase: a p
 ULOC: 9,695 · **DRYness: 58%**
 
 Delta vs. previous: +18 files, +1,781 lines, +1,457 code lines, +128 complexity, DRYness flat (58% → 58%). File count reconciles exactly with the new files added: 4 in `api/app/accounts/`, 6 in `api/app/billing/`, 4 new pytest files (`test_accounts.py`, `test_billing_models.py`, `test_billing_webhooks.py`, `test_refund.py`), and 4 in `web/src` (`components/session.ts`, `components/VerifySignIn.tsx`, `components/services/SubscribeControl.tsx`, `app/sign-in/verify/page.tsx`) — 4+6+4+4 = 18. DRYness holding exactly flat is consistent with this being almost entirely new, non-duplicative logic (a new account/billing domain, not a variation on existing patterns) rather than copy-pasted code. Numbers already reflect this entry's own append to `web/src/data/metrics.json`.
+
+### 2026-07-25 — after archiving `page-outline-nav`
+
+Added the "on this page" outline flyout: `PageOutline.tsx` (client-side DOM scan of `main h2[id]` on mount and route change, `IntersectionObserver`-driven active-section highlighting, Escape/backdrop/close-button dismissal matching `SetupGallery`'s existing modal convention), and a `slugify`/`resolveUniqueSlug` utility giving every `SectionHeader` a stable, same-page-collision-safe anchor `id` for the first time (21 existing consumers, zero per-page opt-in required). `RightRail.tsx` was reorganized: the mobile top bar dropped to a single cog button, and the shared rail element gained a new Account icon and this change's outline trigger — final top-to-bottom order Account → Sign In → theme toggle → outline trigger. A minimal `/account` stub page ships as the Account icon's destination, an honest "not live yet" placeholder standing in for the real account hub captured at `docs/lightbulbs/rsw-lb-account-hub-private-chat.md`. 9 new Vitest tests (slug generation and collision suffixing) and 8 new Playwright e2e tests (trigger visibility at the 0/1/2+ section boundary, ordered listing, click-to-scroll-and-close, all three dismissal methods, active-section highlighting).
+
+| Language | Files | Lines | Code | Complexity |
+|---|---|---|---|---|
+| TypeScript | 122 | 9,977 | 9,141 | 524 |
+| Python | 42 | 4,087 | 3,305 | 265 |
+| XML | 21 | 458 | 458 | 0 |
+| JavaScript | 14 | 984 | 808 | 72 |
+| Apex | 7 | 780 | 634 | 37 |
+| JSON | 7 | 402 | 402 | 0 |
+| Plain Text | 5 | 24 | 24 | 0 |
+| Markdown | 3 | 185 | 146 | 0 |
+| CSS | 2 | 88 | 65 | 0 |
+| HTML | 2 | 84 | 77 | 0 |
+| TOML | 2 | 8 | 8 | 0 |
+| **Total** | **227** | **17,077** | **15,068** | **898** |
+
+ULOC: 9,864 · **DRYness: 58%**
+
+Delta vs. previous: +5 files, +261 lines, +196 code lines, +19 complexity, DRYness flat (58% → 58%). File count reconciles exactly: `PageOutline.tsx`, `slugify.ts`, `slugify.test.ts`, `page-outline.spec.ts`, and `app/account/page.tsx` — 5 new files, nothing else added or removed. `SectionHeader.tsx`'s own edit (the new `id` + `cache()` registry) was in-place, not a new file. DRYness holding exactly flat matches a small, genuinely new, non-duplicative feature — no copy-pasted logic. Numbers already reflect this entry's own append to `web/src/data/metrics.json`.

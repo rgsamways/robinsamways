@@ -226,5 +226,17 @@
     "uloc": 9695,
     "drynessPercent": 58,
     "note": "Added the first accounts and first payment-collecting code in this codebase: a passwordless magic-link account-auth module (app/accounts/), a Stripe billing module (app/billing/ -- StripeGateway, SubscriptionService, FulfillmentFeeService, the checkout/webhook/portal/fulfillment-fee routes), a seventh /services section (Troubleshooting & Questions) with a real Subscribe control, understated pricing copy on the other six sections, and 36 new pytest tests (real SQLite-backed persistence tests for Account/SignInToken/Subscription/FulfillmentFee, pure-function refund-math tests, and mocked-Stripe-SDK webhook-handler tests). DRYness held flat (58% -> 58%). Numbers already reflect this entry's own append."
+  },
+  {
+    "date": "2026-07-25",
+    "change": "page-outline-nav",
+    "label": "after archiving page-outline-nav",
+    "files": 227,
+    "lines": 17077,
+    "code": 15068,
+    "complexity": 898,
+    "uloc": 9864,
+    "drynessPercent": 58,
+    "note": "Added an 'on this page' outline flyout (PageOutline.tsx -- client-side DOM scan of main h2[id], IntersectionObserver active-section tracking, Escape/backdrop/close-button dismissal matching SetupGallery's modal convention), a slugify/resolveUniqueSlug utility giving every SectionHeader a stable, collision-safe anchor id, a reorganized RightRail (mobile top bar down to just the cog; the shared rail gained Account and the outline trigger, final order Account -> Sign In -> theme toggle -> outline trigger), and a minimal /account stub page. DRYness held flat (58% -> 58%). Numbers already reflect this entry's own append."
   }
 ]

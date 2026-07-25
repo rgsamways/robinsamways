@@ -1,8 +1,9 @@
 "use client";
 
-import { Lightbulb, LogIn, Settings } from "lucide-react";
+import { Lightbulb, LogIn, Settings, User } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import PageOutline from "./PageOutline";
 import { resolveInitialTheme, THEME_STORAGE_KEY, type Theme } from "./theme";
 
 // Mirrors DrawerNav.tsx's responsive drawer mechanism on the opposite edge.
@@ -45,13 +46,6 @@ export default function RightRail() {
           edge instead of left. */}
       <div className="pointer-events-none fixed inset-x-0 top-4 z-30 xl:hidden">
         <div className="mx-auto flex max-w-6xl items-center justify-end gap-4 px-6">
-          <Link
-            href="/sign-in"
-            aria-label="Sign in"
-            className="pointer-events-auto flex h-9 w-9 items-center justify-center rounded-md border border-foreground/20 bg-background"
-          >
-            <LogIn className="h-5 w-5" />
-          </Link>
           <button
             type="button"
             onClick={() => setOpen(true)}
@@ -78,6 +72,13 @@ export default function RightRail() {
         } xl:sticky xl:top-0 xl:z-auto xl:h-screen xl:w-16 xl:translate-x-0 xl:shrink-0`}
       >
         <Link
+          href="/account"
+          aria-label="Account"
+          className="flex h-10 w-10 items-center justify-center rounded-md hover:bg-skills-bg"
+        >
+          <User className="h-5 w-5" />
+        </Link>
+        <Link
           href="/sign-in"
           aria-label="Sign in"
           className="flex h-10 w-10 items-center justify-center rounded-md hover:bg-skills-bg"
@@ -93,6 +94,7 @@ export default function RightRail() {
         >
           <Lightbulb className={isLight ? "h-5 w-5 text-accent" : "h-5 w-5 text-muted opacity-50"} />
         </button>
+        <PageOutline />
       </div>
     </>
   );
