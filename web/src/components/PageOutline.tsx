@@ -3,6 +3,7 @@
 import { List } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
 type Section = { id: string; title: string };
 
@@ -96,48 +97,59 @@ export default function PageOutline() {
         <List className="h-5 w-5" />
       </button>
 
-      {open && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-label="On this page"
-          onClick={() => setOpen(false)}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
-        >
+      {/* Portalled to document.body: RightRail's own rail element carries a
+          CSS transform (the mobile slide animation, forced on at xl+ too)
+          unconditionally, and a transformed ancestor becomes the containing
+          block for `position: fixed` descendants — so rendered in place,
+          this panel's `fixed inset-0` would resolve against the rail's own
+          box, not the viewport. `open` only ever flips true from the
+          trigger's onClick, which can't fire before mount/hydration, so
+          this never runs during the server-rendered pass — no `document`
+          access before `document` exists. */}
+      {open &&
+        createPortal(
           <div
-            onClick={(event) => event.stopPropagation()}
-            className="relative flex max-h-full w-full max-w-sm flex-col overflow-auto border border-accent bg-background p-4"
+            role="dialog"
+            aria-modal="true"
+            aria-label="On this page"
+            onClick={() => setOpen(false)}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
           >
-            <button
-              type="button"
-              onClick={() => setOpen(false)}
-              aria-label="Close"
-              className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center text-lg text-accent hover:bg-accent hover:text-background"
+            <div
+              onClick={(event) => event.stopPropagation()}
+              className="relative flex max-h-full w-full max-w-sm flex-col overflow-auto border border-accent bg-background p-4"
             >
-              ×
-            </button>
-            <p className="mb-3 pr-8 text-sm font-bold text-accent">On this page</p>
-            <ul className="space-y-1 text-sm">
-              {sections.map((section) => (
-                <li key={section.id}>
-                  <button
-                    type="button"
-                    onClick={() => handleSelect(section.id)}
-                    aria-current={section.id === activeId ? "true" : undefined}
-                    className={
-                      section.id === activeId
-                        ? "block w-full rounded-md px-2 py-1 text-left font-semibold text-accent"
-                        : "block w-full rounded-md px-2 py-1 text-left text-muted transition hover:text-accent"
-                    }
-                  >
-                    {section.title}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      )}
+              <button
+                type="button"
+                onClick={() => setOpen(false)}
+                aria-label="Close"
+                className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center text-lg text-accent hover:bg-accent hover:text-background"
+              >
+                ×
+              </button>
+              <p className="mb-3 pr-8 text-sm font-bold text-accent">On this page</p>
+              <ul className="space-y-1 text-sm">
+                {sections.map((section) => (
+                  <li key={section.id}>
+                    <button
+                      type="button"
+                      onClick={() => handleSelect(section.id)}
+                      aria-current={section.id === activeId ? "true" : undefined}
+                      className={
+                        section.id === activeId
+                          ? "block w-full rounded-md px-2 py-1 text-left font-semibold text-accent"
+                          : "block w-full rounded-md px-2 py-1 text-left text-muted transition hover:text-accent"
+                      }
+                    >
+                      {section.title}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>,
+          document.body
+        )}
     </>
   );
 }
