@@ -90,6 +90,38 @@ test.describe("page outline flyout", () => {
     ).toHaveAttribute("aria-current", "true");
   });
 
+  test("clicking a trailing section near the page bottom marks it active immediately, even if it can never satisfy the observer's active band", async ({
+    page,
+  }) => {
+    await page.goto("/");
+
+    await page.getByRole("button", { name: "On this page" }).click();
+    let dialog = page.getByRole("dialog", { name: "On this page" });
+    await dialog.locator("ul button", { hasText: "CONTINUING_EDUCATION" }).click();
+    await expect(dialog).toBeHidden();
+
+    // Reopen to inspect the marked-active state without waiting on any
+    // scroll animation or IntersectionObserver callback to settle first.
+    await page.getByRole("button", { name: "On this page" }).click();
+    dialog = page.getByRole("dialog", { name: "On this page" });
+    await expect(
+      dialog.locator("ul button", { hasText: "CONTINUING_EDUCATION" })
+    ).toHaveAttribute("aria-current", "true");
+
+    await dialog.locator("ul button", { hasText: "CONTACT" }).click();
+    await expect(dialog).toBeHidden();
+
+    await page.getByRole("button", { name: "On this page" }).click();
+    dialog = page.getByRole("dialog", { name: "On this page" });
+    await expect(dialog.locator("ul button", { hasText: "CONTACT" })).toHaveAttribute(
+      "aria-current",
+      "true"
+    );
+    await expect(
+      dialog.locator("ul button", { hasText: "CONTINUING_EDUCATION" })
+    ).not.toHaveAttribute("aria-current", "true");
+  });
+
   test("a page with zero sections shows no outline trigger", async ({ page }) => {
     await page.goto("/sign-in");
 

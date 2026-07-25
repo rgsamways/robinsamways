@@ -72,6 +72,13 @@ export default function RightRail() {
         } xl:sticky xl:top-0 xl:z-auto xl:h-screen xl:w-16 xl:translate-x-0 xl:shrink-0`}
       >
         <Link
+          href="/settings"
+          aria-label="Site settings"
+          className="flex h-10 w-10 items-center justify-center rounded-md hover:bg-skills-bg"
+        >
+          <Settings className="h-5 w-5" />
+        </Link>
+        <Link
           href="/account"
           aria-label="Account"
           className="flex h-10 w-10 items-center justify-center rounded-md hover:bg-skills-bg"

@@ -2,7 +2,7 @@
 
 import { List } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 type Section = { id: string; title: string };
@@ -30,6 +30,27 @@ export default function PageOutline() {
   const [sections, setSections] = useState<Section[]>([]);
   const [open, setOpen] = useState(false);
   const [activeId, setActiveId] = useState<string | null>(null);
+
+  // While true, the observer below re-asserts "first visible" every time it
+  // fires but must not act on it — a just-clicked selection is still
+  // authoritative until its scroll settles. Without this, a click-triggered
+  // smooth scroll to a section that can never satisfy the observer's own
+  // rootMargin band gets silently overwritten mid-flight, back to whatever
+  // the observer still considers visible.
+  const suppressObserverRef = useRef(false);
+  const suppressTimeoutRef = useRef<number | undefined>(undefined);
+  const clearSuppressionRef = useRef<(() => void) | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (suppressTimeoutRef.current !== undefined) {
+        window.clearTimeout(suppressTimeoutRef.current);
+      }
+      if (clearSuppressionRef.current) {
+        window.removeEventListener("scrollend", clearSuppressionRef.current);
+      }
+    };
+  }, []);
 
   // Re-scan on mount and on every route change — a fresh page's headings
   // replace the previous page's entirely, and any open panel closes with it.
@@ -67,6 +88,7 @@ export default function PageOutline() {
           if (entry.isIntersecting) intersecting.add(entry.target.id);
           else intersecting.delete(entry.target.id);
         }
+        if (suppressObserverRef.current) return;
         const firstVisible = sections.find((section) => intersecting.has(section.id));
         if (firstVisible) setActiveId(firstVisible.id);
       },
@@ -82,6 +104,45 @@ export default function PageOutline() {
 
   function handleSelect(id: string) {
     setOpen(false);
+    // Don't wait on the IntersectionObserver to confirm this — a short
+    // trailing section near the bottom of the page may never satisfy its
+    // rootMargin band if the document can't scroll far enough to bring it
+    // there, which would otherwise leave the previously active entry
+    // highlighted after a click that clearly went elsewhere.
+    setActiveId(id);
+
+    // Suppress the observer until this click's own smooth scroll settles —
+    // it keeps firing mid-scroll and would otherwise silently overwrite the
+    // selection above with whatever it still considers "first visible."
+    suppressObserverRef.current = true;
+    if (suppressTimeoutRef.current !== undefined) {
+      window.clearTimeout(suppressTimeoutRef.current);
+    }
+    // A second click before the first one's scroll settled would otherwise
+    // leave the first click's listener attached — if it later fires it
+    // would clear suppression for *this* click, since both closures share
+    // the same ref. Remove it before installing the new one.
+    if (clearSuppressionRef.current) {
+      window.removeEventListener("scrollend", clearSuppressionRef.current);
+    }
+
+    const clearSuppression = () => {
+      suppressObserverRef.current = false;
+      window.removeEventListener("scrollend", clearSuppression);
+      if (suppressTimeoutRef.current !== undefined) {
+        window.clearTimeout(suppressTimeoutRef.current);
+        suppressTimeoutRef.current = undefined;
+      }
+      clearSuppressionRef.current = null;
+    };
+    clearSuppressionRef.current = clearSuppression;
+
+    window.addEventListener("scrollend", clearSuppression, { once: true });
+    // Fallback for browsers without `scrollend` support — matches a
+    // typical smooth-scroll's settle time, so suppression still lifts even
+    // there.
+    suppressTimeoutRef.current = window.setTimeout(clearSuppression, 1000);
+
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
