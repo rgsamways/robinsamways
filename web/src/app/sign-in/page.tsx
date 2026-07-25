@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import PageHeading from "@/components/PageHeading";
 import SignInForm from "@/components/SignInForm";
 
 export const metadata: Metadata = {
@@ -8,13 +9,10 @@ export const metadata: Metadata = {
 export default function SignInPage() {
   return (
     <main className="py-10">
-      <h1 className="text-xl font-bold">
-        <span className="text-accent">$</span> Sign In
-      </h1>
-      <p className="mt-2 text-sm text-muted">
+      <PageHeading title="Sign In">
         Passwordless — enter your email and we&rsquo;ll send you a link. New
         here? Signing in creates your account automatically.
-      </p>
+      </PageHeading>
 
       <div className="mt-8">
         <SignInForm />

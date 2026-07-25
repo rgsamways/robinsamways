@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import PageHeading from "@/components/PageHeading";
 import SectionHeader from "@/components/SectionHeader";
 import FarpostTabBar from "@/components/farpost/FarpostTabBar";
 
@@ -10,14 +11,11 @@ export default function FarpostDispatchPage() {
   return (
     <main className="py-10">
       <FarpostTabBar />
-      <h1 className="text-xl font-bold">
-        <span className="text-accent">$</span> Farpost Dispatch
-      </h1>
-      <p className="mt-2 text-sm text-muted">
+      <PageHeading title="Farpost Dispatch">
         A Salesforce-native partner network — Experience Cloud, Apex, and an
         AI-assisted matching service, built to prove Salesforce skills from{" "}
         <em>inside</em> the platform, not just integrating with it.
-      </p>
+      </PageHeading>
 
       <section>
         <SectionHeader title="OVERVIEW" />

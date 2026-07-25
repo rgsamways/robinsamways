@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import PageHeading from "@/components/PageHeading";
 import StatusSnapshot from "@/components/project-record/StatusSnapshot";
 import { parseProjectStatus } from "@/components/project-record/types";
 import rawVocareStatus from "@/data/vocare-status.json";
@@ -12,14 +13,11 @@ export default function VocareCurrentMetricsPage() {
 
   return (
     <main className="py-10">
-      <h1 className="text-xl font-bold">
-        <span className="text-accent">$</span>{" "}Vocare &middot; Current Metrics
-      </h1>
-      <p className="mt-2 text-sm text-muted">
+      <PageHeading title="Vocare · Current Metrics">
         A dated, written status snapshot — not a live chart. Vocare&rsquo;s
         real repository is separate from this site&rsquo;s build process, so
         this is updated by hand as real progress happens.
-      </p>
+      </PageHeading>
 
       <div className="mt-8">
         <StatusSnapshot status={status} />

@@ -1,6 +1,6 @@
 "use client";
 
-import { Lightbulb, Settings } from "lucide-react";
+import { Lightbulb, LogIn, Settings } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { resolveInitialTheme, THEME_STORAGE_KEY, type Theme } from "./theme";
@@ -47,9 +47,10 @@ export default function RightRail() {
         <div className="mx-auto flex max-w-6xl items-center justify-end gap-4 px-6">
           <Link
             href="/sign-in"
-            className="pointer-events-auto flex h-9 items-center rounded-md border border-foreground/20 bg-background px-3 text-sm font-bold"
+            aria-label="Sign in"
+            className="pointer-events-auto flex h-9 w-9 items-center justify-center rounded-md border border-foreground/20 bg-background"
           >
-            Sign In
+            <LogIn className="h-5 w-5" />
           </Link>
           <button
             type="button"
@@ -76,6 +77,13 @@ export default function RightRail() {
           open ? "translate-x-0" : "translate-x-full"
         } xl:sticky xl:top-0 xl:z-auto xl:h-screen xl:w-16 xl:translate-x-0 xl:shrink-0`}
       >
+        <Link
+          href="/sign-in"
+          aria-label="Sign in"
+          className="flex h-10 w-10 items-center justify-center rounded-md hover:bg-skills-bg"
+        >
+          <LogIn className="h-5 w-5" />
+        </Link>
         <button
           type="button"
           aria-label={isLight ? "Switch to dark mode" : "Switch to light mode"}

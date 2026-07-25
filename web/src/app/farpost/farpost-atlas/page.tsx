@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import PageHeading from "@/components/PageHeading";
 import SectionHeader from "@/components/SectionHeader";
 import AtlasMapLoader from "@/components/farpost-atlas/AtlasMapLoader";
 import FarpostTabBar from "@/components/farpost/FarpostTabBar";
@@ -11,13 +12,10 @@ export default function FarpostAtlasPage() {
   return (
     <main className="py-10">
       <FarpostTabBar />
-      <h1 className="text-xl font-bold">
-        <span className="text-accent">$</span> Farpost Atlas
-      </h1>
-      <p className="mt-2 text-sm text-muted">
+      <PageHeading title="Farpost Atlas">
         A real geospatial join against Statistics Canada census boundary
         data — real GIS work, not pins on a map.
-      </p>
+      </PageHeading>
 
       <section>
         <SectionHeader title="ORIGIN_STORY" />

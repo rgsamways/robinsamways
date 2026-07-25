@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import PageHeading from "@/components/PageHeading";
 import Timestamp from "@/components/dev-log/Timestamp";
 import { CODE_SHOWCASE_ENTRIES } from "@/components/dev-log/codeShowcase";
 
@@ -10,14 +11,14 @@ export const metadata: Metadata = {
 export default function CodeShowcaseIndexPage() {
   return (
     <main className="py-10">
-      <h1 className="text-xl font-bold">
-        <span className="text-accent">$</span>{" "}Dev Log &middot; Code Showcase
-      </h1>
-      <p className="mt-2 text-sm leading-relaxed text-muted">
+      <PageHeading
+        title="Dev Log · Code Showcase"
+        descriptionClassName="mt-2 text-sm leading-relaxed text-muted"
+      >
         Real, verified code pulled straight from the Farpost project — not
         illustrative examples — each paired with the plain-language
         reasoning and the engineering judgment behind it.
-      </p>
+      </PageHeading>
 
       <ul className="mt-8 space-y-6">
         {CODE_SHOWCASE_ENTRIES.map((entry) => (

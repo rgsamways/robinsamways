@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import PageHeading from "@/components/PageHeading";
 import SectionHeader from "@/components/SectionHeader";
 
 export const metadata: Metadata = {
@@ -8,13 +9,10 @@ export const metadata: Metadata = {
 export default function SreditorPage() {
   return (
     <main className="py-10">
-      <h1 className="text-xl font-bold">
-        <span className="text-accent">$</span> Sreditor
-      </h1>
-      <p className="mt-2 text-sm text-muted">
+      <PageHeading title="Sreditor">
         A CLI tool that judges SR&amp;ED tax-credit eligibility from a
         project&rsquo;s own OpenSpec change history, in near real time.
-      </p>
+      </PageHeading>
 
       <section>
         <SectionHeader title="ORIGIN_STORY" />

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import PageHeading from "@/components/PageHeading";
 import FeatureStatusList from "@/components/project-record/FeatureStatusList";
 import { parseProjectStatus } from "@/components/project-record/types";
 import rawVocareStatus from "@/data/vocare-status.json";
@@ -12,13 +13,10 @@ export default function VocareFeatureListPage() {
 
   return (
     <main className="py-10">
-      <h1 className="text-xl font-bold">
-        <span className="text-accent">$</span>{" "}Vocare &middot; Feature List
-      </h1>
-      <p className="mt-2 text-sm text-muted">
+      <PageHeading title="Vocare · Feature List">
         Real and planned Vocare capabilities, each flagged shipped or
         planned against the live product.
-      </p>
+      </PageHeading>
 
       <div className="mt-8">
         <FeatureStatusList features={status.features} />

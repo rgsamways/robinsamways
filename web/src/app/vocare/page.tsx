@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import PageHeading from "@/components/PageHeading";
 
 export const metadata: Metadata = {
   title: "Vocare · Robin Samways",
@@ -17,10 +18,10 @@ const PAGES = [
 export default function VocarePage() {
   return (
     <main className="py-10">
-      <h1 className="text-xl font-bold">
-        <span className="text-accent">$</span> Vocare
-      </h1>
-      <p className="mt-2 text-sm leading-relaxed text-muted">
+      <PageHeading
+        title="Vocare"
+        descriptionClassName="mt-2 text-sm leading-relaxed text-muted"
+      >
         Vocare is an AI-conversational career/interview practice app, sold as
         a $29 one-time lifetime fee — not a subscription, unlike every named
         competitor. A person just talks about what they&rsquo;ve done, what
@@ -29,7 +30,7 @@ export default function VocarePage() {
         conversation, never during it. It&rsquo;s a fully independent
         product Robin owns and operates, on its own infrastructure, separate
         from this site and from Farpost.
-      </p>
+      </PageHeading>
 
       <ul className="mt-8 space-y-2 text-sm">
         {PAGES.map((page) => (

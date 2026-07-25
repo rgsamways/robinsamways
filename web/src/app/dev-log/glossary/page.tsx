@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import PageHeading from "@/components/PageHeading";
 import SectionHeader from "@/components/SectionHeader";
 import { GLOSSARY_ENTRIES } from "@/components/dev-log/glossary";
 
@@ -9,10 +10,10 @@ export const metadata: Metadata = {
 export default function GlossaryPage() {
   return (
     <main className="py-10">
-      <h1 className="text-xl font-bold">
-        <span className="text-accent">$</span>{" "}Dev Log &middot; Glossary
-      </h1>
-      <p className="mt-2 text-sm leading-relaxed text-muted">
+      <PageHeading
+        title="Dev Log · Glossary"
+        descriptionClassName="mt-2 text-sm leading-relaxed text-muted"
+      >
         Translating a technical decision for someone who wasn&rsquo;t in the
         room when it was made is its own skill, distinct from making the
         decision itself — a stakeholder, a hiring manager, or a curious
@@ -20,7 +21,7 @@ export default function GlossaryPage() {
         growing "X, in layman&rsquo;s terms" list is that skill applied to
         the tools and concepts used elsewhere on this site, not a bare
         dictionary.
-      </p>
+      </PageHeading>
 
       <section>
         <SectionHeader title="GLOSSARY" />

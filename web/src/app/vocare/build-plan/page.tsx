@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import PageHeading from "@/components/PageHeading";
 import SectionHeader from "@/components/SectionHeader";
 
 export const metadata: Metadata = {
@@ -24,14 +25,11 @@ const MODULES: { id: string; what: string; status: string }[] = [
 export default function VocareBuildPlanPage() {
   return (
     <main className="py-10">
-      <h1 className="text-xl font-bold">
-        <span className="text-accent">$</span>{" "}Vocare &middot; Build Plan
-      </h1>
-      <p className="mt-2 text-sm text-muted">
+      <PageHeading title="Vocare · Build Plan">
         The real module map (M0&ndash;M11) as of 2026-07-24 — provisional and
         expected to change as the build itself progresses, not a fixed
         roadmap.
-      </p>
+      </PageHeading>
 
       <section>
         <SectionHeader title="MODULE_MAP" />

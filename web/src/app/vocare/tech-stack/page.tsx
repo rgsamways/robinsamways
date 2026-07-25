@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import PageHeading from "@/components/PageHeading";
 import SectionHeader from "@/components/SectionHeader";
 
 export const metadata: Metadata = {
@@ -8,15 +9,12 @@ export const metadata: Metadata = {
 export default function VocareTechStackPage() {
   return (
     <main className="py-10">
-      <h1 className="text-xl font-bold">
-        <span className="text-accent">$</span>{" "}Vocare &middot; Tech Stack
-      </h1>
-      <p className="mt-2 text-sm text-muted">
+      <PageHeading title="Vocare · Tech Stack">
         The converged siloes stack as it applies to Vocare, plus the
         Vocare-specific items beyond that shared baseline. Notably, Vocare is
         where this stack was discovered, not designed top-down — Farpost's
         rebuild adopted it after finding it already working here.
-      </p>
+      </PageHeading>
 
       <section>
         <SectionHeader title="SHARED_SILOES_BASELINE" />

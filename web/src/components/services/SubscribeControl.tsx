@@ -3,7 +3,7 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { getStoredSession } from "../session";
 
-type Status = "idle" | "submitting" | "error";
+type Status = "idle" | "submitting" | "invalid-email" | "request-failed";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
@@ -29,7 +29,7 @@ export default function SubscribeControl() {
       const data = await response.json();
       window.location.href = data.checkout_url;
     } catch {
-      setStatus("error");
+      setStatus("request-failed");
     }
   };
 
@@ -44,7 +44,7 @@ export default function SubscribeControl() {
         >
           {status === "submitting" ? "Redirecting…" : "Subscribe — $12/year"}
         </button>
-        {status === "error" && (
+        {status === "request-failed" && (
           <p className="mt-2 text-xs">Something went wrong — please try again.</p>
         )}
       </div>
@@ -55,7 +55,7 @@ export default function SubscribeControl() {
     event.preventDefault();
     const trimmed = email.trim();
     if (!EMAIL_RE.test(trimmed)) {
-      setStatus("error");
+      setStatus("invalid-email");
       return;
     }
     startCheckout(trimmed);
@@ -85,8 +85,11 @@ export default function SubscribeControl() {
       >
         {status === "submitting" ? "Redirecting…" : "Subscribe — $12/year"}
       </button>
-      {status === "error" && (
+      {status === "invalid-email" && (
         <p className="text-xs">Enter a valid email address and try again.</p>
+      )}
+      {status === "request-failed" && (
+        <p className="text-xs">Something went wrong — please try again.</p>
       )}
     </form>
   );

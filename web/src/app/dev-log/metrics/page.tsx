@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import PageHeading from "@/components/PageHeading";
 import SectionHeader from "@/components/SectionHeader";
 import { parseMetricsSnapshots } from "@/components/dev-log/metrics";
 import MetricsDashboard from "@/components/dev-log/MetricsDashboard";
@@ -13,13 +14,13 @@ export default function DevLogMetricsPage() {
 
   return (
     <main className="py-10">
-      <h1 className="text-xl font-bold">
-        <span className="text-accent">$</span>{" "}Dev Log &middot; Metrics
-      </h1>
-      <p className="mt-2 text-sm leading-relaxed text-muted">
+      <PageHeading
+        title="Dev Log · Metrics"
+        descriptionClassName="mt-2 text-sm leading-relaxed text-muted"
+      >
         Real code-metrics history for this site&rsquo;s own source
         (<code>web/</code>, <code>api/</code>, <code>pieces/</code>).
-      </p>
+      </PageHeading>
 
       <section>
         <SectionHeader title="METRICS" />

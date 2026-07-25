@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import PageHeading from "@/components/PageHeading";
 import TechStacksBrowser from "@/components/techstacks/TechStacksBrowser";
 
 const TAGS = [
@@ -29,14 +30,11 @@ export const metadata: Metadata = {
 export default function TechStacksPage() {
   return (
     <main className="py-10">
-      <h1 className="text-xl font-bold">
-        <span className="text-accent">$</span> Experiments
-      </h1>
-      <p className="mt-2 text-sm text-muted">
+      <PageHeading title="Experiments">
         Standalone technical experiments with no relation to a named,
         ongoing project like Farpost or Vocare &mdash; a place to try a
         stack or a concept just to see if it can be built.
-      </p>
+      </PageHeading>
 
       <TechStacksBrowser tags={TAGS} projects={PROJECTS} />
     </main>

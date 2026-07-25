@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Farpost from "@/components/Farpost";
 import InfoTooltip from "@/components/InfoTooltip";
+import PageHeading from "@/components/PageHeading";
 import SectionHeader from "@/components/SectionHeader";
 import PortfolioDemos from "@/components/portfolio/PortfolioDemos";
 import SetupGallery from "@/components/portfolio/SetupGallery";
@@ -15,13 +16,10 @@ export const metadata: Metadata = {
 export default function CredentialFlowPage() {
   return (
     <main className="py-10">
-      <h1 className="text-xl font-bold">
-        <span className="text-accent">$</span> Credential Flow
-      </h1>
-      <p className="mt-2 text-sm text-muted">
+      <PageHeading title="Credential Flow">
         Salesforce loan-application integration — a live case study, not a
         mockup.
-      </p>
+      </PageHeading>
 
       <section>
         <SectionHeader title="OVERVIEW" />

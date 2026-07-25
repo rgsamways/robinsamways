@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Farpost from "@/components/Farpost";
+import PageHeading from "@/components/PageHeading";
 import SectionHeader from "@/components/SectionHeader";
 import FarpostTabBar from "@/components/farpost/FarpostTabBar";
 import SectionFilterBar from "@/components/SectionFilterBar";
@@ -232,14 +233,11 @@ export default function FarpostPage() {
   return (
     <main className="py-10">
       <FarpostTabBar />
-      <h1 className="text-xl font-bold">
-        <span className="text-accent">$</span> <Farpost />
-      </h1>
-      <p className="mt-2 text-sm text-muted">
+      <PageHeading title={<Farpost />}>
         A building-intelligence platform &mdash; NFC-tagged records that
         outlive any single owner, insurer, or contractor, born from a rural
         dispatch gap nobody else was solving.
-      </p>
+      </PageHeading>
 
       <SectionFilterBar sections={sections} ariaLabel="filter farpost sections" />
     </main>

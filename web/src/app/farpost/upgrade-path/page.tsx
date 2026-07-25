@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import FarpostTabBar from "@/components/farpost/FarpostTabBar";
+import PageHeading from "@/components/PageHeading";
 import SectionHeader from "@/components/SectionHeader";
 
 export const metadata: Metadata = {
@@ -10,13 +11,10 @@ export default function FarpostUpgradePathPage() {
   return (
     <main className="py-10">
       <FarpostTabBar />
-      <h1 className="text-xl font-bold">
-        <span className="text-accent">$</span>{" "}Farpost &middot; Upgrade Path
-      </h1>
-      <p className="mt-2 text-sm text-muted">
+      <PageHeading title="Farpost · Upgrade Path">
         Planned upgrades and evolutions to the live build, beyond the
         immediate rebuild work covered in Build Plan.
-      </p>
+      </PageHeading>
 
       <section>
         <SectionHeader title="CROSS_SILO_IDENTITY_ABSTRACTION" />

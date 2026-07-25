@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import PageHeading from "@/components/PageHeading";
 import VerifySignIn from "@/components/VerifySignIn";
 
 export const metadata: Metadata = {
@@ -14,9 +15,7 @@ export default async function VerifySignInPage({
 
   return (
     <main className="py-10">
-      <h1 className="text-xl font-bold">
-        <span className="text-accent">$</span> Sign In
-      </h1>
+      <PageHeading title="Sign In" />
 
       <div className="mt-8">
         <VerifySignIn token={token ?? null} />

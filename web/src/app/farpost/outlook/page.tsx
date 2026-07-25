@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import FarpostTabBar from "@/components/farpost/FarpostTabBar";
+import PageHeading from "@/components/PageHeading";
 import SectionHeader from "@/components/SectionHeader";
 
 export const metadata: Metadata = {
@@ -10,12 +11,9 @@ export default function FarpostOutlookPage() {
   return (
     <main className="py-10">
       <FarpostTabBar />
-      <h1 className="text-xl font-bold">
-        <span className="text-accent">$</span>{" "}Farpost &middot; Outlook
-      </h1>
-      <p className="mt-2 text-sm text-muted">
+      <PageHeading title="Farpost · Outlook">
         Where Farpost is headed beyond the near-term build plan.
-      </p>
+      </PageHeading>
 
       <section>
         <SectionHeader title="POSITIONING" />

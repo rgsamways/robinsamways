@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import PageHeading from "@/components/PageHeading";
 import SectionHeader from "@/components/SectionHeader";
 import TechRoster from "@/components/farpost-pulse/TechRoster";
 import FarpostTabBar from "@/components/farpost/FarpostTabBar";
@@ -12,14 +13,11 @@ export default function FarpostPulsePage() {
   return (
     <main className="py-10">
       <FarpostTabBar />
-      <h1 className="text-xl font-bold">
-        <span className="text-accent">$</span> Farpost Pulse
-      </h1>
-      <p className="mt-2 text-sm text-muted">
+      <PageHeading title="Farpost Pulse">
         A field-tech coaching dashboard — real Azure serverless, built to
         get genuine hands-on time with a stack I wanted to actually know,
         not just read about.
-      </p>
+      </PageHeading>
 
       <section>
         <SectionHeader title="ORIGIN_STORY" />

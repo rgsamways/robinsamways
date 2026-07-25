@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import PageHeading from "@/components/PageHeading";
 import SectionHeader from "@/components/SectionHeader";
 
 export const metadata: Metadata = {
@@ -8,13 +9,10 @@ export const metadata: Metadata = {
 export default function VocareOutlookPage() {
   return (
     <main className="py-10">
-      <h1 className="text-xl font-bold">
-        <span className="text-accent">$</span>{" "}Vocare &middot; Outlook
-      </h1>
-      <p className="mt-2 text-sm text-muted">
+      <PageHeading title="Vocare · Outlook">
         The build itself is well-specified and mostly executed — the
         product&rsquo;s longer-term shape is the genuinely open part.
-      </p>
+      </PageHeading>
 
       <section>
         <SectionHeader title="CAREER_CONVERSATIONS_VS_INTERVIEW_PRACTICE" />

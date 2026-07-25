@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import FarpostTabBar from "@/components/farpost/FarpostTabBar";
+import PageHeading from "@/components/PageHeading";
 import SectionHeader from "@/components/SectionHeader";
 
 export const metadata: Metadata = {
@@ -11,14 +12,11 @@ export default function FarpostBuildPlanPage() {
   return (
     <main className="py-10">
       <FarpostTabBar />
-      <h1 className="text-xl font-bold">
-        <span className="text-accent">$</span>{" "}Farpost &middot; Build Plan
-      </h1>
-      <p className="mt-2 text-sm text-muted">
+      <PageHeading title="Farpost · Build Plan">
         Forward build sequencing for the real Farpost rebuild, as far as it
         can currently be forecast — this is provisional and will evolve as
         the build itself progresses, not a fixed roadmap.
-      </p>
+      </PageHeading>
 
       <section>
         <SectionHeader title="PHASE_1_PORT_THE_CORE" />

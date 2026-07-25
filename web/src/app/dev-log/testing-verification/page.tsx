@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import PageHeading from "@/components/PageHeading";
 import SectionHeader from "@/components/SectionHeader";
 
 export const metadata: Metadata = {
@@ -8,10 +9,9 @@ export const metadata: Metadata = {
 export default function TestingVerificationPage() {
   return (
     <main className="py-10">
-      <h1 className="text-xl font-bold">
-        <span className="text-accent">$</span>{" "}Dev Log &middot; Testing &amp; Verification
-      </h1>
-      <p className="mt-2 text-sm text-muted">How this site actually gets verified.</p>
+      <PageHeading title="Dev Log · Testing & Verification">
+        How this site actually gets verified.
+      </PageHeading>
 
       <section>
         <SectionHeader title="TESTING_AND_VERIFICATION" />

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import PageHeading from "@/components/PageHeading";
 import SectionHeader from "@/components/SectionHeader";
 import SectionFilterBar from "@/components/SectionFilterBar";
 import SubscribeControl from "@/components/services/SubscribeControl";
@@ -249,13 +250,10 @@ export default function ServicesPage() {
 
   return (
     <main className="py-10">
-      <h1 className="text-xl font-bold">
-        <span className="text-accent">$</span> Services
-      </h1>
-      <p className="mt-2 text-sm text-muted">
+      <PageHeading title="Services">
         Independent developer available for freelance and contract work —
         from a small brochure site to a full custom platform.
-      </p>
+      </PageHeading>
 
       <SectionFilterBar sections={sections} ariaLabel="filter services sections" />
     </main>

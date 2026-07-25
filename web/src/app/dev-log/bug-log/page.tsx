@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import PageHeading from "@/components/PageHeading";
 import SectionHeader from "@/components/SectionHeader";
 import { BUG_LOG_ENTRIES } from "@/components/dev-log/bugLog";
 
@@ -9,14 +10,14 @@ export const metadata: Metadata = {
 export default function BugLogPage() {
   return (
     <main className="py-10">
-      <h1 className="text-xl font-bold">
-        <span className="text-accent">$</span>{" "}Dev Log &middot; Bug Log
-      </h1>
-      <p className="mt-2 text-sm leading-relaxed text-muted">
+      <PageHeading
+        title="Dev Log · Bug Log"
+        descriptionClassName="mt-2 text-sm leading-relaxed text-muted"
+      >
         Real bugs actually hit during development, each paired with the
         underlying concept it reveals — the messy, unpolished record, not a
         curated highlight reel.
-      </p>
+      </PageHeading>
 
       <section>
         <SectionHeader title="BUG_LOG" />

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import DashboardContent from "@/components/farpost-pulse/DashboardContent";
+import PageHeading from "@/components/PageHeading";
 
 export const metadata: Metadata = {
   title: "Farpost Pulse Dashboard · Robin Samways",
@@ -14,12 +15,9 @@ export default function DashboardPage() {
           ← Farpost Pulse
         </Link>
       </p>
-      <h1 className="mt-2 text-xl font-bold">
-        <span className="text-accent">$</span> Dashboard
-      </h1>
-      <p className="mt-2 text-sm text-muted">
+      <PageHeading title="Dashboard" headingClassName="mt-2 text-xl font-bold">
         Org-wide patterns across all seeded technicians.
-      </p>
+      </PageHeading>
       <DashboardContent />
     </main>
   );

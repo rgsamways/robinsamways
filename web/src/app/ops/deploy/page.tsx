@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import PageHeading from "@/components/PageHeading";
 import SectionHeader from "@/components/SectionHeader";
 import Callout from "@/components/ops/Callout";
 import CodeBlock from "@/components/CodeBlock";
@@ -16,18 +17,14 @@ export const metadata: Metadata = {
 export default function DeployRunbookPage() {
   return (
     <main className="py-10">
-      <h1 className="text-xl font-bold">
-        <span className="text-accent">$</span> Going live: robinsamways.ca
-        deployment manual
-      </h1>
-      <p className="mt-2 text-sm text-muted">
+      <PageHeading title="Going live: robinsamways.ca deployment manual">
         A complete, ordered runbook for taking robinsamways.ca from a local
         repo to a live, production site — the five core services (GoDaddy,
         Cloudflare, Vercel, Railway, Resend), plus each promoted portfolio
         piece&rsquo;s own infrastructure as one gets added (see Part 8).
         Written so it can be followed start to finish, or handed to someone
         else to execute.
-      </p>
+      </PageHeading>
       <p className="mt-1 text-sm text-muted">
         Last updated: 2026-07-12 (Farpost Dispatch/Salesforce deployment
         steps added, Part 8c).

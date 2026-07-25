@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import PageHeading from "@/components/PageHeading";
 import { LIGHTBULB_ENTRIES } from "@/data/lightbulbs";
 
 export const metadata: Metadata = {
@@ -9,15 +10,15 @@ export const metadata: Metadata = {
 export default function LightbulbsPage() {
   return (
     <main className="py-10">
-      <h1 className="text-xl font-bold">
-        <span className="text-accent">$</span>{" "}Dev Log &middot; Lightbulbs
-      </h1>
-      <p className="mt-2 text-sm leading-relaxed text-muted">
+      <PageHeading
+        title="Dev Log · Lightbulbs"
+        descriptionClassName="mt-2 text-sm leading-relaxed text-muted"
+      >
         An idea doesn&rsquo;t need a build decision to be worth capturing —
         it just needs its own record. This is the idea stage of development
         logging, one step upstream of a bug or a metric: unscoped notes that
         may or may not ever become something real.
-      </p>
+      </PageHeading>
 
       <ul className="mt-8 space-y-5">
         {LIGHTBULB_ENTRIES.map((entry) => (

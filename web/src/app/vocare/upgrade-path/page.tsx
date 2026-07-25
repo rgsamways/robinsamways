@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import PageHeading from "@/components/PageHeading";
 import SectionHeader from "@/components/SectionHeader";
 
 export const metadata: Metadata = {
@@ -8,13 +9,10 @@ export const metadata: Metadata = {
 export default function VocareUpgradePathPage() {
   return (
     <main className="py-10">
-      <h1 className="text-xl font-bold">
-        <span className="text-accent">$</span>{" "}Vocare &middot; Upgrade Path
-      </h1>
-      <p className="mt-2 text-sm text-muted">
+      <PageHeading title="Vocare · Upgrade Path">
         Planned upgrades and evolutions to the live build, beyond what&rsquo;s
         already shipped.
-      </p>
+      </PageHeading>
 
       <section>
         <SectionHeader title="M6_PROGRESS_OVER_TIME" />
