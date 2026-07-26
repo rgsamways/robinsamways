@@ -34,7 +34,7 @@ To keep this handoff honest rather than overstating how settled things are:
 
 - **Offline-first** is a stated goal for Robin's projects generally but has no design or groundwork anywhere yet — it's new, not deferred.
 - **Core objects beyond User and billing** (`docs/core-user-model.md`, `docs/core-billing-model.md`) remain undesigned. Those two are closed out and real; nothing else has been through the same evidence-based process yet.
-- **Farpost's own optional role-curation layer** on top of the shared `Membership.role` (plain text, no enum, no admin-curation apparatus in the shared package) is Farpost's own call to make or skip — not required by the shared design.
+- **Farpost's admin-controlled role management screen is real, wanted scope, not optional.** An earlier draft of this file called this optional/low-priority — that was wrong. The old ad hoc approach (a user suggests a role, an admin is "supposed to" add it somewhere) was a genuine mess, and Robin wants a proper admin screen replacing it. See `docs/handoff-2026-07-26-farpost-role-admin-requirement.md` for the actual requirement.
 - **The anchor/audience practice-engine integration** mentioned above is design-only, parked, and explicitly not something to start building as part of this rebuild.
 
 ## The point of writing this down separately
