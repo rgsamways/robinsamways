@@ -14,7 +14,10 @@ export default function SectionHeader({ title }: { title: string }) {
   const id = resolveUniqueSlug(title, getUsedSlugsForThisPage());
 
   return (
-    <div className="mb-4 mt-10 flex items-center gap-3">
+    // `section-heading-row` is PageOutline.tsx's own hook for the full-strip
+    // glow (## through the end of the solid line) — it targets this wrapper
+    // via `closest()` rather than just the h2 it scrolls to.
+    <div className="section-heading-row mb-4 mt-10 flex items-center gap-3 rounded-md">
       <h2 id={id} className="whitespace-nowrap text-sm font-bold tracking-wide">
         <span className="text-accent">##</span> {title}
       </h2>

@@ -98,7 +98,7 @@ test.describe("/settings — reduced motion", () => {
     await page.goto("/services");
 
     const duration = await page
-      .locator("[data-testid='nav-rail']")
+      .locator("[data-testid='mobile-nav-panel']")
       .evaluate((el) => getComputedStyle(el).transitionDuration);
     expect(duration).toBe("0s");
   });
@@ -108,7 +108,7 @@ test.describe("/settings — reduced motion", () => {
     await page.goto("/services");
 
     const duration = await page
-      .locator("[data-testid='nav-rail']")
+      .locator("[data-testid='mobile-nav-panel']")
       .evaluate((el) => getComputedStyle(el).transitionDuration);
     expect(duration).not.toBe("0s");
   });
@@ -122,7 +122,7 @@ test.describe("/settings — reduced motion", () => {
     await page.getByRole("button", { name: "On", exact: true }).click();
 
     const duration = await page
-      .locator("[data-testid='nav-rail']")
+      .locator("[data-testid='mobile-nav-panel']")
       .evaluate((el) => getComputedStyle(el).transitionDuration);
     expect(duration).toBe("0s");
   });
@@ -136,7 +136,7 @@ test.describe("/settings — reduced motion", () => {
     await page.getByRole("button", { name: "Off", exact: true }).click();
 
     const duration = await page
-      .locator("[data-testid='nav-rail']")
+      .locator("[data-testid='mobile-nav-panel']")
       .evaluate((el) => getComputedStyle(el).transitionDuration);
     expect(duration).not.toBe("0s");
   });
@@ -159,9 +159,8 @@ test.describe("/settings — reduced motion", () => {
       };
     });
 
-    await page.getByRole("button", { name: "On this page" }).click();
     await page
-      .getByRole("dialog", { name: "On this page" })
+      .getByRole("navigation", { name: "On this page" })
       .locator("ul button", { hasText: "FIELD_DOCUMENTATION" })
       .click();
 
@@ -187,9 +186,8 @@ test.describe("/settings — reduced motion", () => {
       };
     });
 
-    await page.getByRole("button", { name: "On this page" }).click();
     await page
-      .getByRole("dialog", { name: "On this page" })
+      .getByRole("navigation", { name: "On this page" })
       .locator("ul button", { hasText: "FIELD_DOCUMENTATION" })
       .click();
 

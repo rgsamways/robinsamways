@@ -3,7 +3,6 @@
 import { List } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
 import {
   REDUCED_MOTION_STORAGE_KEY,
   resolveInitialReducedMotionPref,
@@ -13,11 +12,16 @@ import {
 type Section = { id: string; title: string };
 
 const MIN_SECTIONS_TO_SHOW = 2;
+// Matches globals.css's `.outline-target-glow` animation duration — the
+// class comes off on this timer rather than `animationend`, since reduced
+// motion drops the animation entirely (`animation: none` never fires that
+// event) but still needs the highlight removed after the same interval.
+const GLOW_DURATION_MS = 1400;
 
-// D3: heading discovery is a client-side DOM scan, not a build-time or
-// props-based registry — the outline's entries come from the exact same
-// rendered `<h2 id>` elements `SectionHeader` already produces, so they can
-// never drift out of sync with the page's real content.
+// D3 (page-outline-nav): heading discovery is a client-side DOM scan, not a
+// build-time or props-based registry — the outline's entries come from the
+// exact same rendered `<h2 id>` elements `SectionHeader` already produces,
+// so they can never drift out of sync with the page's real content.
 function scanSections(): Section[] {
   return Array.from(document.querySelectorAll<HTMLHeadingElement>("main h2[id]")).map(
     (heading) => ({
@@ -30,10 +34,13 @@ function scanSections(): Section[] {
   );
 }
 
+// D2 (mobile-chrome-redesign): a plain inline block now, not a click-to-open
+// panel — no `createPortal`, no open/close state, no Escape listener.
+// Visibility is CSS-only (`hidden xl:block`), matching every other
+// responsive element on this site, dropped from mobile entirely.
 export default function PageOutline() {
   const pathname = usePathname();
   const [sections, setSections] = useState<Section[]>([]);
-  const [open, setOpen] = useState(false);
   const [activeId, setActiveId] = useState<string | null>(null);
 
   // While true, the observer below re-asserts "first visible" every time it
@@ -46,6 +53,12 @@ export default function PageOutline() {
   const suppressTimeoutRef = useRef<number | undefined>(undefined);
   const clearSuppressionRef = useRef<(() => void) | null>(null);
 
+  // Tracks the currently-glowing heading so a rapid second click removes the
+  // first click's highlight (and its pending timeout) before starting a new
+  // one, rather than leaving a stale timer that clears the wrong element.
+  const glowTimeoutRef = useRef<number | undefined>(undefined);
+  const glowElementRef = useRef<HTMLElement | null>(null);
+
   useEffect(() => {
     return () => {
       if (suppressTimeoutRef.current !== undefined) {
@@ -54,24 +67,17 @@ export default function PageOutline() {
       if (clearSuppressionRef.current) {
         window.removeEventListener("scrollend", clearSuppressionRef.current);
       }
+      if (glowTimeoutRef.current !== undefined) {
+        window.clearTimeout(glowTimeoutRef.current);
+      }
     };
   }, []);
 
   // Re-scan on mount and on every route change — a fresh page's headings
-  // replace the previous page's entirely, and any open panel closes with it.
+  // replace the previous page's entirely.
   useEffect(() => {
     setSections(scanSections());
-    setOpen(false);
   }, [pathname]);
-
-  useEffect(() => {
-    if (!open) return;
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpen(false);
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [open]);
 
   // D5: IntersectionObserver over the real heading elements, not manual
   // scroll-offset math. `intersecting` tracks every section currently in
@@ -97,18 +103,21 @@ export default function PageOutline() {
         const firstVisible = sections.find((section) => intersecting.has(section.id));
         if (firstVisible) setActiveId(firstVisible.id);
       },
-      { rootMargin: "0px 0px -80% 0px" }
+      // Top trim matches globals.css's `scroll-margin-top` on `h2[id]`
+      // (Header.tsx's sticky height) — without it, the "active" band would
+      // still start at the literal viewport top, underneath where the
+      // header now visually sits.
+      { rootMargin: "-176px 0px -60% 0px" }
     );
     elements.forEach((element) => observer.observe(element));
     return () => observer.disconnect();
   }, [sections]);
 
-  // D2: a page with fewer than two sections has nothing worth outlining —
-  // render nothing at all, not even a disabled trigger.
+  // A page with fewer than two sections has nothing worth outlining — render
+  // nothing at all, not even a disabled heading.
   if (sections.length < MIN_SECTIONS_TO_SHOW) return null;
 
   function handleSelect(id: string) {
-    setOpen(false);
     // Don't wait on the IntersectionObserver to confirm this — a short
     // trailing section near the bottom of the page may never satisfy its
     // rootMargin band if the document can't scroll far enough to bring it
@@ -160,76 +169,65 @@ export default function PageOutline() {
     );
     const reduceMotion = shouldReduceMotion(reducedMotionPref, prefersReducedMotion);
 
-    document
-      .getElementById(id)
-      ?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+    const target = document.getElementById(id);
+    if (!target) return;
+
+    // Glows the whole heading strip (## through the end of the solid line),
+    // not just the heading text — SectionHeader.tsx's own wrapper, found via
+    // its marker class rather than assumed DOM shape. Falls back to the
+    // heading itself if that wrapper isn't there for some reason.
+    const glowTarget = target.closest<HTMLElement>(".section-heading-row") ?? target;
+
+    // A momentary highlight — real feedback even when the page is already
+    // scrolled as far as it can go and a trailing section can't visibly move
+    // any further. If the previous glow is still showing, clear it (and its
+    // timeout) before starting a fresh one.
+    if (glowTimeoutRef.current !== undefined) {
+      window.clearTimeout(glowTimeoutRef.current);
+      glowElementRef.current?.classList.remove("outline-target-glow");
+    }
+    glowTarget.classList.remove("outline-target-glow");
+    void glowTarget.offsetWidth; // Force reflow so re-triggering the same element restarts the animation.
+    glowTarget.classList.add("outline-target-glow");
+    glowElementRef.current = glowTarget;
+    glowTimeoutRef.current = window.setTimeout(() => {
+      glowTarget.classList.remove("outline-target-glow");
+      glowTimeoutRef.current = undefined;
+      glowElementRef.current = null;
+    }, GLOW_DURATION_MS);
+
+    target.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
   }
 
   return (
-    <>
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        aria-label="On this page"
-        aria-expanded={open}
-        className="flex h-10 w-10 items-center justify-center rounded-md hover:bg-skills-bg"
-      >
-        <List className="h-5 w-5" />
-      </button>
-
-      {/* Portalled to document.body: RightRail's own rail element carries a
-          CSS transform (the mobile slide animation, forced on at xl+ too)
-          unconditionally, and a transformed ancestor becomes the containing
-          block for `position: fixed` descendants — so rendered in place,
-          this panel's `fixed inset-0` would resolve against the rail's own
-          box, not the viewport. `open` only ever flips true from the
-          trigger's onClick, which can't fire before mount/hydration, so
-          this never runs during the server-rendered pass — no `document`
-          access before `document` exists. */}
-      {open &&
-        createPortal(
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-label="On this page"
-            onClick={() => setOpen(false)}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
-          >
-            <div
-              onClick={(event) => event.stopPropagation()}
-              className="relative flex max-h-full w-full max-w-sm flex-col overflow-auto border border-accent bg-background p-4"
+    <nav aria-label="On this page" className="hidden xl:block">
+      <p className="mb-2 flex items-center gap-1.5 text-xs font-semibold text-muted">
+        <List className="h-3.5 w-3.5" />
+        On this page
+      </p>
+      <ul className="space-y-1 text-sm">
+        {sections.map((section) => (
+          <li key={section.id}>
+            {/* The left border is the "strip" — always present (subtle,
+                muted) so every entry has one, brightened to the accent
+                color only for the active entry. A fixed border-width on
+                both states (color-only change) avoids any width jitter
+                when the selection moves. */}
+            <button
+              type="button"
+              onClick={() => handleSelect(section.id)}
+              aria-current={section.id === activeId ? "true" : undefined}
+              className={
+                section.id === activeId
+                  ? "block w-full cursor-pointer border-l-2 border-accent px-2 py-1 text-left font-semibold text-accent"
+                  : "block w-full cursor-pointer border-l-2 border-foreground/20 px-2 py-1 text-left text-muted transition hover:border-accent/50 hover:text-accent"
+              }
             >
-              <button
-                type="button"
-                onClick={() => setOpen(false)}
-                aria-label="Close"
-                className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center text-lg text-accent hover:bg-accent hover:text-background"
-              >
-                ×
-              </button>
-              <p className="mb-3 pr-8 text-sm font-bold text-accent">On this page</p>
-              <ul className="space-y-1 text-sm">
-                {sections.map((section) => (
-                  <li key={section.id}>
-                    <button
-                      type="button"
-                      onClick={() => handleSelect(section.id)}
-                      aria-current={section.id === activeId ? "true" : undefined}
-                      className={
-                        section.id === activeId
-                          ? "block w-full rounded-md px-2 py-1 text-left font-semibold text-accent"
-                          : "block w-full rounded-md px-2 py-1 text-left text-muted transition hover:text-accent"
-                      }
-                    >
-                      {section.title}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>,
-          document.body
-        )}
-    </>
+              {section.title}
+            </button>
+          </li>
+        ))}
+      </ul>
+    </nav>
   );
 }

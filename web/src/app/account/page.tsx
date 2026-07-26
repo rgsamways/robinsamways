@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import AccountSignOut from "@/components/AccountSignOut";
 import PageHeading from "@/components/PageHeading";
 
 export const metadata: Metadata = {
@@ -11,6 +12,7 @@ export default function AccountPage() {
       <PageHeading title="Account">
         Isn&rsquo;t live yet — check back soon.
       </PageHeading>
+      <AccountSignOut />
     </main>
   );
 }

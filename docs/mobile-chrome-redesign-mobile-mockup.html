@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>mobile-chrome-redesign — mobile mockup (static, non-functional)</title>
+<style>
+  :root {
+    --background: #0a0a0a;
+    --foreground: #e5e5e5;
+    --muted: #a1a1aa;
+    --accent: #fbbf24;
+    --skills-bg: #1c1917;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: #111;
+    color: var(--foreground);
+    font-family: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
+    font-size: 14px;
+    padding: 24px;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  .banner {
+    background: var(--skills-bg);
+    color: var(--muted);
+    font-size: 12px;
+    padding: 8px 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    margin: -24px -24px 24px;
+  }
+
+  .stage {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .frame-wrap { text-align: center; }
+  .frame-label {
+    color: var(--muted);
+    font-size: 12px;
+    margin-bottom: 10px;
+  }
+
+  .phone {
+    width: 390px;
+    height: 780px;
+    background: var(--background);
+    border: 2px solid #333;
+    border-radius: 28px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* ---- Top bar, shared shape ---- */
+  .topbar {
+    position: sticky;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 14px 0;
+    z-index: 10;
+  }
+  .brand-pill {
+    height: 36px;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 8px;
+    background: var(--background);
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .brand-pill .dollar { color: var(--accent); margin-right: 4px; }
+
+  .icon-cluster { display: flex; gap: 8px; }
+  .icon-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: var(--background);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+  }
+  .icon-btn.account { border-color: var(--accent); color: var(--accent); }
+  .icon-btn.menu { font-size: 18px; }
+
+  /* ---- Closed state: page content ---- */
+  .page-body { padding: 20px 18px 0; }
+
+  .header-card {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+  }
+  .header-text p.title { font-size: 12px; color: var(--muted); margin: 0 0 6px; }
+  .header-text .field { font-size: 12px; margin: 2px 0; }
+  .header-text .field .label { color: var(--accent); }
+  .photo {
+    width: 76px;
+    height: 76px;
+    border-radius: 10px;
+    flex-shrink: 0;
+    background: linear-gradient(135deg, #3a2f27, #171310);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    font-size: 10px;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  hr.divider { border: none; border-top: 1px solid rgba(255,255,255,0.15); margin: 18px 0; }
+
+  .section { margin-bottom: 20px; }
+  .section h2 { font-size: 13px; margin: 0 0 4px; font-weight: 700; }
+  .section h2 .marker { color: var(--accent); }
+  .section hr { border: none; border-top: 1px solid rgba(255,255,255,0.15); margin: 5px 0 10px; }
+  .section p { font-size: 12px; color: var(--muted); line-height: 1.55; margin: 0; }
+
+  .no-outline-note {
+    margin-top: 16px;
+    padding: 10px 12px;
+    border: 1px dashed rgba(255,255,255,0.15);
+    border-radius: 8px;
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.5;
+  }
+
+  /* ---- Open state: full-viewport nav takeover ---- */
+  .nav-open {
+    position: absolute;
+    inset: 0;
+    background: var(--background);
+    display: flex;
+    flex-direction: column;
+  }
+  .nav-open-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  .nav-open-title { font-size: 13px; color: var(--muted); }
+  .close-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+  }
+
+  .nav-open-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 18px;
+  }
+
+  .nav-group { margin-bottom: 22px; }
+  .nav-heading {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .nav-link {
+    display: block;
+    padding: 10px 4px;
+    font-size: 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .nav-link.active { color: var(--accent); }
+  .nav-sub { padding-left: 16px; }
+  .nav-sub .nav-link { color: var(--muted); font-size: 14px; padding: 8px 4px; }
+  .chev { color: var(--muted); font-size: 11px; margin-right: 6px; }
+
+  .caption {
+    max-width: 390px;
+    margin-top: 16px;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+    text-align: left;
+  }
+</style>
+</head>
+<body>
+
+<div class="banner">
+  STATIC MOCKUP — from openspec/changes/mobile-chrome-redesign, mobile view. Not real app code, nothing here is interactive/functional.
+</div>
+
+<div class="stage">
+
+  <!-- STATE 1: nav closed -->
+  <div class="frame-wrap">
+    <div class="frame-label">Nav closed</div>
+    <div class="phone">
+      <div class="topbar">
+        <a class="brand-pill"><span class="dollar">$</span>Robin Samways</a>
+        <div class="icon-cluster">
+          <div class="icon-btn account" title="Account (signed in) — Sign-In door icon shows here instead when signed out, per D4">◍</div>
+          <div class="icon-btn menu" title="Menu — opens full-viewport nav">☰</div>
+          <div class="icon-btn" title="Settings">⚙</div>
+        </div>
+      </div>
+
+      <div class="page-body">
+        <div class="header-card">
+          <div class="header-text">
+            <p class="title">Senior Application Developer</p>
+            <div class="field"><span class="label">loc:</span> Maynooth, ON</div>
+            <div class="field"><span class="label">tel:</span> 613-553-0960</div>
+            <div class="field"><span class="label">email:</span> rgsamways@gmail.com</div>
+          </div>
+          <div class="photo">photo</div>
+        </div>
+        <hr class="divider" />
+
+        <div class="section">
+          <h2><span class="marker">##</span> PROFILE</h2>
+          <hr />
+          <p>Senior application developer with 25 years building production-grade software — founder and sole developer of Farpost.</p>
+        </div>
+
+        <div class="section">
+          <h2><span class="marker">##</span> EXPERIENCE</h2>
+          <hr />
+          <p>Founder &amp; Lead Developer — Farpost (2026–Present)</p>
+        </div>
+
+        <div class="no-outline-note">
+          No "on this page" outline on mobile (dropped for now, per the spec's explicit decision) — this space just scrolls normally.
+        </div>
+      </div>
+    </div>
+    <div class="caption">
+      Brand pill stays top-left. The old split hamburger-left / cog-right is gone — one 3-icon cluster top-right: Account-or-Sign-In (session-conditional), Menu, Settings. Photo's back on the right of the info card.
+    </div>
+  </div>
+
+  <!-- STATE 2: nav open (full-viewport takeover) -->
+  <div class="frame-wrap">
+    <div class="frame-label">Nav open (after tapping ☰)</div>
+    <div class="phone">
+      <div class="nav-open">
+        <div class="nav-open-header">
+          <span class="nav-open-title">Navigate</span>
+          <div class="close-btn">✕</div>
+        </div>
+        <div class="nav-open-body">
+          <div class="nav-group">
+            <div class="nav-heading">Site</div>
+            <a class="nav-link active">Home</a>
+            <a class="nav-link">Services</a>
+            <a class="nav-link">Metrics</a>
+          </div>
+          <div class="nav-group">
+            <div class="nav-heading">Work</div>
+            <a class="nav-link"><span class="chev">▾</span>Farpost</a>
+            <div class="nav-sub">
+              <a class="nav-link">Build Plan</a>
+              <a class="nav-link">Feature List</a>
+            </div>
+            <a class="nav-link"><span class="chev">▸</span>Vocare</a>
+            <a class="nav-link"><span class="chev">▸</span>Sreditor</a>
+          </div>
+          <div class="nav-group">
+            <div class="nav-heading">Experiments</div>
+            <a class="nav-link"><span class="chev">▸</span>Experiments</a>
+          </div>
+          <div class="nav-group">
+            <div class="nav-heading">Writing</div>
+            <a class="nav-link"><span class="chev">▸</span>Dev Log</a>
+          </div>
+          <div class="nav-group">
+            <div class="nav-heading">Ops</div>
+            <a class="nav-link">Deploy Runbook</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="caption">
+      Full-viewport takeover, no dim backdrop — nothing else is visible, matching Better Auth's mobile nav pattern. Closes via the ✕, Escape, or selecting a link. Same NAV_GROUPS content/collapsing behavior as today, just full-screen instead of a narrow 288px drawer.
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

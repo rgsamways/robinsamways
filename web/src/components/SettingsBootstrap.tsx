@@ -7,6 +7,7 @@ import {
   resolveInitialReducedMotionPref,
   shouldReduceMotion,
 } from "./reducedMotion";
+import { getStoredSession } from "./session";
 import { resolveInitialTheme, THEME_STORAGE_KEY } from "./theme";
 
 // D2: the one place all three persisted settings get applied on mount, on
@@ -34,6 +35,15 @@ export default function SettingsBootstrap() {
       "reduce-motion",
       shouldReduceMotion(reducedMotionPref, prefersReducedMotion)
     );
+
+    // D4 (mobile-chrome-redesign): sets the initial data-signed-in attribute
+    // from real stored session state; storeSession()/clearSession() flip it
+    // directly from then on, so it never goes stale after this first read.
+    if (getStoredSession()) {
+      document.documentElement.dataset.signedIn = "true";
+    } else {
+      delete document.documentElement.dataset.signedIn;
+    }
   }, []);
 
   return null;

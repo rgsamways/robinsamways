@@ -26,8 +26,8 @@ export default function PillBar({
             onClick={() => onToggle(pill.id)}
             className={
               isActive
-                ? "rounded-full border border-accent bg-accent px-4 py-1 text-xs font-semibold text-background"
-                : "rounded-full border border-foreground/20 px-4 py-1 text-xs font-semibold text-muted transition hover:border-accent hover:text-accent"
+                ? "cursor-pointer rounded-full border border-accent bg-accent px-4 py-1 text-xs font-semibold text-background"
+                : "cursor-pointer rounded-full border border-foreground/20 px-4 py-1 text-xs font-semibold text-muted transition hover:border-accent hover:text-accent"
             }
           >
             {pill.label}

@@ -234,6 +234,9 @@ node_modules/
 .next/
 out/
 
+# Playwright output, occasionally run from the repo root instead of web/
+/test-results/
+
 # Vercel
 .vercel
 

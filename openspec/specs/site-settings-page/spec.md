@@ -33,11 +33,11 @@ The system SHALL let a visitor choose a font-size scale (Small, Default, Large, 
 - **THEN** the same font-size scale is still applied
 
 ### Requirement: Reduced motion is a real tri-state preference that disables real animation
-The system SHALL let a visitor set reduced motion to System (the default, follows the OS `prefers-reduced-motion` setting), On, or Off, and SHALL actually suppress this site's existing animated transitions (the nav rail's slide transition, the page-outline's smooth scroll-to-section) whenever the resolved state is "reduced."
+The system SHALL let a visitor set reduced motion to System (the default, follows the OS `prefers-reduced-motion` setting), On, or Off, and SHALL actually suppress this site's existing animated transitions (the mobile nav panel's open/close transition, the page-outline's smooth scroll-to-section) whenever the resolved state is "reduced."
 
 #### Scenario: An explicit "On" override suppresses animation regardless of OS preference
 - **WHEN** a visitor sets reduced motion to On, even if their OS preference is not set to reduce motion
-- **THEN** the nav rail's slide transition and the page outline's scroll-to-section both occur without animation
+- **THEN** the mobile nav panel's open/close transition and the page outline's scroll-to-section both occur without animation
 
 #### Scenario: "System" defers to the OS preference
 - **WHEN** a visitor leaves reduced motion at System and their OS is set to prefer reduced motion
@@ -45,7 +45,7 @@ The system SHALL let a visitor set reduced motion to System (the default, follow
 
 #### Scenario: An explicit "Off" override keeps animation even if the OS prefers reduced motion
 - **WHEN** a visitor sets reduced motion to Off, even if their OS preference prefers reduced motion
-- **THEN** the nav rail's slide transition and the page outline's scroll-to-section both animate normally
+- **THEN** the mobile nav panel's open/close transition and the page outline's scroll-to-section both animate normally
 
 ### Requirement: Every persisted setting applies on every page load, not only on /settings
 The system SHALL apply each visitor's stored theme, font-size, and reduced-motion preferences on every page, regardless of which page they land on or navigate to.

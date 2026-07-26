@@ -4,6 +4,7 @@ import Script from "next/script";
 import DrawerNav from "@/components/DrawerNav";
 import FeedbackWidget from "@/components/FeedbackWidget";
 import Header from "@/components/Header";
+import { MobileNavProvider } from "@/components/MobileNavContext";
 import RightRail from "@/components/RightRail";
 import SettingsBootstrap from "@/components/SettingsBootstrap";
 import { THEME_STORAGE_KEY } from "@/components/theme";
@@ -63,20 +64,22 @@ export default function RootLayout({
         >
           <div className="hidden xl:block xl:w-64 xl:shrink-0" />
           <div className="h-16 flex-1 bg-background xl:h-10" />
-          <div className="hidden xl:block xl:w-16 xl:shrink-0" />
+          <div className="hidden xl:block xl:w-64 xl:shrink-0" />
         </div>
         <SettingsBootstrap />
-        <div className="mx-auto flex max-w-6xl">
-          <DrawerNav />
-          <div className="min-w-0 flex-1 px-6 pb-10 pt-16 xl:px-10 xl:pt-10">
-            <div className="w-full xl:max-w-3xl">
-              <Header />
-              {children}
-              <FeedbackWidget />
+        <MobileNavProvider>
+          <div className="mx-auto flex max-w-6xl">
+            <DrawerNav />
+            <div className="min-w-0 flex-1 px-6 pb-10 pt-16 xl:px-10 xl:pt-10">
+              <div className="w-full xl:max-w-3xl">
+                <Header />
+                {children}
+                <FeedbackWidget />
+              </div>
             </div>
+            <RightRail />
           </div>
-          <RightRail />
-        </div>
+        </MobileNavProvider>
       </body>
     </html>
   );

@@ -52,6 +52,58 @@ body {
   transition: none !important;
 }
 
+/* D4 (mobile-chrome-redesign): session-conditional icon — html[data-signed-in]
+   is toggled directly by session.ts's storeSession()/clearSession() (and set
+   on initial load by SettingsBootstrap from getStoredSession()), read live by
+   these rules so the Account/Sign In swap never goes stale given RightRail's
+   one mount at the root layout. Both links always render in the DOM; exactly
+   one is ever visible. */
+html:not([data-signed-in="true"]) .signed-in-only {
+  display: none;
+}
+
+html[data-signed-in="true"] .signed-out-only {
+  display: none;
+}
+
+/* Header.tsx is sticky (top-16 / xl:top-10) and would otherwise cover the
+   first ~161px of whatever heading scrolls to the very top of the viewport
+   (measured: header's own bottom edge sits at 161px on desktop) —
+   scroll-margin-top leaves room for it, for both PageOutline's own
+   scrollIntoView and a plain #anchor page load. One value covers both
+   breakpoints since Header's rendered height is close enough at either. */
+main h2[id] {
+  scroll-margin-top: 11rem;
+}
+
+/* A momentary highlight on the outline's target heading — feedback that
+   something happened even when the page is already scrolled as far as it
+   can go (a bottom section can't always reach the top of the viewport).
+   Reduced motion keeps the highlight itself (still real feedback) but drops
+   the animated fade, matching this site's existing reduced-motion stance:
+   suppress *motion*, not all visual response. PageOutline.tsx removes the
+   class on a fixed timeout either way, since `animation: none` never fires
+   `animationend`. */
+@keyframes outline-target-glow {
+  0%,
+  15% {
+    background-color: color-mix(in srgb, var(--accent) 40%, transparent);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+.outline-target-glow {
+  animation: outline-target-glow 1.4s ease-out;
+  border-radius: 0.25rem;
+}
+
+.reduce-motion .outline-target-glow {
+  animation: none;
+  background-color: color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
 /* A thin scrollbar close to the background color site-wide, so a scrolling
    panel (the left nav's own overflow-y-auto, in particular) doesn't render
    the browser's default stark white/gray bar against a dark theme. Uses

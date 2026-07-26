@@ -1,8 +1,5 @@
-# account-hub-stub Specification
+## MODIFIED Requirements
 
-## Purpose
-TBD - created by archiving change page-outline-nav. Update Purpose after archive.
-## Requirements
 ### Requirement: An Account icon in the nav rail links to a placeholder account page
 The system SHALL show exactly one of two icons in the shared nav icon set (mobile top-bar cluster and desktop persistent rail), reflecting the visitor's real session state: a Sign In icon linking to `/sign-in` when no session exists, or an Account icon linking to `/account` when one does. The two SHALL never both appear at once, and the swap SHALL reflect a sign-in or sign-out that happens while the icon set is already visible, without requiring a full page reload.
 

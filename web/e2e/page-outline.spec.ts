@@ -10,68 +10,30 @@ const SERVICES_SECTION_TITLES = [
   "TROUBLESHOOTING_QUESTIONS",
 ];
 
-test.describe("page outline flyout", () => {
-  test("a page with 2+ sections shows the trigger and lists every section in document order", async ({
+test.describe("page outline — desktop, always-visible inline list", () => {
+  test("a page with 2+ sections shows every section, in document order, with no click needed", async ({
     page,
   }) => {
     await page.goto("/services");
 
-    const trigger = page.getByRole("button", { name: "On this page" });
-    await expect(trigger).toBeVisible();
+    const outline = page.getByRole("navigation", { name: "On this page" });
+    await expect(outline).toBeVisible();
 
-    await trigger.click();
-    const dialog = page.getByRole("dialog", { name: "On this page" });
-    await expect(dialog).toBeVisible();
-
-    const entries = dialog.locator("ul button");
+    const entries = outline.locator("ul button");
     await expect(entries).toHaveCount(SERVICES_SECTION_TITLES.length);
     await expect(entries).toHaveText(SERVICES_SECTION_TITLES);
   });
 
-  test("clicking an outline entry scrolls to its section and closes the panel", async ({
+  test("clicking an outline entry scrolls to its section and the outline stays visible", async ({
     page,
   }) => {
     await page.goto("/services");
 
-    await page.getByRole("button", { name: "On this page" }).click();
-    const dialog = page.getByRole("dialog", { name: "On this page" });
-    await dialog.locator("ul button", { hasText: "FIELD_DOCUMENTATION" }).click();
+    const outline = page.getByRole("navigation", { name: "On this page" });
+    await outline.locator("ul button", { hasText: "FIELD_DOCUMENTATION" }).click();
 
-    await expect(dialog).toBeHidden();
     await expect(page.locator("#field-documentation")).toBeInViewport();
-  });
-
-  test("Escape dismisses the open panel", async ({ page }) => {
-    await page.goto("/services");
-
-    await page.getByRole("button", { name: "On this page" }).click();
-    const dialog = page.getByRole("dialog", { name: "On this page" });
-    await expect(dialog).toBeVisible();
-
-    await page.keyboard.press("Escape");
-    await expect(dialog).toBeHidden();
-  });
-
-  test("a backdrop click dismisses the open panel", async ({ page }) => {
-    await page.goto("/services");
-
-    await page.getByRole("button", { name: "On this page" }).click();
-    const dialog = page.getByRole("dialog", { name: "On this page" });
-    await expect(dialog).toBeVisible();
-
-    await dialog.click({ position: { x: 5, y: 5 } });
-    await expect(dialog).toBeHidden();
-  });
-
-  test("the close button dismisses the open panel", async ({ page }) => {
-    await page.goto("/services");
-
-    await page.getByRole("button", { name: "On this page" }).click();
-    const dialog = page.getByRole("dialog", { name: "On this page" });
-    await expect(dialog).toBeVisible();
-
-    await page.getByRole("button", { name: "Close" }).click();
-    await expect(dialog).toBeHidden();
+    await expect(outline).toBeVisible();
   });
 
   test("scrolling into a different section updates which entry is marked active", async ({
@@ -82,11 +44,10 @@ test.describe("page outline flyout", () => {
     await page
       .locator("#troubleshooting-questions")
       .evaluate((element) => element.scrollIntoView({ block: "start" }));
-    await page.getByRole("button", { name: "On this page" }).click();
-    const dialog = page.getByRole("dialog", { name: "On this page" });
 
+    const outline = page.getByRole("navigation", { name: "On this page" });
     await expect(
-      dialog.locator("ul button", { hasText: "TROUBLESHOOTING_QUESTIONS" })
+      outline.locator("ul button", { hasText: "TROUBLESHOOTING_QUESTIONS" })
     ).toHaveAttribute("aria-current", "true");
   });
 
@@ -95,42 +56,43 @@ test.describe("page outline flyout", () => {
   }) => {
     await page.goto("/");
 
-    await page.getByRole("button", { name: "On this page" }).click();
-    let dialog = page.getByRole("dialog", { name: "On this page" });
-    await dialog.locator("ul button", { hasText: "CONTINUING_EDUCATION" }).click();
-    await expect(dialog).toBeHidden();
+    const outline = page.getByRole("navigation", { name: "On this page" });
+    await outline.locator("ul button", { hasText: "CONTINUING_EDUCATION" }).click();
 
-    // Reopen to inspect the marked-active state without waiting on any
-    // scroll animation or IntersectionObserver callback to settle first.
-    await page.getByRole("button", { name: "On this page" }).click();
-    dialog = page.getByRole("dialog", { name: "On this page" });
     await expect(
-      dialog.locator("ul button", { hasText: "CONTINUING_EDUCATION" })
+      outline.locator("ul button", { hasText: "CONTINUING_EDUCATION" })
     ).toHaveAttribute("aria-current", "true");
 
-    await dialog.locator("ul button", { hasText: "CONTACT" }).click();
-    await expect(dialog).toBeHidden();
+    await outline.locator("ul button", { hasText: "CONTACT" }).click();
 
-    await page.getByRole("button", { name: "On this page" }).click();
-    dialog = page.getByRole("dialog", { name: "On this page" });
-    await expect(dialog.locator("ul button", { hasText: "CONTACT" })).toHaveAttribute(
+    await expect(outline.locator("ul button", { hasText: "CONTACT" })).toHaveAttribute(
       "aria-current",
       "true"
     );
     await expect(
-      dialog.locator("ul button", { hasText: "CONTINUING_EDUCATION" })
+      outline.locator("ul button", { hasText: "CONTINUING_EDUCATION" })
     ).not.toHaveAttribute("aria-current", "true");
   });
 
-  test("a page with zero sections shows no outline trigger", async ({ page }) => {
+  test("a page with zero sections shows no outline", async ({ page }) => {
     await page.goto("/sign-in");
 
-    await expect(page.getByRole("button", { name: "On this page" })).toHaveCount(0);
+    await expect(page.getByRole("navigation", { name: "On this page" })).toHaveCount(0);
   });
 
-  test("a page with exactly one section shows no outline trigger", async ({ page }) => {
+  test("a page with exactly one section shows no outline", async ({ page }) => {
     await page.goto("/metrics");
 
-    await expect(page.getByRole("button", { name: "On this page" })).toHaveCount(0);
+    await expect(page.getByRole("navigation", { name: "On this page" })).toHaveCount(0);
+  });
+});
+
+test.describe("page outline — mobile", () => {
+  test.use({ viewport: { width: 390, height: 844 } });
+
+  test("no outline appears at all on mobile, regardless of section count", async ({ page }) => {
+    await page.goto("/services");
+
+    await expect(page.getByRole("navigation", { name: "On this page" })).toHaveCount(0);
   });
 });

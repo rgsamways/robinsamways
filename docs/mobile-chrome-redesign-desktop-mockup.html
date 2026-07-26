@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>mobile-chrome-redesign — desktop mockup (static, non-functional)</title>
+<style>
+  :root {
+    --background: #0a0a0a;
+    --foreground: #e5e5e5;
+    --muted: #a1a1aa;
+    --accent: #fbbf24;
+    --skills-bg: #1c1917;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--background);
+    color: var(--foreground);
+    font-family: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
+    font-size: 15px;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  .banner {
+    background: var(--skills-bg);
+    color: var(--muted);
+    font-size: 12px;
+    padding: 6px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .shell {
+    display: flex;
+    max-width: 1152px; /* max-w-6xl */
+    margin: 0 auto;
+  }
+
+  /* ---- Left nav (DrawerNav, desktop) ---- */
+  .left-nav {
+    width: 256px; /* xl:w-64 */
+    flex-shrink: 0;
+    height: 100vh;
+    padding: 24px 20px;
+    border-right: 1px solid rgba(255,255,255,0.12);
+    overflow-y: auto;
+  }
+
+  .brand {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    display: inline-block;
+  }
+  .brand .dollar { color: var(--accent); }
+
+  .nav-group { margin-bottom: 20px; }
+  .nav-heading {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .nav-link {
+    display: block;
+    padding: 4px 0;
+    font-size: 14px;
+  }
+  .nav-link.active { color: var(--accent); }
+  .nav-sub { padding-left: 14px; }
+  .nav-sub .nav-link { color: var(--muted); font-size: 13px; }
+  .nav-sub .nav-link.active { color: var(--accent); }
+  .chev { color: var(--muted); font-size: 11px; margin-right: 4px; }
+
+  /* ---- Center content ---- */
+  .content {
+    flex: 1;
+    min-width: 0;
+    padding: 40px 40px 60px;
+    max-width: 768px; /* xl:max-w-3xl */
+  }
+
+  .header-card {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .header-text p.title { font-size: 13px; color: var(--muted); margin: 0 0 6px; }
+  .header-text .field { font-size: 13px; margin: 2px 0; }
+  .header-text .field .label { color: var(--accent); }
+  .photo {
+    width: 96px;
+    height: 96px;
+    border-radius: 12px;
+    flex-shrink: 0;
+    background: linear-gradient(135deg, #3a2f27, #171310);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    font-size: 11px;
+    text-align: center;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  hr.divider { border: none; border-top: 1px solid rgba(255,255,255,0.15); margin: 24px 0; }
+
+  .section { margin-bottom: 28px; }
+  .section h2 {
+    font-size: 15px;
+    margin: 0 0 4px;
+    font-weight: 700;
+  }
+  .section h2 .marker { color: var(--accent); }
+  .section hr { border: none; border-top: 1px solid rgba(255,255,255,0.15); margin: 6px 0 14px; }
+  .section p, .section li { font-size: 13px; color: var(--foreground); line-height: 1.6; }
+  .section .muted { color: var(--muted); }
+
+  /* ---- Right rail (RightRail, desktop, widened) ---- */
+  .right-rail {
+    width: 256px; /* xl:w-64, widened from xl:w-16 */
+    flex-shrink: 0;
+    height: 100vh;
+    padding: 24px 20px;
+    border-left: 1px solid rgba(255,255,255,0.12);
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .icon-row { display: flex; gap: 10px; }
+  .icon-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: var(--foreground);
+  }
+  .icon-btn.account { border-color: var(--accent); color: var(--accent); }
+
+  .outline-block .outline-heading {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .outline-list { display: flex; flex-direction: column; gap: 6px; }
+  .outline-item {
+    font-size: 13px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    color: var(--muted);
+  }
+  .outline-item.active {
+    color: var(--accent);
+    background: rgba(251, 191, 36, 0.08);
+    border-left: 2px solid var(--accent);
+    padding-left: 6px;
+  }
+
+  .callout {
+    margin-top: auto;
+    font-size: 11px;
+    color: var(--muted);
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 12px;
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+
+<div class="banner">
+  STATIC MOCKUP — from openspec/changes/mobile-chrome-redesign, desktop (xl+) view only. Not real app code, nothing here is interactive/functional.
+</div>
+
+<div class="shell">
+
+  <!-- LEFT NAV — unchanged by this change -->
+  <nav class="left-nav">
+    <a class="brand" href="#"><span class="dollar">$</span> Robin Samways</a>
+
+    <div class="nav-group">
+      <div class="nav-heading">Site</div>
+      <a class="nav-link active" href="#">Home</a>
+      <a class="nav-link" href="#">Services</a>
+      <a class="nav-link" href="#">Metrics</a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-heading">Work</div>
+      <a class="nav-link" href="#"><span class="chev">▾</span>Farpost</a>
+      <a class="nav-link" href="#"><span class="chev">▸</span>Vocare</a>
+      <a class="nav-link" href="#"><span class="chev">▸</span>Sreditor</a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-heading">Experiments</div>
+      <a class="nav-link" href="#"><span class="chev">▸</span>Experiments</a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-heading">Writing</div>
+      <a class="nav-link" href="#"><span class="chev">▸</span>Dev Log</a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-heading">Ops</div>
+      <a class="nav-link" href="#">Deploy Runbook</a>
+    </div>
+  </nav>
+
+  <!-- CENTER CONTENT — Header.tsx photo swapped back to the right (D7) -->
+  <main class="content">
+    <div class="header-card">
+      <div class="header-text">
+        <p class="title">Senior Application Developer</p>
+        <div class="field"><span class="label">loc:</span> Maynooth, ON K0L 2S0</div>
+        <div class="field"><span class="label">tel:</span> 613-553-0960</div>
+        <div class="field"><span class="label">email:</span> rgsamways@gmail.com</div>
+      </div>
+      <div class="photo">photo</div>
+    </div>
+    <hr class="divider" />
+
+    <div class="section" id="profile">
+      <h2><span class="marker">##</span> PROFILE</h2>
+      <hr />
+      <p class="muted">Senior application developer with 25 years building production-grade software across pharmaceutical, automotive, industrial, and municipal sectors — now founder and sole developer of Farpost, a rural Ontario building-intelligence platform.</p>
+    </div>
+
+    <div class="section" id="experience">
+      <h2><span class="marker">##</span> EXPERIENCE</h2>
+      <hr />
+      <p class="muted">Founder &amp; Lead Developer — Farpost · Maynooth, ON (2026 – Present)</p>
+      <p class="muted">Senior Application Developer — Impres Pharma · Cambridge, ON (2012 – 2025)</p>
+    </div>
+
+    <div class="section" id="skills">
+      <h2><span class="marker">##</span> SKILLS</h2>
+      <hr />
+      <p class="muted">(further sections continue below, scrolled to via the outline on the right →)</p>
+    </div>
+  </main>
+
+  <!-- RIGHT RAIL — widened xl:w-16 → xl:w-64 (D3), outline is now inline, no popup (D2) -->
+  <aside class="right-rail">
+    <div class="icon-row">
+      <div class="icon-btn" title="Settings">⚙</div>
+      <div class="icon-btn account" title="Account (signed in) — swaps with Sign In icon when signed out, per D4">◍</div>
+    </div>
+
+    <div class="outline-block">
+      <div class="outline-heading">≡ On this page</div>
+      <div class="outline-list">
+        <a class="outline-item active" href="#profile">Profile</a>
+        <a class="outline-item" href="#experience">Experience</a>
+        <a class="outline-item" href="#skills">Skills</a>
+      </div>
+    </div>
+
+    <div class="callout">
+      Clicking an entry just scrolls the page here — no panel opens or closes anymore.
+    </div>
+  </aside>
+
+</div>
+
+</body>
+</html>
