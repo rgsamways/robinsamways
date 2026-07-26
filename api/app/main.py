@@ -27,6 +27,10 @@ app.add_middleware(
         "https://robinsamways.ca",
         "https://www.robinsamways.ca",
         "http://localhost:3000",
+        # web/'s dev server actually runs on 3200 in this environment —
+        # Farpost's own dev server holds 3000, so this project's runs
+        # alongside it on a different port instead of fighting for 3000.
+        "http://localhost:3200",
     ],
     allow_methods=["GET", "POST", "PATCH", "DELETE"],
     allow_headers=["Content-Type", "Authorization"],
