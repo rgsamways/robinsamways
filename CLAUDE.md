@@ -52,14 +52,6 @@ Any piece involving real external infrastructure (a cloud portal, a third-party 
 
 Every promoted piece lives under `pieces/`, one folder per piece, never bare at the repo root — this keeps the root itself (`web/`, `api/`, `pieces/`, plus `docs/`/`openspec/`) stable no matter how many pieces accumulate, and means moving a piece's folder later is never necessary. A promoted piece is a genuinely separate runtime on separate infrastructure, callable over HTTP, never touching `api/`'s own dependencies at all.
 
-## Silo isolation
-
-`siloes/` holds full standalone product rebuilds — bigger in scope than a `pieces/` demonstration module (a single-purpose backend like Farpost Pulse's Azure Function), closer to a whole second product hosted under this site's infrastructure conventions. A silo gets its own folder (e.g. `siloes/farpost/`), is deployed independently, and chooses its own tech stack freely — not constrained to `api/`'s Python or `web/`'s Next.js, and not required to match any other silo's stack either. It never shares dependencies or runtime with the site's core or with anything in `pieces/`. Introduced 2026-07-24 for the Farpost rebuild (deliberately Node/TS/Fastify/Postgres, distinct from `api/`'s Python); `pieces/` is left exactly as-is, not migrated or restructured as part of adding this convention.
-
-**Frontend and backend are one unified feature, not two.** Under the site's "Work" nav group, each silo gets a homepage: project background/context, followed by the actual live working build of that project — sourced directly from that silo's own `siloes/<project>/` code, never a separate copy, mockup, or embed of something else. Vocare's silo homepage is straightforward since the build already exists; Farpost's rebuild *is* what becomes its silo's live build once it's done. (Note: an earlier lightbulb, `rsw-lb-project-silos.md`, used the spelling "silos" for the showcase-homepage half of this same idea before the two halves were reconciled as one concept on 2026-07-24 — "siloes" is the correct spelling going forward; that file has its own append-only update noting this.)
-
-**Shared navigation house style.** Every silo's own build follows the same structural navigation pattern, established by Vocare and carried forward deliberately (starting with the Farpost rebuild) so new projects form a consistent habit rather than each reinventing layout: a simple header (brand + UI effects) that always surfaces sign-in/sign-up/sign-out — as a Lucide icon, text, or icon+text depending on available screen space — plus footer-based primary navigation, which translates cleanly to mobile. Verbiage and nav options differ per project; the structural pattern doesn't.
-
 ## Issues / QA notes
 
 Lightweight "something's off" capture lives in `docs/issues.md` — quick, low-ceremony, not the formal OpenSpec or Sreditor flows. Robin flags things he spots in the running app there; CLI checks them off when fixed.
