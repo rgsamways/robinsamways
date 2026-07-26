@@ -87,6 +87,52 @@ test.describe("page outline — desktop, always-visible inline list", () => {
   });
 });
 
+test.describe("page outline — stays synced with in-page filtering", () => {
+  test("filtering down to one section still shows that one entry", async ({ page }) => {
+    await page.goto("/services");
+
+    const pills = page.getByRole("group", { name: "filter services sections" });
+    await pills.getByRole("button", { name: "Web Sites", exact: true }).click();
+
+    const outline = page.getByRole("navigation", { name: "On this page" });
+    const entries = outline.locator("ul button");
+    await expect(entries).toHaveCount(1);
+    await expect(entries).toHaveText(["WEB_SITES"]);
+  });
+
+  test("re-enabling a filter restores the additional entry live, no reload", async ({ page }) => {
+    await page.goto("/services");
+
+    const pills = page.getByRole("group", { name: "filter services sections" });
+    await pills.getByRole("button", { name: "Web Sites", exact: true }).click();
+
+    const outline = page.getByRole("navigation", { name: "On this page" });
+    await expect(outline.locator("ul button")).toHaveCount(1);
+
+    await pills.getByRole("button", { name: "Web Applications", exact: true }).click();
+
+    await expect(outline.locator("ul button")).toHaveCount(2);
+    await expect(outline.locator("ul button")).toHaveText(["WEB_SITES", "WEB_APPLICATIONS"]);
+  });
+
+  test("filtering out the active section clears the active marking", async ({ page }) => {
+    await page.goto("/services");
+
+    const outline = page.getByRole("navigation", { name: "On this page" });
+    await outline.locator("ul button", { hasText: "WEB_SITES" }).click();
+    await expect(outline.locator("ul button", { hasText: "WEB_SITES" })).toHaveAttribute(
+      "aria-current",
+      "true"
+    );
+
+    const pills = page.getByRole("group", { name: "filter services sections" });
+    await pills.getByRole("button", { name: "Web Applications", exact: true }).click();
+
+    await expect(outline.locator("ul button")).toHaveCount(1);
+    await expect(outline.locator("ul button")).not.toHaveAttribute("aria-current", "true");
+  });
+});
+
 test.describe("page outline — mobile", () => {
   test.use({ viewport: { width: 390, height: 844 } });
 

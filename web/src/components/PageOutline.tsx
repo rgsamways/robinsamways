@@ -59,6 +59,13 @@ export default function PageOutline() {
   const glowTimeoutRef = useRef<number | undefined>(undefined);
   const glowElementRef = useRef<HTMLElement | null>(null);
 
+  // D3 (sync-page-outline-with-filters): the highest section count seen
+  // during this page view, not the instantaneous count — once a page has
+  // ever crossed MIN_SECTIONS_TO_SHOW it stays "eligible" for the rest of
+  // the view, so filtering down to 1 still shows that 1 entry instead of
+  // the outline disappearing and reappearing as pills toggle.
+  const maxSectionsSeenRef = useRef(0);
+
   useEffect(() => {
     return () => {
       if (suppressTimeoutRef.current !== undefined) {
@@ -73,10 +80,50 @@ export default function PageOutline() {
     };
   }, []);
 
-  // Re-scan on mount and on every route change — a fresh page's headings
-  // replace the previous page's entirely.
+  // Re-scan on mount, on every route change, and whenever the page's own
+  // rendered heading structure changes for any other reason (D1: a generic
+  // MutationObserver on `main`, not a callback/context wired to whatever
+  // in-page filter component caused the change — SectionFilterBar today,
+  // anything else tomorrow, all get this for free). The observer is
+  // recreated per pathname since `main`'s subtree is entirely new content
+  // after navigation anyway.
   useEffect(() => {
-    setSections(scanSections());
+    maxSectionsSeenRef.current = 0;
+
+    function rescan() {
+      const next = scanSections();
+      if (next.length > maxSectionsSeenRef.current) {
+        maxSectionsSeenRef.current = next.length;
+      }
+      setSections(next);
+      // D4: a filtered-out active section resets to null rather than a
+      // guessed replacement — the IntersectionObserver re-establishes a
+      // real active section on the next scroll regardless.
+      setActiveId((current) =>
+        current !== null && !next.some((section) => section.id === current) ? null : current
+      );
+    }
+
+    rescan();
+
+    const container = document.querySelector("main");
+    if (!container) return;
+
+    // D2: a single pill toggle can remove/add several SectionHeader
+    // subtrees in one React commit, which would otherwise deliver several
+    // mutation records at once — debounce so one settled DOM batch produces
+    // one re-scan.
+    let debounceHandle: number | undefined;
+    const observer = new MutationObserver(() => {
+      if (debounceHandle !== undefined) window.clearTimeout(debounceHandle);
+      debounceHandle = window.setTimeout(rescan, 50);
+    });
+    observer.observe(container, { childList: true, subtree: true });
+
+    return () => {
+      observer.disconnect();
+      if (debounceHandle !== undefined) window.clearTimeout(debounceHandle);
+    };
   }, [pathname]);
 
   // D5: IntersectionObserver over the real heading elements, not manual
@@ -85,7 +132,7 @@ export default function PageOutline() {
   // since IntersectionObserver's own callback order isn't guaranteed to
   // match page order.
   useEffect(() => {
-    if (sections.length < MIN_SECTIONS_TO_SHOW) return;
+    if (maxSectionsSeenRef.current < MIN_SECTIONS_TO_SHOW) return;
 
     const elements = sections
       .map((section) => document.getElementById(section.id))
@@ -113,9 +160,11 @@ export default function PageOutline() {
     return () => observer.disconnect();
   }, [sections]);
 
-  // A page with fewer than two sections has nothing worth outlining — render
-  // nothing at all, not even a disabled heading.
-  if (sections.length < MIN_SECTIONS_TO_SHOW) return null;
+  // D3: gated on the max ever seen this page view, not the instantaneous
+  // count — a page that's crossed the threshold keeps its outline even when
+  // filtering narrows it down to 1; a page that's never crossed it stays
+  // hidden regardless of how many sections happen to be visible right now.
+  if (maxSectionsSeenRef.current < MIN_SECTIONS_TO_SHOW) return null;
 
   function handleSelect(id: string) {
     // Don't wait on the IntersectionObserver to confirm this — a short

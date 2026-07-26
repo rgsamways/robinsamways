@@ -1,8 +1,5 @@
-# page-outline-nav Specification
+## MODIFIED Requirements
 
-## Purpose
-TBD - created by archiving change page-outline-nav. Update Purpose after archive.
-## Requirements
 ### Requirement: A page with real section structure surfaces an outline trigger
 On desktop viewports only, the system SHALL render an "on this page" outline as an always-visible inline anchor list in the widened right rail, once the current page view has ever had two or more `SectionHeader` sections rendered at once, derived at runtime from the page's actual rendered headings — not from a hand-maintained per-page list. Once eligible, the outline SHALL reflect however many `SectionHeader` sections are currently rendered, down to a minimum of one, including after in-page filtering removes or restores sections without a route change. A page that never renders more than one `SectionHeader` section at a time during the current page view, filtered or not, SHALL show no outline. On mobile viewports, the outline is not shown at all — no trigger, no access point.
 
@@ -18,6 +15,8 @@ On desktop viewports only, the system SHALL render an "on this page" outline as 
 - **WHEN** a visitor at a mobile viewport loads a page with two or more `SectionHeader` sections
 - **THEN** no outline trigger or list appears anywhere on that page
 
+## ADDED Requirements
+
 ### Requirement: The outline stays synced when in-page filtering changes which sections are visible
 The system SHALL re-derive the outline's section list whenever the page's rendered `SectionHeader` content changes for any reason during the current page view, not only on navigation — including when a pill filter or similar in-page control adds or removes sections from the page without changing the route. Once the outline has become eligible per the two-or-more rule, it SHALL continue showing even when filtering narrows the currently visible sections down to exactly one. If the section currently marked active is removed by such a change, the system SHALL clear the active marking rather than continuing to mark a section that is no longer present.
 
@@ -32,35 +31,3 @@ The system SHALL re-derive the outline's section list whenever the page's render
 #### Scenario: Filtering out the active section clears the active marking
 - **WHEN** the section currently marked active in the outline is removed by an in-page filter change
 - **THEN** no entry in the outline remains marked active until the visitor scrolls or otherwise causes a new section to become active
-
-### Requirement: Every SectionHeader renders a stable, unique anchor id
-Each `SectionHeader` instance SHALL render its heading with an `id` slugified from its `title`, and SHALL disambiguate same-page title collisions so every section remains individually reachable by a unique anchor.
-
-#### Scenario: A section's heading gets a slugified id
-- **WHEN** a `SectionHeader` with title "Phase 1 — Port The Core" renders
-- **THEN** its heading element has an `id` derived from that title (lowercased, non-alphanumeric characters replaced, no leading/trailing separator)
-
-#### Scenario: Two sections with the same title both stay individually reachable
-- **WHEN** a page renders two `SectionHeader` instances with identical titles
-- **THEN** the system gives the second instance a numerically-suffixed variant of the first's id, so both ids remain unique on that page
-
-### Requirement: The outline lists the page's real sections in document order
-The inline outline SHALL list every `SectionHeader` section on the current page, in the order they appear in the document, each as a clickable link to its section.
-
-#### Scenario: The outline shows every section
-- **WHEN** a visitor at a desktop viewport views a page with several sections
-- **THEN** the outline lists each section's title, in the same order they appear on the page
-
-### Requirement: Selecting an outline entry navigates to that section
-Clicking an entry in the outline SHALL scroll the page to that section's heading. The outline remains visible afterward — there is nothing to close, since it is not a panel.
-
-#### Scenario: Clicking an outline entry jumps to its section
-- **WHEN** a visitor clicks a section's entry in the outline
-- **THEN** the page scrolls to that section's heading and the outline stays visible, unchanged
-
-### Requirement: The outline highlights the section currently in view
-The system SHALL visually mark whichever listed section is currently scrolled into view, updating as the visitor scrolls.
-
-#### Scenario: Scrolling into a section marks it active
-- **WHEN** a visitor scrolls so that a different section's heading enters the viewport
-- **THEN** that section's entry in the outline becomes the one marked active, and the previously active entry is no longer marked active
