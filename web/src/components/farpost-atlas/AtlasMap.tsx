@@ -101,7 +101,12 @@ export default function AtlasMap() {
         />
         Show rural-density overlay (North Hastings Dissemination Areas)
       </label>
-      <div className="h-[480px] w-full overflow-hidden border border-foreground/20">
+      {/* `isolate` contains Leaflet's own internal z-index values (.leaflet-pane
+          400, .leaflet-top/.leaflet-control 1000, etc.) inside this box's own
+          stacking context, so they never compare directly against the site's
+          global z-index order (Header.tsx's sticky z-20 in particular) — a
+          new stacking context, no `position` side effects. */}
+      <div className="isolate h-[480px] w-full overflow-hidden border border-foreground/20">
         <MapContainer center={NORTH_HASTINGS_CENTER} zoom={10} scrollWheelZoom style={{ height: "100%", width: "100%" }}>
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
