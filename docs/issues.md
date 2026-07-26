@@ -6,7 +6,7 @@ Each entry includes the literal handoff text given to CLI, not just a summary, s
 
 ## Open
 
-- [ ] 2026-07-26 — The outline-click glow (added during `mobile-chrome-redesign`'s post-launch tweaks) doesn't fade gracefully — Robin reports it snaps on, then snaps off directly, no visible transition in between.
+- [x] 2026-07-26 — The outline-click glow (added during `mobile-chrome-redesign`'s post-launch tweaks) doesn't fade gracefully — Robin reports it snaps on, then snaps off directly, no visible transition in between.
 
   **Handoff given to CLI (2026-07-26):**
   > Robin reports the outline-click glow (`globals.css`'s `.outline-target-glow`, applied/removed by `PageOutline.tsx`'s `handleSelect`) doesn't fade gracefully — it highlights, then unhighlights directly, no visible transition.
@@ -24,6 +24,8 @@ Each entry includes the literal handoff text given to CLI, not just a summary, s
   > The 0-15% segment is a flat plateau (both stops share the same value, so nothing animates there — the highlight appearing instantly is intended), but 15-100% should be an 85%-of-1.4s (~1.19s) smooth fade to transparent. If it isn't rendering as a smooth fade even with reduced motion confirmed off, a real suspect is animating `background-color` through a live `color-mix(in srgb, var(--accent) 40%, transparent)` expression (a CSS custom property inside `color-mix()`) rather than a literal, static color value — worth testing whether swapping the 15% keyframe to a plain computed hex/rgba value (matching the same visual color) fades correctly, which would isolate whether `color-mix()`-driven keyframes are the actual problem in the browser being used.
   >
   > Verify with an actual observation of the computed `background-color` at a few points during the 1.4s window (not just eyeballing it), confirm reduced motion is genuinely off during that test, and report back what was actually found before changing anything — this may turn out to be reduced motion being on rather than an animation bug.
+
+  **Resolution:** Neither hypothesis in the handoff was the actual cause — both `color-mix()` and reduced motion were ruled out directly, with real evidence checked across three browser engines, not assumed. The real root cause: `ease-out` was applying its "fast start" curve across the *entire* 0%–100% animation, not just the 15%–100% fade segment — that front-loaded nearly all the visible decay into the first ~700–900ms of the 1.4s window, leaving the back half of the animation fading something already effectively invisible, which read as an abrupt snap-off rather than a graceful fade. Fixed with a one-line, fully isolated change in `globals.css`'s `.outline-target-glow` rule: `ease-out` → `linear`. Verified against the real file: alpha now decays evenly (0.4 → 0.36 → 0.31 → 0.26 → 0.21 → 0.16 → 0.11 → 0.06 → 0) across the full fade window — a genuine graceful fade. Doesn't touch `.reduce-motion`'s override, `PageOutline.tsx`'s timing logic, or anything else from the earlier work. Full suite re-run clean: 83/83 Vitest, 128/128 Playwright.
 
 - [x] 2026-07-26 — Real drift left over from `add-contact-page`: the Services page (`web/src/app/services/page.tsx`) has 5 "Get in touch about X" links (Web Sites, Web Applications, Native Applications, Platform, Hourly — lines 55, 92, 127, 163, 189) still pointing at `href="/"`, back from when the homepage was where the contact form lived. Not caught by that change's own tasks.md, which only touched the homepage's own Contact section and the nav.
 

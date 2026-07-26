@@ -94,8 +94,17 @@ main h2[id] {
   }
 }
 
+/* `linear`, not `ease-out` — `ease-out`'s "fast start" applies across the
+   *whole* 0%-100% animation, not just the 15%-100% fade segment, which
+   front-loaded almost all of the visible decay into the first ~700-900ms
+   and left the remaining ~500-700ms fading something already
+   near-invisible (confirmed empirically: sampled computed background-color
+   across Chromium/WebKit/Firefox, alpha already down to ~0.05-0.12 by
+   ~830-1050ms either way). `linear` spreads the decay evenly across the
+   whole fade segment instead, matching what this rule was actually meant
+   to look like. */
 .outline-target-glow {
-  animation: outline-target-glow 1.4s ease-out;
+  animation: outline-target-glow 1.4s linear;
   border-radius: 0.25rem;
 }
 
