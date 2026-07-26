@@ -478,3 +478,47 @@ Restructured the entire left nav: Metrics moved from Writing/Dev Log to its own 
 | **Total** | **249** | **18,073** | **15,874** | **971** |
 
 ULOC: 10,438 · **DRYness: 58%**
+
+### 2026-07-26 — after archiving `mobile-chrome-redesign`
+
+Consolidated the mobile top bar (brand pill left, one 3-icon cluster right — Account-or-Sign-In, Menu, Settings), replacing the old split hamburger-left/cog-right layout; the mobile nav is now a full-viewport takeover (`fixed inset-0`, no dim backdrop) instead of a narrow `w-72` slide-in drawer, sharing open/close state between `RightRail` (the trigger) and `DrawerNav` (the panel) via a new `MobileNavContext.tsx`. The desktop right rail widened from `xl:w-16` to `xl:w-64`, and `PageOutline` dropped its `createPortal`-to-`document.body` click-to-open modal entirely in favor of a persistent inline anchor list, CSS-hidden below `xl` (`hidden xl:block`) rather than shown via a mobile trigger. The Account/Sign-In icon is now genuinely session-conditional everywhere — `session.ts`'s `storeSession()`/`clearSession()` toggle a `data-signed-in` attribute on `<html>` (read live by new `globals.css` rules), the same DOM-attribute pattern already proven by theme/font-scale/reduced-motion, since `RightRail` mounts once at the root layout and never remounts on client-side nav. `/account` gained a real Sign Out button (`AccountSignOut.tsx`) using the existing `clearSession()`. `Header.tsx`'s photo moved back to the right of the contact-info block, restoring `resume-homepage`'s already-shipped spec. DRYness held flat (58% → 58%); complexity dropped slightly (971 → 968) since `PageOutline` lost its open-state/Escape-listener logic and the new files are mostly simple wrapper components. File count reconciles exactly: 4 new files in `web/src` (`MobileNavContext.tsx`, `AccountSignOut.tsx`, `session.test.ts`, `Header.test.tsx`) — no deletions. (`e2e/account-session.spec.ts`, also new, isn't in scc's `web/src api pieces` scan scope.)
+
+| Language | Files | Lines | Code | Complexity |
+|---|---|---|---|---|
+| TypeScript | 147 | 10,827 | 9,770 | 594 |
+| Python | 42 | 4,087 | 3,305 | 265 |
+| XML | 21 | 458 | 458 | 0 |
+| JavaScript | 14 | 984 | 808 | 72 |
+| JSON | 8 | 608 | 608 | 0 |
+| Apex | 7 | 780 | 634 | 37 |
+| Plain Text | 5 | 24 | 24 | 0 |
+| Markdown | 3 | 185 | 146 | 0 |
+| CSS | 2 | 123 | 78 | 0 |
+| HTML | 2 | 84 | 77 | 0 |
+| TOML | 2 | 8 | 8 | 0 |
+| **Total** | **253** | **18,168** | **15,916** | **968** |
+
+ULOC: 10,476 · **DRYness: 58%**
+
+### 2026-07-26 — after archiving `dev-log-topics`
+
+Added a `topic: Topic` field one level above `category` on every Dev Log entry (fixed 5-value taxonomy — Engineering, Process & Verification, Architecture & Stack Decisions, Business Model, Human Factors), grew `CODE_SHOWCASE_ENTRIES` from 12 to 23 with 11 new entries carrying real final copy (3 about this project's own AI-assisted process, 8 drawn from existing `docs/lightbulbs/*-dev-log-entry.md` files, each graduated with a pointer note), gave `/dev-log` a single-select topic pill filter (`TopicFilter.tsx`, reusing the site's existing active-pill styling), and capped `DrawerNav`'s Dev Log submenu at the 5 most recent entries plus a "View All" link (`capRecentEntries.ts`) instead of listing all 23. DRYness held flat (58% → 58%).
+
+**This delta is not purely `dev-log-topics`' own work** — worth stating plainly rather than implying otherwise. The previous snapshot (`mobile-chrome-redesign`) was logged before a separate batch of live, ad hoc post-archive tweaks that session (the outline's scroll-margin fix, the click glow, the per-anchor color strip, `cursor-pointer` additions — see `docs/handoff-2026-07-26-post-mobile-chrome-tweaks.md`) — none of which had their own snapshot. Those tweaks only edited already-existing files (`globals.css`, `PageOutline.tsx`, `SectionHeader.tsx`, `Header.tsx`, `PillBar.tsx`), so they added real lines to this delta without adding any files — `dev-log-topics` itself never touched any of those five files at all. File count still reconciles exactly against `dev-log-topics`' own new files alone (6: `TopicFilter.tsx`, `filterByTopic.ts`, `DevLogEntryList.tsx`, `capRecentEntries.ts`, `filterByTopic.test.ts`, `capRecentEntries.test.ts`), which is what makes the mixed attribution easy to miss — the file-count math working out perfectly doesn't mean the line-count delta is 100% this change's own.
+
+| Language | Files | Lines | Code | Complexity |
+|---|---|---|---|---|
+| TypeScript | 153 | 11,388 | 10,260 | 603 |
+| Python | 42 | 4,087 | 3,305 | 265 |
+| XML | 21 | 458 | 458 | 0 |
+| JavaScript | 14 | 984 | 808 | 72 |
+| JSON | 8 | 620 | 620 | 0 |
+| Apex | 7 | 780 | 634 | 37 |
+| Plain Text | 5 | 24 | 24 | 0 |
+| Markdown | 3 | 185 | 146 | 0 |
+| CSS | 2 | 161 | 98 | 0 |
+| HTML | 2 | 84 | 77 | 0 |
+| TOML | 2 | 8 | 8 | 0 |
+| **Total** | **259** | **18,779** | **16,438** | **977** |
+
+ULOC: 10,815 · **DRYness: 58%**

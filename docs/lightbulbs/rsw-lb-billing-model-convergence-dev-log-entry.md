@@ -2,7 +2,7 @@
 
 **Slug:** rsw-lb-billing-model-convergence-dev-log-entry
 **Date logged:** 2026-07-24
-**Status:** unscoped — idea captured, not yet spec'd
+**Status:** scoped — became the `billing-model-convergence` Dev Log entry on 2026-07-26 (`dev-log-topics` change)
 **Related:** `docs/core-billing-model.md`, `rsw-lb-own-stack-discovery-dev-log-entry` (the same shape of discovery, applied to billing instead of tech stack), `farpost-lb-payment-models.md`
 
 ## The gap

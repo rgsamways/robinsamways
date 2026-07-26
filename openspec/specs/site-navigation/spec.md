@@ -4,21 +4,23 @@
 TBD - created by archiving change initial-site-scaffold. Update Purpose after archive.
 ## Requirements
 ### Requirement: Header exposes a menu toggle
-On a laptop/desktop viewport, the site SHALL show a persistent left navigation drawer at all times, grouped into sections — **Site** (Home, Services, Metrics), **Work** (Farpost, Vocare, Sreditor), **Experiments** (Atlas, Dispatch, Pulse, Credential Flow), **Writing** (Dev Log), and **Ops** (Deploy Runbook) — with no toggle needed to reveal it. The Farpost, Vocare, and Sreditor entries under Work; the Experiments group itself; and the Dev Log entry under Writing SHALL each render as collapsible groups with their own child links (per the "Collapsible nav groups expand and collapse, auto-expanded on the active route" requirement), rather than plain links. On a mobile viewport, the same drawer SHALL be hidden by default behind a menu button that, when activated, slides it into view with a dismissible backdrop; activating the button again, selecting a link, or clicking the backdrop SHALL close it.
+On a laptop/desktop viewport, the site SHALL show a persistent left navigation drawer at all times, grouped into sections — **Site** (Home, Services, Metrics), **Work** (Farpost, Vocare, Sreditor), **Experiments** (Atlas, Dispatch, Pulse, Credential Flow), **Writing** (Dev Log), and **Ops** (Deploy Runbook) — with no toggle needed to reveal it. The Farpost, Vocare, and Sreditor entries under Work; the Experiments group itself; and the Dev Log entry under Writing SHALL each render as collapsible groups with their own child links (per the "Collapsible nav groups expand and collapse, auto-expanded on the active route" requirement), rather than plain links. On a mobile viewport, the drawer SHALL be hidden by default behind a menu button positioned in a shared icon cluster at the top-right of the viewport, alongside the site's Account-or-Sign-In icon and Settings icon (per the `account-hub-stub` capability) — the brand pill on the opposite, top-left side of the same bar is the only other control in that row. Activating the menu button SHALL open the navigation as a full-viewport takeover, not a narrow slide-in panel: no other page content or backdrop remains visible while it's open. Pressing Escape, activating the panel's own explicit close control, or selecting a link SHALL close it — the menu button itself is covered by the open panel and isn't reachable again while it's open, so there is no click-to-toggle path back through it, and there is no backdrop to click either, since nothing else is visible while it's open.
 
 #### Scenario: Desktop shows the drawer persistently
 - **WHEN** a visitor loads any page at a laptop/desktop viewport width
 - **THEN** the grouped navigation drawer (Site, Work, Experiments, Writing, Ops) is visible without any toggle interaction
 
-#### Scenario: Mobile menu opens and closes
-- **WHEN** a visitor at a mobile viewport width clicks the menu button
-- **THEN** the navigation drawer slides into view over a backdrop
-- **WHEN** the visitor clicks the menu button again, clicks the backdrop, or selects a link
-- **THEN** the drawer closes
+#### Scenario: Mobile menu opens as a full-viewport takeover
+- **WHEN** a visitor at a mobile viewport width activates the menu button
+- **THEN** the navigation opens covering the entire viewport, with no other page content or backdrop visible behind it
 
-#### Scenario: Selecting a link navigates and closes the drawer
-- **WHEN** a visitor at a mobile viewport clicks "Experiments" in the open drawer
-- **THEN** the browser navigates to the Experiments index page and the drawer closes
+#### Scenario: Escape closes the open mobile nav without navigating
+- **WHEN** a visitor at a mobile viewport has the full-viewport nav open and presses Escape
+- **THEN** the nav closes and no navigation occurs
+
+#### Scenario: Selecting a link navigates and closes the mobile nav
+- **WHEN** a visitor at a mobile viewport clicks "Experiments" in the open full-viewport nav
+- **THEN** the browser navigates to the Experiments index page and the nav closes
 
 #### Scenario: Selecting Home navigates to the homepage
 - **WHEN** a visitor on any page selects "Home" in the drawer
@@ -72,11 +74,15 @@ The Experiments group SHALL render as a top-level entry in the navigation drawer
 - **THEN** the submenu shows Atlas, Dispatch, Pulse, and Credential Flow
 
 ### Requirement: Writing group's Dev Log entry links to a collapsible submenu of Dev Log pages
-The Writing group's "Dev Log" entry SHALL be a link to `/dev-log` (rendering a short hub landing, per the `dev-log-content` capability) and SHALL also expose a collapsible submenu listing every Dev Log entry (the former Code Showcase articles, now direct children of Dev Log, plus any future posts), by title, most recent first. Dev Log no longer has Bug Log, Metrics, Testing & Verification, Glossary, or Lightbulbs as its own sub-pages — that content now lives per-Work-project (or, for Metrics, under Site).
+The Writing group's "Dev Log" entry SHALL be a link to `/dev-log` (rendering a short hub landing, per the `dev-log-content` capability) and SHALL also expose a collapsible submenu listing the 5 most recently published Dev Log entries by title, most recent first, followed by a trailing "View All" link to `/dev-log` — not every entry, since Dev Log is an unbounded, growing stream rather than a fixed page set. Dev Log no longer has Bug Log, Metrics, Testing & Verification, Glossary, or Lightbulbs as its own sub-pages — that content now lives per-Work-project (or, for Metrics, under Site).
 
-#### Scenario: Dev Log submenu lists its entries directly, with no intermediate Code Showcase node
-- **WHEN** a visitor expands the Dev Log group under Writing
-- **THEN** the submenu lists every Dev Log entry by title directly, with no "Code Showcase" grouping node between Dev Log and its entries
+#### Scenario: Dev Log submenu lists the 5 most recent entries plus View All
+- **WHEN** a visitor expands the Dev Log group under Writing, and more than 5 Dev Log entries exist
+- **THEN** the submenu lists the 5 most recently published entries by title, most recent first, followed by a "View All" link to `/dev-log`, with no "Code Showcase" grouping node anywhere in the tree
+
+#### Scenario: Fewer than 5 entries exist
+- **WHEN** fewer than 5 Dev Log entries exist
+- **THEN** the submenu lists all of them, most recent first, still followed by the "View All" link
 
 ### Requirement: Placeholder routes exist for each menu item
 The Farpost route SHALL render Farpost's real content (as a hub, per the `farpost-page-content` capability), not a placeholder. The Sreditor route SHALL render Sreditor's real content, as defined by the `sreditor-page-content` capability, not a placeholder. The Experiments route SHALL render a showcase index of pieces, as defined by the `tech-stacks-index` capability. The Dev Log route SHALL render its real content, as defined by the `dev-log-content` capability, not a placeholder. The Services route SHALL render its real content, as defined by the `services-page-content` capability, not a placeholder. The site's Metrics route (under Site) SHALL render its real content, unchanged in content from its prior location under Dev Log.

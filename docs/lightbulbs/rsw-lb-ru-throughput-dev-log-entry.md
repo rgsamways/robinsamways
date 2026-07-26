@@ -2,7 +2,7 @@
 
 **Slug:** rsw-lb-ru-throughput-dev-log-entry
 **Date logged:** 2026-07-10
-**Status:** unscoped — idea captured, not yet spec'd
+**Status:** independently fulfilled — this content is already published as the `cosmos-db-shared-throughput` Dev Log entry (not drafted as part of the `dev-log-topics` change; confirmed while scoping that change that this idea's content and that entry's are the same)
 **Related:** `docs/issues.md` (the real bug entry this would draw from), `web/src/app/dev-log/page.tsx` (currently a placeholder), `pieces/farpost-pulse-func/scripts/seed.js`
 
 ## The gap

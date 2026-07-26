@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import PageHeading from "@/components/PageHeading";
-import Timestamp from "@/components/dev-log/Timestamp";
 import { CODE_SHOWCASE_ENTRIES } from "@/components/dev-log/codeShowcase";
+import DevLogEntryList from "@/components/dev-log/DevLogEntryList";
 
 export const metadata: Metadata = {
   title: "Dev Log · Robin Samways",
@@ -20,24 +19,7 @@ export default function DevLogPage() {
         experience from Robin&rsquo;s own projects, most recent first.
       </PageHeading>
 
-      <ul className="mt-8 space-y-6">
-        {ENTRIES.map((entry) => (
-          <li key={entry.slug} className="border-b border-foreground/10 pb-6">
-            <p className="text-xs uppercase tracking-wide text-muted">
-              {entry.project} &middot; {entry.category}
-            </p>
-            <h2 className="mt-1 text-sm font-bold">
-              <Link href={`/dev-log/${entry.slug}`} className="hover:text-accent">
-                <span className="text-accent">&gt;</span> {entry.title}
-              </Link>
-            </h2>
-            <p className="mt-2 text-sm leading-relaxed">{entry.teaser}</p>
-            <div className="mt-2">
-              <Timestamp utc={entry.publishedAtUtc} />
-            </div>
-          </li>
-        ))}
-      </ul>
+      <DevLogEntryList entries={ENTRIES} />
     </main>
   );
 }

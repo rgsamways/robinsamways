@@ -2,7 +2,7 @@
 
 **Slug:** rsw-lb-vocare-pricing-history-dev-log-entry
 **Date logged:** 2026-07-24
-**Status:** unscoped — idea captured, not yet spec'd
+**Status:** scoped — became the `three-prices-in-three-days` Dev Log entry on 2026-07-26 (`dev-log-topics` change)
 **Related:** `docs/core-billing-model.md`, Vocare's real billing code (`c:\dev\vocare\backend\src\billing\`)
 
 ## The gap

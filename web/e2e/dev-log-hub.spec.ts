@@ -67,3 +67,54 @@ test.describe("/dev-log hub", () => {
     await expect(page).toHaveURL("/metrics");
   });
 });
+
+test.describe("/dev-log topic filter", () => {
+  test("loads with 'All' selected, showing entries from more than one topic", async ({ page }) => {
+    await page.goto("/dev-log");
+
+    const group = page.getByRole("group", { name: "filter by topic" });
+    await expect(group.getByRole("button", { name: "All", exact: true })).toHaveAttribute(
+      "aria-pressed",
+      "true"
+    );
+
+    const main = page.locator("main");
+    await expect(
+      main.getByRole("link", { name: "The Bug That Silently Ate 2,706 Records" })
+    ).toBeVisible();
+    await expect(
+      main.getByRole("link", { name: "What a Timed AI Interview Actually Measures" })
+    ).toBeVisible();
+  });
+
+  test("selecting a topic shows only its entries", async ({ page }) => {
+    await page.goto("/dev-log");
+
+    const group = page.getByRole("group", { name: "filter by topic" });
+    await group.getByRole("button", { name: "Human Factors", exact: true }).click();
+
+    const main = page.locator("main");
+    await expect(
+      main.getByRole("link", { name: "What a Timed AI Interview Actually Measures" })
+    ).toBeVisible();
+    await expect(
+      main.getByRole("link", { name: "The Bug That Silently Ate 2,706 Records" })
+    ).toHaveCount(0);
+  });
+
+  test("selecting All after a topic restores the full list", async ({ page }) => {
+    await page.goto("/dev-log");
+
+    const group = page.getByRole("group", { name: "filter by topic" });
+    await group.getByRole("button", { name: "Human Factors", exact: true }).click();
+    const main = page.locator("main");
+    await expect(
+      main.getByRole("link", { name: "The Bug That Silently Ate 2,706 Records" })
+    ).toHaveCount(0);
+
+    await group.getByRole("button", { name: "All", exact: true }).click();
+    await expect(
+      main.getByRole("link", { name: "The Bug That Silently Ate 2,706 Records" })
+    ).toBeVisible();
+  });
+});

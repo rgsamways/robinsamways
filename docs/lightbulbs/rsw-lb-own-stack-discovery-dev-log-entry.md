@@ -2,7 +2,7 @@
 
 **Slug:** rsw-lb-own-stack-discovery-dev-log-entry
 **Date logged:** 2026-07-24
-**Status:** unscoped — idea captured, not yet spec'd
+**Status:** scoped — became the `found-my-own-stack` Dev Log entry on 2026-07-26 (`dev-log-topics` change)
 **Related:** Vocare (`c:\dev\vocare\backend`), Farpost, Sreditor, Smallburg — the multi-project stack audit
 
 ## The gap

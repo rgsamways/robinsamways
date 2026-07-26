@@ -2,7 +2,7 @@
 
 **Slug:** rsw-lb-ai-interview-format-mismatch-dev-log-entry
 **Date logged:** 2026-07-24
-**Status:** unscoped — idea captured, not yet spec'd
+**Status:** scoped — became the `ai-interview-format-mismatch` Dev Log entry on 2026-07-26 (`dev-log-topics` change)
 **Related:** Farpost (used as counter-evidence), the micro1/Zara AI-interview process
 
 ## The gap

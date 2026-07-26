@@ -2,7 +2,7 @@
 
 **Slug:** rsw-lb-role-modeled-twice-dev-log-entry
 **Date logged:** 2026-07-24
-**Status:** unscoped — idea captured, not yet spec'd
+**Status:** scoped — became the `role-modeled-twice` Dev Log entry on 2026-07-26 (`dev-log-topics` change)
 **Related:** Farpost's identity/roles schema (`app/models/user.py`, `professional.py`, and the 10 per-role child tables), the Farpost rebuild decision
 
 ## The gap

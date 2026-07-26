@@ -2,7 +2,7 @@
 
 **Slug:** rsw-lb-fastify-vs-express-dev-log-entry
 **Date logged:** 2026-07-24
-**Status:** unscoped — idea captured, not yet spec'd
+**Status:** scoped — became the `fastify-vs-express-tradeoff` Dev Log entry on 2026-07-26 (`dev-log-topics` change)
 **Related:** the Farpost rebuild's stack decision, Vocare's existing Fastify backend
 
 ## The gap

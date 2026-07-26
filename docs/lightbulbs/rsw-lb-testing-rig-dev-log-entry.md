@@ -2,7 +2,7 @@
 
 **Slug:** rsw-lb-testing-rig-dev-log-entry
 **Date logged:** 2026-07-10
-**Status:** unscoped — idea captured, not yet spec'd
+**Status:** scoped — became the `how-this-site-actually-gets-tested` Dev Log entry on 2026-07-26 (`dev-log-topics` change)
 **Related:** `docs/testing.md`, `web/src/app/dev-log/page.tsx` (currently a placeholder)
 
 ## The gap

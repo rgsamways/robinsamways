@@ -1,10 +1,12 @@
 "use client";
 
-import { ChevronDown, ChevronRight } from "lucide-react";
+import { ChevronDown, ChevronRight, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { capRecentEntries } from "./dev-log/capRecentEntries";
 import { CODE_SHOWCASE_ENTRIES } from "./dev-log/codeShowcase";
+import { useMobileNav } from "./MobileNavContext";
 import { isExpanded, type NavGroup, type NavLink } from "./navTree";
 
 const PROJECT_RECORD_CHILDREN = (base: string): NavLink[] => [
@@ -20,9 +22,15 @@ const PROJECT_RECORD_CHILDREN = (base: string): NavLink[] => [
   { href: `${base}/glossary`, label: "Glossary" },
 ];
 
-const DEV_LOG_ENTRIES: NavLink[] = [...CODE_SHOWCASE_ENTRIES]
-  .sort((a, b) => b.publishedAtUtc.localeCompare(a.publishedAtUtc))
-  .map((entry) => ({ href: `/dev-log/${entry.slug}`, label: entry.title }));
+// D3 (dev-log-topics): caps at the 5 most recent, plus a trailing "View
+// All" link to /dev-log — Dev Log is an unbounded, growing stream, not a
+// fixed page set like Farpost/Vocare/Sreditor's 10-item submenus.
+const DEV_LOG_ENTRIES: NavLink[] = [
+  ...capRecentEntries(
+    [...CODE_SHOWCASE_ENTRIES].sort((a, b) => b.publishedAtUtc.localeCompare(a.publishedAtUtc))
+  ).map((entry) => ({ href: `/dev-log/${entry.slug}`, label: entry.title })),
+  { href: "/dev-log", label: "View All" },
+];
 
 const NAV_GROUPS: NavGroup[] = [
   {
@@ -128,7 +136,7 @@ function NavItem({
 }
 
 export default function DrawerNav() {
-  const [open, setOpen] = useState(false);
+  const { open, setOpen } = useMobileNav();
   const [overrides, setOverrides] = useState<Record<string, boolean>>({});
   const pathname = usePathname();
 
@@ -139,7 +147,7 @@ export default function DrawerNav() {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [open]);
+  }, [open, setOpen]);
 
   function toggleGroup(href: string) {
     setOverrides((current) => ({
@@ -152,20 +160,13 @@ export default function DrawerNav() {
     <>
       {/* Full-width, pointer-events-none shell matching the content column's
           own box (mx-auto max-w-6xl + the same px-6 the content div uses) so
-          these buttons track the content's left edge instead of the
+          this brand pill tracks the content's left edge instead of the
           viewport's, once the content column stops being a fixed width
-          below xl. Only the actual button/link re-enable pointer events. */}
+          below xl. Only the actual link re-enables pointer events. The
+          hamburger trigger now lives in RightRail's icon cluster (task 3),
+          not here — this row is brand-pill-only. */}
       <div className="pointer-events-none fixed inset-x-0 top-4 z-30 xl:hidden">
         <div className="mx-auto flex max-w-6xl items-center gap-4 px-6">
-          <button
-            type="button"
-            onClick={() => setOpen(true)}
-            aria-label="Open navigation"
-            aria-expanded={open}
-            className="pointer-events-auto flex h-9 w-9 items-center justify-center rounded-md border border-foreground/20 bg-background text-lg"
-          >
-            ☰
-          </button>
           <Link
             href="/"
             aria-hidden="true"
@@ -177,17 +178,16 @@ export default function DrawerNav() {
         </div>
       </div>
 
-      {open && (
-        <div
-          className="fixed inset-0 z-40 bg-black/40 xl:hidden"
-          onClick={() => setOpen(false)}
-          aria-hidden="true"
-        />
-      )}
-
+      {/* D5: full-viewport takeover, not a narrow slide-in drawer — no
+          backdrop, since nothing else is visible behind an opaque
+          full-viewport panel. Closes via Escape, the close button, or
+          selecting a link; the shared `open` boolean comes from
+          MobileNavContext since RightRail's icon cluster is what triggers
+          it now (D1). */}
       <nav
         aria-label="Site"
-        className={`fixed inset-y-0 left-0 z-50 w-72 overflow-y-auto border-r border-foreground/20 bg-background px-5 py-6 transition-transform duration-200 ease-out ${
+        data-testid="mobile-nav-panel"
+        className={`motion-safe-transition fixed inset-0 z-50 overflow-y-auto border-r border-foreground/20 bg-background px-5 py-6 transition-transform duration-200 ease-out ${
           open ? "translate-x-0" : "-translate-x-full"
         } xl:sticky xl:top-0 xl:z-auto xl:h-screen xl:w-64 xl:translate-x-0 xl:shrink-0`}
       >
@@ -199,9 +199,9 @@ export default function DrawerNav() {
             type="button"
             onClick={() => setOpen(false)}
             aria-label="Close navigation"
-            className="text-lg xl:hidden"
+            className="flex h-9 w-9 items-center justify-center rounded-md border border-foreground/20 xl:hidden"
           >
-            ✕
+            <X className="h-5 w-5" />
           </button>
         </div>
 

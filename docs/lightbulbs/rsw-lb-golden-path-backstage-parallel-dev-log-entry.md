@@ -2,7 +2,7 @@
 
 **Slug:** rsw-lb-golden-path-backstage-parallel-dev-log-entry
 **Date logged:** 2026-07-24
-**Status:** unscoped — idea captured, not yet spec'd
+**Status:** scoped — became the `golden-path-not-planned` Dev Log entry on 2026-07-26 (`dev-log-topics` change) — the resume/LinkedIn/homepage versions noted in the 2026-07-24 update below remain unscoped
 **Related:** `siloes/` convention (`CLAUDE.md`'s "Silo isolation"), the Farpost rebuild stack decision, `rsw-lb-own-stack-discovery-dev-log-entry`
 
 ## The gap

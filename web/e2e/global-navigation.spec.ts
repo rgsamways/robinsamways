@@ -105,11 +105,36 @@ test.describe("collapsible nav groups", () => {
     await nav.getByRole("button", { name: "Expand Dev Log" }).click();
     await expect(nav.getByRole("button", { name: "Expand Code Showcase" })).toHaveCount(0);
 
-    const articleLink = nav.getByRole("link", { name: "The Bug That Silently Ate 2,706 Records" });
+    // The most recently published entry — always in the capped 5, unlike an
+    // older entry that could drop out as new ones are added.
+    const articleLink = nav.getByRole("link", {
+      name: "A 'Drift-Audited and Synced' Report That Wasn't",
+    });
     await expect(articleLink).toBeVisible();
     await articleLink.click();
 
-    await expect(page).toHaveURL("/dev-log/silent-slug-collision");
+    await expect(page).toHaveURL("/dev-log/drift-audit-doesnt-self-verify");
+  });
+
+  test("Dev Log submenu caps at the 5 most recent entries, plus a working View All link", async ({
+    page,
+  }) => {
+    await page.goto("/");
+
+    const nav = page.getByRole("navigation", { name: "Site" });
+    await nav.getByRole("button", { name: "Expand Dev Log" }).click();
+
+    // An entry old enough to have dropped out of the cap — confirms this
+    // is a bounded submenu, not every entry.
+    await expect(
+      nav.getByRole("link", { name: "The Bug That Silently Ate 2,706 Records" })
+    ).toHaveCount(0);
+
+    const viewAll = nav.getByRole("link", { name: "View All" });
+    await expect(viewAll).toBeVisible();
+    await viewAll.click();
+
+    await expect(page).toHaveURL("/dev-log");
   });
 
   test("Sreditor submenu navigates to a project-record page", async ({ page }) => {
@@ -139,5 +164,77 @@ test.describe("collapsible nav groups", () => {
 
     await nav.getByRole("link", { name: "Atlas" }).click();
     await expect(page).toHaveURL("/techstacks/farpost-atlas");
+  });
+});
+
+test.describe("mobile full-viewport nav takeover", () => {
+  test.use({ viewport: { width: 390, height: 844 } });
+
+  test("opens covering the entire viewport, with no backdrop behind it", async ({ page }) => {
+    await page.goto("/");
+    const viewport = page.viewportSize()!;
+
+    await page.getByRole("button", { name: "Open navigation" }).click();
+
+    const panel = page.getByRole("navigation", { name: "Site" });
+    await expect(panel).toBeVisible();
+    // Waits out the slide-in transition rather than reading mid-animation.
+    await expect.poll(async () => (await panel.boundingBox())?.x).toBe(0);
+    const box = (await panel.boundingBox())!;
+    expect(box.width).toBe(viewport.width);
+    expect(box.height).toBe(viewport.height);
+  });
+
+  test("clicking within the open panel away from a link does not close it", async ({ page }) => {
+    await page.goto("/");
+    const viewport = page.viewportSize()!;
+
+    await page.getByRole("button", { name: "Open navigation" }).click();
+    const panel = page.getByRole("navigation", { name: "Site" });
+
+    // There's no backdrop to click anymore — the old dismissible-backdrop
+    // interaction is a deliberate breaking change (design.md's D5/Risks).
+    await panel.getByRole("heading", { name: "Site" }).click();
+
+    const box = (await panel.boundingBox())!;
+    expect(box.x).toBe(0);
+    expect(box.width).toBe(viewport.width);
+  });
+
+  test("Escape closes the nav without navigating", async ({ page }) => {
+    await page.goto("/");
+
+    await page.getByRole("button", { name: "Open navigation" }).click();
+    const panel = page.getByRole("navigation", { name: "Site" });
+    await expect(panel).toBeVisible();
+
+    await page.keyboard.press("Escape");
+
+    const box = (await panel.boundingBox())!;
+    expect(box.x).toBeLessThan(0);
+    await expect(page).toHaveURL("/");
+  });
+
+  test("the close button closes the nav", async ({ page }) => {
+    await page.goto("/");
+
+    await page.getByRole("button", { name: "Open navigation" }).click();
+    const panel = page.getByRole("navigation", { name: "Site" });
+    await page.getByRole("button", { name: "Close navigation" }).click();
+
+    const box = (await panel.boundingBox())!;
+    expect(box.x).toBeLessThan(0);
+  });
+
+  test("selecting a link navigates and closes the nav", async ({ page }) => {
+    await page.goto("/");
+
+    await page.getByRole("button", { name: "Open navigation" }).click();
+    const panel = page.getByRole("navigation", { name: "Site" });
+    await panel.getByRole("link", { name: "Services", exact: true }).click();
+
+    await expect(page).toHaveURL("/services");
+    const box = (await panel.boundingBox())!;
+    expect(box.x).toBeLessThan(0);
   });
 });
