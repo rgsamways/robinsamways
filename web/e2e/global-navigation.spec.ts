@@ -7,6 +7,7 @@ const TOP_LEVEL_LINKS: { label: string; path: string }[] = [
   { label: "Dev Log", path: "/dev-log" },
   { label: "Sreditor", path: "/sreditor" },
   { label: "Services", path: "/services" },
+  { label: "Contact", path: "/contact" },
 ];
 
 test.describe("global navigation drawer", () => {
@@ -20,6 +21,15 @@ test.describe("global navigation drawer", () => {
     }
 
     await expect(page.getByRole("button", { name: "Open navigation" })).toBeHidden();
+  });
+
+  test("Site group lists Home, Services, Metrics, and Contact, in that order", async ({ page }) => {
+    await page.goto("/");
+
+    const siteHeading = page.getByRole("heading", { name: "Site", exact: true });
+    const siteLinks = siteHeading.locator("xpath=following-sibling::ul[1]").getByRole("link");
+
+    await expect(siteLinks).toHaveText(["Home", "Services", "Metrics", "Contact"]);
   });
 
   for (const { label, path } of TOP_LEVEL_LINKS) {
