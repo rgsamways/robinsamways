@@ -52,7 +52,7 @@ export default function ServicesPage() {
             </div>
           </div>
           <p className="mt-4 text-sm leading-relaxed">
-            <Link href="/" className="text-accent underline">
+            <Link href="/contact" className="text-accent underline">
               Get in touch about a Web Sites project
             </Link>
           </p>
@@ -89,7 +89,7 @@ export default function ServicesPage() {
             </p>
           </div>
           <p className="mt-4 text-sm leading-relaxed">
-            <Link href="/" className="text-accent underline">
+            <Link href="/contact" className="text-accent underline">
               Get in touch about a web application
             </Link>
           </p>
@@ -124,7 +124,7 @@ export default function ServicesPage() {
             </p>
           </div>
           <p className="mt-4 text-sm leading-relaxed">
-            <Link href="/" className="text-accent underline">
+            <Link href="/contact" className="text-accent underline">
               Get in touch about a native app
             </Link>
           </p>
@@ -160,7 +160,7 @@ export default function ServicesPage() {
             </p>
           </div>
           <p className="mt-4 text-sm leading-relaxed">
-            <Link href="/" className="text-accent underline">
+            <Link href="/contact" className="text-accent underline">
               Get in touch about a platform build
             </Link>
           </p>
@@ -186,7 +186,7 @@ export default function ServicesPage() {
             </p>
           </div>
           <p className="mt-4 text-sm leading-relaxed">
-            <Link href="/" className="text-accent underline">
+            <Link href="/contact" className="text-accent underline">
               Get in touch about hourly/contract rates
             </Link>
           </p>
