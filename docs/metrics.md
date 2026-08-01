@@ -522,3 +522,26 @@ Added a `topic: Topic` field one level above `category` on every Dev Log entry (
 | **Total** | **259** | **18,779** | **16,438** | **977** |
 
 ULOC: 10,815 · **DRYness: 58%**
+
+### 2026-08-01 — after archiving `experiments-record-pages`
+
+Fixed the redundant "Experiments > Experiments" nav node — Atlas/Dispatch/Pulse/Credential Flow are now direct children of the Experiments heading, plus a trailing "View All" link — and gave each of the four its own six-page submenu (Tech Stack, Architecture, Object Model, Design Notes, AI Notes, Setup Gallery), mirroring Work's existing project-record shape. 24 new `page.tsx` files (six per Experiment), plus three new Setup Gallery components: `farpost-dispatch/SetupGallery.tsx` and `farpost-pulse/SetupGallery.tsx` (both honest "screenshots coming soon" stubs pending Robin capturing real Experience Cloud/Azure screenshots), and `credential-flow/SetupGallery.tsx` migrated off the shared `portfolio/SetupGallery.tsx` with its existing real screenshots carried over unchanged. AI Notes and Design Notes are genuinely new writing for all four pieces (not reorganized content), including Atlas's honest "no AI mechanic today" stub and Pulse's "currently mocked" coaching-tip disclosure.
+
+| Language | Files | Lines | Code | Complexity |
+|---|---|---|---|---|
+| TypeScript | 181 | 13,439 | 12,142 | 670 |
+| Python | 42 | 4,091 | 3,306 | 265 |
+| XML | 21 | 458 | 458 | 0 |
+| JavaScript | 14 | 984 | 808 | 72 |
+| JSON | 8 | 644 | 644 | 0 |
+| Apex | 7 | 780 | 634 | 37 |
+| Plain Text | 5 | 24 | 24 | 0 |
+| Markdown | 3 | 185 | 146 | 0 |
+| CSS | 2 | 170 | 98 | 0 |
+| HTML | 2 | 84 | 77 | 0 |
+| TOML | 2 | 8 | 8 | 0 |
+| **Total** | **287** | **20,867** | **18,345** | **1,044** |
+
+ULOC: 11,653 · **DRYness: 56%**
+
+Delta vs. previous: +28 files, +2,088 lines, +1,907 code, +67 complexity, DRYness dipped 2 points (58% → 56%) — still comfortably above the 55% "high repetition" flag threshold and well short of the 10-point-drop trigger, so no `docs/issues.md` entry needed, though it's the lowest DRYness recorded so far and worth watching on the next snapshot. The dip tracks with a large amount of genuinely new case-study prose rather than duplicated logic: AI Notes and Design Notes are new writing for all four pieces, not reorganized content, per this change's own design.md. File count reconciles to +27 from this change's own new files (listed above); the remaining +1 (`web/src/app/contact/page.tsx`) landed in an intervening commit that didn't get its own snapshot.

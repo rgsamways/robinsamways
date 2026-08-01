@@ -14,7 +14,7 @@ test.describe("Farpost Dispatch case-study page", () => {
     await expect(page.getByRole("heading", { name: "ARCHITECTURE" })).toBeVisible();
     await expect(page.getByRole("heading", { name: "AI_MATCHING" })).toBeVisible();
     await expect(page.getByRole("heading", { name: "TECH_STACK" })).toBeVisible();
-    await expect(page.getByRole("heading", { name: "SETUP_GALLERY" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "NO_LIVE_DEMO" })).toBeVisible();
   });
 
   test("the old Farpost-nested URL redirects permanently to the new Experiments route", async ({ page }) => {

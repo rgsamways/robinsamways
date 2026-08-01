@@ -41,99 +41,36 @@ export default function FarpostPulsePage() {
 
       <section>
         <SectionHeader title="ARCHITECTURE" />
-        <div className="space-y-4 text-sm leading-relaxed">
-          <p>
-            The frontend lives in this same repo, next to every other page on
-            this site. The backend is a genuinely separate Azure Functions
-            app (<code>farpost-pulse-func</code>), calling a real Cosmos DB
-            account (<code>farpost-pulse-cosmos</code>) — not reimplemented
-            in this site&rsquo;s own Python/FastAPI <code>api/</code>, on
-            purpose. The whole point of this page is getting genuine,
-            hands-on time with Node.js and Azure serverless specifically;
-            doing it in Python would defeat that entirely.
-          </p>
-          <p>
-            Unlike Credential Flow&rsquo;s relationship with Salesforce,
-            there&rsquo;s no secret this frontend needs to hide server-side —
-            the Function App holds its own Cosmos DB connection string (and,
-            later, an Azure OpenAI key) entirely on its own side, never sent
-            to the browser. So the frontend calls the Function App directly
-            over HTTP, no proxy through this site&rsquo;s own <code>api/</code>{" "}
-            — simpler, and a more honest picture of the architecture being
-            shown off.
-          </p>
-          <p>
-            The four HTTP endpoints run at anonymous auth level — a function
-            key embedded in a public frontend&rsquo;s client-side JS is
-            extractable by anyone regardless, so it would add friction
-            without real protection. Nothing sensitive is at stake here; all
-            of this data is seeded and fake. The one write endpoint,{" "}
-            <code>POST /api/coaching/generate</code>, still gets a per-IP
-            rate limiter, the same pattern already used for Credential
-            Flow&rsquo;s write endpoints — cheap insurance against abuse,
-            especially once a real AI call (with a real per-request cost) is
-            wired in.
-          </p>
-        </div>
+        <p className="text-sm leading-relaxed">
+          The backend is a genuinely separate Azure Functions app calling a
+          real Cosmos DB account — not reimplemented in this site&rsquo;s own
+          Python/FastAPI <code>api/</code>, on purpose. See{" "}
+          <a
+            href="/techstacks/farpost-pulse/architecture"
+            className="text-accent underline"
+          >
+            Architecture
+          </a>{" "}
+          for the full explanation.
+        </p>
       </section>
 
       <section>
         <SectionHeader title="TECH_STACK" />
-        <div className="overflow-x-auto text-sm">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="border-b border-foreground/20 text-left text-muted">
-                <th className="py-1 pr-4 font-semibold">Layer</th>
-                <th className="py-1 pr-4 font-semibold">Choice</th>
-                <th className="py-1 font-semibold">Why</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="border-b border-foreground/10">
-                <td className="py-2 pr-4 align-top">Frontend</td>
-                <td className="py-2 pr-4 align-top">Next.js / React</td>
-                <td className="py-2 align-top">
-                  Same stack as every other page on this site — no separate
-                  frontend deploy for this one piece.
-                </td>
-              </tr>
-              <tr className="border-b border-foreground/10">
-                <td className="py-2 pr-4 align-top">Backend</td>
-                <td className="py-2 pr-4 align-top">
-                  Azure Functions, Node.js, Flex Consumption
-                </td>
-                <td className="py-2 align-top">
-                  The stack I wanted genuine hands-on time with — proving
-                  real Node.js/Azure serverless experience, not just reading
-                  about it.
-                </td>
-              </tr>
-              <tr className="border-b border-foreground/10">
-                <td className="py-2 pr-4 align-top">Database</td>
-                <td className="py-2 pr-4 align-top">Azure Cosmos DB (NoSQL API)</td>
-                <td className="py-2 align-top">
-                  Partitioned by technician (<code>techId</code>) — the
-                  natural query shape throughout is &ldquo;everything for one
-                  tech.&rdquo;
-                </td>
-              </tr>
-              <tr>
-                <td className="py-2 pr-4 align-top">Coaching tips</td>
-                <td className="py-2 pr-4 align-top">
-                  Mocked for now; Azure OpenAI once quota clears
-                </td>
-                <td className="py-2 align-top">
-                  Isolated in one function, so swapping the real model call
-                  in later is a one-file change, not a rewrite.
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <p className="text-sm leading-relaxed">
+          Azure Functions (Node.js), Cosmos DB, and a Next.js frontend — see{" "}
+          <a
+            href="/techstacks/farpost-pulse/tech-stack"
+            className="text-accent underline"
+          >
+            Tech Stack
+          </a>{" "}
+          for the full reasoning behind each choice.
+        </p>
       </section>
 
       <section>
-        <SectionHeader title="DESIGN_NOTES" />
+        <SectionHeader title="ACCESSIBILITY" />
         <p className="text-sm leading-relaxed">
           Semantic HTML throughout (real <code>table</code>s for tabular job
           data, real <code>button</code>s for actions), keyboard-navigable

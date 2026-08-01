@@ -46,47 +46,15 @@ export default function FarpostAtlasPage() {
         <div className="space-y-4 text-sm leading-relaxed">
           <p>
             The backend, <code>farpost-atlas-geo</code>, is a genuinely
-            separate Python/FastAPI service — promoted out of this
-            site&rsquo;s shared <code>api/</code> from day one, not prototyped
-            there first. Shapely{" "}
-            is a real runtime dependency of a live spatial join, not a one-off local script —{" "}
-            <code>geopandas</code>, used only in the one-time ingestion step
-            below, deliberately isn&rsquo;t. That&rsquo;s exactly the
-            &ldquo;heavy/native dependency&rdquo; case this
-            site&rsquo;s own portfolio-piece isolation convention was written
-            to describe, before this piece existed to actually prove it.
-          </p>
-          <p>
-            No PostGIS. At this scale — a few dozen North Hastings
-            Dissemination Area polygons, a dozen-odd tracked buildings — a
-            spatial database extension would be real weight for no real
-            benefit. Instead, a small in-memory Shapely{" "}
-            <code>STRtree</code> is built once at application startup from a
-            pre-processed GeoJSON file, and every{" "}
-            <code>GET /api/buildings/{"{id}"}</code> request runs a genuine
-            point-in-polygon query against it. Tracked buildings and their
-            records themselves live in an ordinary small Postgres database —
-            only the boundary-polygon lookup gets the spatial index.
-          </p>
-          <p>
-            The one-time ingestion step is where <code>geopandas</code>{" "}
-            actually earns its keep: reprojecting Statistics Canada&rsquo;s
-            2021 Census Dissemination Area boundary file out of its native
-            Lambert conformal conic projection into the WGS84 coordinates
-            Leaflet expects, simplifying geometry for web rendering, and
-            joining each polygon&rsquo;s real, StatCan-computed
-            population-density figure by <code>DAUID</code>. That step runs
-            once, locally, before this page ever ships — never part of the
-            live request path.
-          </p>
-          <p>
-            The frontend calls <code>farpost-atlas-geo</code> directly from
-            the browser, the same relationship{" "}
-            <a href="/techstacks/farpost-pulse" className="text-accent underline">Farpost Pulse</a>
-            {" "}has with its own backend — nothing sensitive is at stake
-            here (every building is seeded and fictional), so a server-side
-            proxy through this site&rsquo;s own <code>api/</code> would add
-            complexity without adding real protection.
+            separate Python/FastAPI service running a real Shapely spatial
+            join against an in-memory index built from Statistics Canada
+            boundary data — no PostGIS, deliberately, at this piece&rsquo;s
+            scale. See{" "}
+            <a href="/techstacks/farpost-atlas/architecture" className="text-accent underline">
+              Architecture
+            </a>{" "}
+            for the full spatial-join explanation and the three HTTP
+            endpoints it exposes.
           </p>
         </div>
       </section>

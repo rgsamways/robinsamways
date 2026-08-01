@@ -3,11 +3,30 @@ import { test, expect } from "@playwright/test";
 const TOP_LEVEL_LINKS: { label: string; path: string }[] = [
   { label: "Farpost", path: "/farpost" },
   { label: "Vocare", path: "/vocare" },
-  { label: "Experiments", path: "/techstacks" },
+  { label: "Atlas", path: "/techstacks/farpost-atlas" },
+  { label: "Dispatch", path: "/techstacks/farpost-dispatch" },
+  { label: "Pulse", path: "/techstacks/farpost-pulse" },
+  { label: "Credential Flow", path: "/techstacks/credential-flow" },
   { label: "Dev Log", path: "/dev-log" },
   { label: "Sreditor", path: "/sreditor" },
   { label: "Services", path: "/services" },
   { label: "Contact", path: "/contact" },
+];
+
+const EXPERIMENT_RECORD_PAGES = [
+  "Tech Stack",
+  "Architecture",
+  "Object Model",
+  "Design Notes",
+  "AI Notes",
+  "Setup Gallery",
+];
+
+const EXPERIMENTS: { label: string; base: string }[] = [
+  { label: "Atlas", base: "/techstacks/farpost-atlas" },
+  { label: "Dispatch", base: "/techstacks/farpost-dispatch" },
+  { label: "Pulse", base: "/techstacks/farpost-pulse" },
+  { label: "Credential Flow", base: "/techstacks/credential-flow" },
 ];
 
 test.describe("global navigation drawer", () => {
@@ -140,7 +159,13 @@ test.describe("collapsible nav groups", () => {
       nav.getByRole("link", { name: "The Bug That Silently Ate 2,706 Records" })
     ).toHaveCount(0);
 
-    const viewAll = nav.getByRole("link", { name: "View All" });
+    // Scoped to Dev Log's own list item — Experiments now has its own
+    // trailing "View All" link too (visible unconditionally, not gated
+    // behind a toggle), so an unscoped lookup by name alone is ambiguous.
+    const devLogItem = nav
+      .locator("li")
+      .filter({ has: page.getByRole("link", { name: "Dev Log", exact: true }) });
+    const viewAll = devLogItem.getByRole("link", { name: "View All" });
     await expect(viewAll).toBeVisible();
     await viewAll.click();
 
@@ -157,23 +182,105 @@ test.describe("collapsible nav groups", () => {
     await expect(page).toHaveURL("/sreditor/bug-list");
   });
 
-  test("Experiments is a top-level group, not nested under Work, and its submenu lists all four pieces", async ({
+  test("Experiments is a top-level group, not nested under Work, with no redundant middle node", async ({
     page,
   }) => {
     await page.goto("/");
 
     const nav = page.getByRole("navigation", { name: "Site" });
+
+    // No link literally labeled "Experiments" exists anywhere in the nav —
+    // that's the redundant middle node this change removes.
+    await expect(nav.getByRole("link", { name: "Experiments", exact: true })).toHaveCount(0);
+
+    // Atlas/Dispatch/Pulse/Credential Flow/View All are direct children of
+    // the Experiments heading — visible without any group-level toggle.
+    const experimentsLinks = page
+      .getByRole("heading", { name: "Experiments", exact: true })
+      .locator("xpath=following-sibling::ul[1]")
+      .getByRole("link");
+    await expect(experimentsLinks).toHaveText([
+      "Atlas",
+      "Dispatch",
+      "Pulse",
+      "Credential Flow",
+      "View All",
+    ]);
+
+    // Not nested under Work either: expanding Farpost doesn't add a second
+    // Atlas link — there's still exactly the one from Experiments itself.
     await nav.getByRole("button", { name: "Expand Farpost" }).click();
-    await expect(nav.getByRole("link", { name: "Atlas" })).toHaveCount(0);
+    await expect(nav.getByRole("link", { name: "Atlas", exact: true })).toHaveCount(1);
 
-    await nav.getByRole("button", { name: "Expand Experiments" }).click();
-    await expect(nav.getByRole("link", { name: "Atlas" })).toBeVisible();
-    await expect(nav.getByRole("link", { name: "Dispatch" })).toBeVisible();
-    await expect(nav.getByRole("link", { name: "Pulse" })).toBeVisible();
-    await expect(nav.getByRole("link", { name: "Credential Flow" })).toBeVisible();
-
-    await nav.getByRole("link", { name: "Atlas" }).click();
+    await nav.getByRole("link", { name: "Atlas", exact: true }).click();
     await expect(page).toHaveURL("/techstacks/farpost-atlas");
+  });
+
+  test("View All under Experiments navigates to the showcase index", async ({ page }) => {
+    await page.goto("/");
+
+    const experimentsLinks = page
+      .getByRole("heading", { name: "Experiments", exact: true })
+      .locator("xpath=following-sibling::ul[1]")
+      .getByRole("link");
+    await experimentsLinks.filter({ hasText: "View All" }).click();
+
+    await expect(page).toHaveURL("/techstacks");
+  });
+
+  for (const { label } of EXPERIMENTS) {
+    test(`${label} submenu lists its six pages in order`, async ({ page }) => {
+      await page.goto("/");
+
+      const nav = page.getByRole("navigation", { name: "Site" });
+      await nav.getByRole("button", { name: `Expand ${label}` }).click();
+
+      const item = nav
+        .locator("li")
+        .filter({ has: page.getByRole("link", { name: label, exact: true }) })
+        .first();
+      await expect(item.locator("ul").getByRole("link")).toHaveText(EXPERIMENT_RECORD_PAGES);
+    });
+  }
+});
+
+test.describe("Experiment record sub-pages", () => {
+  for (const { label, base } of EXPERIMENTS) {
+    test(`${label} submenu navigates through all six pages without error`, async ({ page }) => {
+      await page.goto("/");
+
+      const nav = page.getByRole("navigation", { name: "Site" });
+      await nav.getByRole("button", { name: `Expand ${label}` }).click();
+      const item = nav
+        .locator("li")
+        .filter({ has: page.getByRole("link", { name: label, exact: true }) })
+        .first();
+
+      for (const recordPage of EXPERIMENT_RECORD_PAGES) {
+        await item.getByRole("link", { name: recordPage }).click();
+        const slug = recordPage.toLowerCase().replace(/ /g, "-");
+        await expect(page).toHaveURL(`${base}/${slug}`);
+        await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+      }
+    });
+  }
+});
+
+test.describe("Experiment AI Notes honesty disclosures", () => {
+  test("Atlas's AI Notes page states it has no AI mechanic today", async ({ page }) => {
+    await page.goto("/techstacks/farpost-atlas/ai-notes");
+
+    await expect(
+      page.getByText(/does not use AI as part of its own mechanic today/i)
+    ).toBeVisible();
+  });
+
+  test("Pulse's AI Notes page discloses coaching tips are currently mocked", async ({ page }) => {
+    await page.goto("/techstacks/farpost-pulse/ai-notes");
+
+    await expect(
+      page.getByText(/coaching-tip generation is currently mocked, not live AI/i)
+    ).toBeVisible();
   });
 });
 

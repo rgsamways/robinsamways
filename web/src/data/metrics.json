@@ -298,5 +298,17 @@
     "uloc": 10815,
     "drynessPercent": 58,
     "note": "Added a topic field one level above category on every Dev Log entry (fixed 5-value taxonomy), grew CODE_SHOWCASE_ENTRIES from 12 to 23 with 11 new entries carrying real final copy (3 about this project's own AI-assisted process, 8 drawn from existing docs/lightbulbs/*-dev-log-entry.md files, each graduated with a pointer note), gave /dev-log a single-select topic pill filter (TopicFilter.tsx), and capped DrawerNav's Dev Log submenu at the 5 most recent entries plus a View All link (capRecentEntries.ts). DRYness held flat (58% -> 58%). This delta is not purely dev-log-topics' own work: the previous mobile-chrome-redesign snapshot was logged before a separate batch of live post-archive tweaks that session (scroll-margin fix, click glow, per-anchor color strip, cursor-pointer additions -- see docs/handoff-2026-07-26-post-mobile-chrome-tweaks.md), which only edited already-existing files (globals.css, PageOutline.tsx, SectionHeader.tsx, Header.tsx, PillBar.tsx) and so added lines without adding files -- dev-log-topics itself never touched any of those five. File count still reconciles exactly against dev-log-topics' own 6 new files (TopicFilter.tsx, filterByTopic.ts, DevLogEntryList.tsx, capRecentEntries.ts, filterByTopic.test.ts, capRecentEntries.test.ts). Numbers already reflect this entry's own append."
+  },
+  {
+    "date": "2026-08-01",
+    "change": "experiments-record-pages",
+    "label": "after archiving experiments-record-pages",
+    "files": 287,
+    "lines": 20867,
+    "code": 18345,
+    "complexity": 1044,
+    "uloc": 11653,
+    "drynessPercent": 56,
+    "note": "Fixed the redundant 'Experiments > Experiments' nav node and gave each of Atlas/Dispatch/Pulse/Credential Flow its own six-page submenu (Tech Stack, Architecture, Object Model, Design Notes, AI Notes, Setup Gallery), mirroring Work's existing project-record shape -- 24 new page.tsx files, plus three new Setup Gallery components (farpost-dispatch, farpost-pulse, and a credential-flow one migrated off the shared portfolio/SetupGallery.tsx). DRYness dipped 2 points (58% -> 56%), still comfortably above the 55% flag threshold -- expected given a large amount of genuinely new case-study prose (AI Notes and Design Notes are new writing for all four pieces, not reorganized content) rather than duplicated logic. File count reconciles to +27 from this change's own new files; the remaining +1 (web/src/app/contact/page.tsx) landed in an intervening commit that didn't get its own snapshot. Numbers already reflect this entry's own append."
   }
 ]

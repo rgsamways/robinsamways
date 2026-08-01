@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { EXPERIMENT_RECORD_CHILDREN } from "../DrawerNav";
 import { isExpanded, pathMatches } from "../navTree";
 
 describe("pathMatches", () => {
@@ -38,13 +39,26 @@ describe("isExpanded", () => {
     expect(isExpanded(link, "/vocare", { "/farpost": true })).toBe(true);
   });
 
-  it("auto-expands the Experiments group when a piece route is active", () => {
-    const experimentsLink = { href: "/techstacks", label: "Experiments", children: [] };
-    expect(isExpanded(experimentsLink, "/techstacks/farpost-atlas", {})).toBe(true);
+  it("auto-expands an Experiment's own submenu when one of its record pages is active", () => {
+    const atlasLink = { href: "/techstacks/farpost-atlas", label: "Atlas", children: [] };
+    expect(isExpanded(atlasLink, "/techstacks/farpost-atlas/architecture", {})).toBe(true);
   });
 
   it("auto-expands Sreditor's 10-page submenu when one of its pages is active", () => {
     const sreditorLink = { href: "/sreditor", label: "Sreditor", children: [] };
     expect(isExpanded(sreditorLink, "/sreditor/bug-list", {})).toBe(true);
+  });
+});
+
+describe("EXPERIMENT_RECORD_CHILDREN", () => {
+  it("generates the six-page submenu in order", () => {
+    expect(EXPERIMENT_RECORD_CHILDREN("/techstacks/farpost-atlas")).toEqual([
+      { href: "/techstacks/farpost-atlas/tech-stack", label: "Tech Stack" },
+      { href: "/techstacks/farpost-atlas/architecture", label: "Architecture" },
+      { href: "/techstacks/farpost-atlas/object-model", label: "Object Model" },
+      { href: "/techstacks/farpost-atlas/design-notes", label: "Design Notes" },
+      { href: "/techstacks/farpost-atlas/ai-notes", label: "AI Notes" },
+      { href: "/techstacks/farpost-atlas/setup-gallery", label: "Setup Gallery" },
+    ]);
   });
 });

@@ -22,6 +22,19 @@ const PROJECT_RECORD_CHILDREN = (base: string): NavLink[] => [
   { href: `${base}/glossary`, label: "Glossary" },
 ];
 
+// Mirrors PROJECT_RECORD_CHILDREN's shape for the four Experiments — a
+// smaller, uniform six-page submenu rather than Work's ten, per
+// experiments-record-pages' design.md. Exported for direct unit coverage
+// (see navTree.test.ts) since it has no other pure-function home.
+export const EXPERIMENT_RECORD_CHILDREN = (base: string): NavLink[] => [
+  { href: `${base}/tech-stack`, label: "Tech Stack" },
+  { href: `${base}/architecture`, label: "Architecture" },
+  { href: `${base}/object-model`, label: "Object Model" },
+  { href: `${base}/design-notes`, label: "Design Notes" },
+  { href: `${base}/ai-notes`, label: "AI Notes" },
+  { href: `${base}/setup-gallery`, label: "Setup Gallery" },
+];
+
 // D3 (dev-log-topics): caps at the 5 most recent, plus a trailing "View
 // All" link to /dev-log — Dev Log is an unbounded, growing stream, not a
 // fixed page set like Farpost/Vocare/Sreditor's 10-item submenus.
@@ -54,15 +67,26 @@ const NAV_GROUPS: NavGroup[] = [
     heading: "Experiments",
     links: [
       {
-        href: "/techstacks",
-        label: "Experiments",
-        children: [
-          { href: "/techstacks/farpost-atlas", label: "Atlas" },
-          { href: "/techstacks/farpost-dispatch", label: "Dispatch" },
-          { href: "/techstacks/farpost-pulse", label: "Pulse" },
-          { href: "/techstacks/credential-flow", label: "Credential Flow" },
-        ],
+        href: "/techstacks/farpost-atlas",
+        label: "Atlas",
+        children: EXPERIMENT_RECORD_CHILDREN("/techstacks/farpost-atlas"),
       },
+      {
+        href: "/techstacks/farpost-dispatch",
+        label: "Dispatch",
+        children: EXPERIMENT_RECORD_CHILDREN("/techstacks/farpost-dispatch"),
+      },
+      {
+        href: "/techstacks/farpost-pulse",
+        label: "Pulse",
+        children: EXPERIMENT_RECORD_CHILDREN("/techstacks/farpost-pulse"),
+      },
+      {
+        href: "/techstacks/credential-flow",
+        label: "Credential Flow",
+        children: EXPERIMENT_RECORD_CHILDREN("/techstacks/credential-flow"),
+      },
+      { href: "/techstacks", label: "View All" },
     ],
   },
   {

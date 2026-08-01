@@ -54,119 +54,55 @@ export default function FarpostDispatchPage() {
 
       <section>
         <SectionHeader title="OBJECT_MODEL" />
-        <div className="space-y-4 text-sm leading-relaxed">
-          <p>
-            Professionals are standard Salesforce Contacts, extended with
-            four custom fields: Service Region (picklist), Certifications
-            (multi-select picklist &mdash; Septic/Well, Electrical,
-            Foundation/Structural, Roofing, General Inspection, mirroring{" "}
-            <a href="/techstacks/farpost-atlas" className="text-accent underline">
-              Farpost Atlas
-            </a>
-            &rsquo;s own tracked-record types), Availability Status
-            (Available/Unavailable), and Rating (a seeded decimal used as
-            the matching service&rsquo;s secondary sort signal).
-          </p>
-          <p>
-            Jobs are a new custom object, <code>Job__c</code>: Job Type and
-            Region (the same picklist value sets as Certifications and
-            Service Region), Urgency (High/Medium/Low), Status
-            (Open/Claimed/Completed), an Assigned Professional lookup back
-            to Contact, and a free-text Description.
-          </p>
-          <p>
-            Region is deliberately a plain picklist, seeded from real North
-            Hastings-area municipality names (Bancroft, Faraday,
-            Carlow/Mayo, Hastings Highlands, Limerick, Tudor and Cashel,
-            Wollaston) for narrative continuity with Farpost Atlas&rsquo;s
-            own setting &mdash; but zero data or code is shared with Atlas.
-            Atlas&rsquo;s real Statistics Canada boundary polygons and this
-            picklist have nothing to do with each other; a categorical
-            region-match filter is all this piece&rsquo;s matching logic
-            actually needs, and duplicating Atlas&rsquo;s real geo data into
-            an unrelated system would be exactly the cross-piece coupling
-            this site&rsquo;s own portfolio-piece isolation convention
-            exists to prevent.
-          </p>
-        </div>
+        <p className="text-sm leading-relaxed">
+          Professionals are standard Salesforce Contacts extended with four
+          custom fields (Service Region, Certifications, Availability
+          Status, Rating), and Jobs are a new custom object,{" "}
+          <code>Job__c</code>. See{" "}
+          <a
+            href="/techstacks/farpost-dispatch/object-model"
+            className="text-accent underline"
+          >
+            Object Model
+          </a>{" "}
+          for the full field list.
+        </p>
       </section>
 
       <section>
         <SectionHeader title="ARCHITECTURE" />
-        <div className="space-y-4 text-sm leading-relaxed">
-          <p>
-            <code>pieces/farpost-dispatch-sf/</code> is a real Salesforce DX
-            project &mdash; Apex classes, custom object/field metadata, a
-            permission set, Named Credential metadata, and two Lightning Web
-            Components, all hand-authored, git-tracked source deployed via{" "}
-            <code>sf project deploy start</code>, not configuration that
-            only exists by clicking through Setup with nothing committed
-            anywhere. Apex is a genuinely different runtime than every other
-            piece on this site, satisfying this site&rsquo;s own
-            portfolio-piece isolation convention directly &mdash; the second
-            real instance of that trigger, after Farpost Pulse&rsquo;s
-            Node.js Azure Functions.
-          </p>
-          <p>
-            A <code>Farpost_Dispatch_Partner</code> permission set scopes
-            exactly what a Partner Community Professional needs: their own
-            Contact self-fields, read-only visibility on{" "}
-            <code>Job__c</code>, and the two Apex classes backing the job
-            board and the claim action &mdash; nothing broader.
-          </p>
-          <p>
-            Two Lightning Web Components carry the two sides of this
-            story: an ops-side recommendation panel on the{" "}
-            <code>Job__c</code> record page, and a Partner Community portal
-            page showing each Professional their own matching open jobs
-            with a Claim action. Claiming itself is concurrency-safe, not a
-            toy: <code>JobClaimService.claimJob</code> row-locks the{" "}
-            <code>Job__c</code> record (<code>FOR UPDATE</code>) and
-            re-checks its Status inside that lock before updating it, so two
-            professionals claiming the same job near-simultaneously can
-            never both succeed. That&rsquo;s the sharper version of the
-            founding story: instead of manual outreach that failed, the
-            system proactively surfaces the job to the best-fit people, who
-            claim it themselves.
-          </p>
-        </div>
+        <p className="text-sm leading-relaxed">
+          <code>pieces/farpost-dispatch-sf/</code> is a real, git-tracked
+          Salesforce DX project deployed via the Salesforce CLI, with
+          concurrency-safe job claiming and a Partner Community portal. See{" "}
+          <a
+            href="/techstacks/farpost-dispatch/architecture"
+            className="text-accent underline"
+          >
+            Architecture
+          </a>{" "}
+          for the full explanation of the source-driven, git-tracked
+          Salesforce DX/Apex build.
+        </p>
       </section>
 
       <section>
         <SectionHeader title="AI_MATCHING" />
-        <div className="space-y-4 text-sm leading-relaxed">
-          <p>
-            <code>JobMatchingService</code>{" "}
-            queries Contacts whose Service
-            Region matches the Job&rsquo;s Region, whose Certifications
-            include the Job&rsquo;s Job Type, and whose Availability Status
-            is Available, sorts the shortlist by Rating, then calls
-            Anthropic &mdash; via the <code>Anthropic_API</code> Named
-            Credential, never a hardcoded key &mdash; for a short
-            natural-language reason per candidate. If no Contact is
-            eligible, the service returns an empty result without ever
-            calling Anthropic.
-          </p>
-          <p>
-            This is the direct, complementary counterpart to Credential
-            Flow&rsquo;s own Anthropic-powered recommendation feature: same
-            &ldquo;explain the why&rdquo; pattern, opposite direction of
-            integration. Credential Flow&rsquo;s recommendation call
-            originates from this site&rsquo;s own Python backend calling{" "}
-            <em>out to</em>{" "}
-            Salesforce data; Farpost Dispatch&rsquo;s
-            originates from Apex calling <em>out from inside</em>{" "}
-            Salesforce
-            itself &mdash; two genuinely different integration directions
-            proven against the same underlying AI provider.
-          </p>
-          <p>
-            The AI ranks and surfaces; it doesn&rsquo;t assign. Ops sees the
-            ranked, reasoned shortlist on the Job record page; Professionals
-            see it reflected as a recommended flag on their own portal
-            board. Claiming stays a Professional&rsquo;s own action.
-          </p>
-        </div>
+        <p className="text-sm leading-relaxed">
+          <code>JobMatchingService</code> queries eligible Contacts and calls
+          Anthropic&rsquo;s API via a Named Credential for a ranked,
+          reasoned shortlist &mdash; the callout originates from inside
+          Salesforce this time, the mirror image of Credential
+          Flow&rsquo;s Python-calls-Salesforce direction. See{" "}
+          <a
+            href="/techstacks/farpost-dispatch/ai-notes"
+            className="text-accent underline"
+          >
+            AI Notes
+          </a>{" "}
+          for the full mechanic and its contrast with Credential
+          Flow&rsquo;s AI feature.
+        </p>
       </section>
 
       <section>
@@ -239,17 +175,26 @@ export default function FarpostDispatchPage() {
       </section>
 
       <section>
-        <SectionHeader title="SETUP_GALLERY" />
+        <SectionHeader title="NO_LIVE_DEMO" />
         <p className="text-sm leading-relaxed">
           No live demo widget or login link here on purpose &mdash; exposing
           a free-tier Salesforce org&rsquo;s Partner Community login
           publicly risks abuse and governor-limit exhaustion for no real
-          benefit. A gallery of real setup screenshots (the Experience Cloud
-          site, the Partner Community job board, the ops-side recommendation
-          panel) is a deferred, non-blocking follow-up once the manual
-          Salesforce configuration is actually done &mdash; the same
-          precedent as Farpost Atlas&rsquo;s and Farpost Pulse&rsquo;s own
-          still-pending setup galleries.
+          benefit. See{" "}
+          <a
+            href="/techstacks/farpost-dispatch/design-notes"
+            className="text-accent underline"
+          >
+            Design Notes
+          </a>{" "}
+          for the full reasoning, and{" "}
+          <a
+            href="/techstacks/farpost-dispatch/setup-gallery"
+            className="text-accent underline"
+          >
+            Setup Gallery
+          </a>{" "}
+          for real configuration screenshots once captured.
         </p>
       </section>
     </main>
